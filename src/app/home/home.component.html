@@ -6,11 +6,11 @@
       </div>
     </div>
     <hr>
-    <div class="row" >
+    <section class="row" >
       <div class="jumbotron">
         <h1 id="Services">Services</h1>
       </div>
-    </div>
+    </section>
     <hr>
     <div class="row">
       <div class="jumbotron">
@@ -26,19 +26,19 @@
     
   </div>
   <div class="col-md-3">
-      <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix-top"> 
+      <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs fixed-top"> 
           <ul class="nav bs-docs-sidenav"> 
-            <li class=""> 
+            <li class="home-nav-item"> 
               <a ng-href="#Intro">Intro</a> 
             </li> 
-            <li class=""> 
+            <li class="home-nav-item"> 
               <a [routerLink]="['home']" fragment="Intro">What's included</a> 
               <ul class="nav"> 
                 <li class=""><a ng-href="#Services">Services</a></li> 
                 <li class=""><a ng-href="#Functions">Functions</a></li>
               </ul> 
             </li> 
-            <li class=""> 
+            <li class="home-nav-item"> 
                 <a ng-href="#Contact">Contact</a> 
               </li> 
           </ul> 

@@ -13,6 +13,7 @@ import { HomeComponent } from './home/home.component';
 import { MapMenuComponent } from './map/map-menu/map-menu.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AboutComponent } from './about/about.component';
+import { MapDemoComponent } from './map/map-demo/map-demo.component';
 
 
 
@@ -26,7 +27,8 @@ import { AboutComponent } from './about/about.component';
     HomeComponent,
     MapMenuComponent,
     PageNotFoundComponent,
-    AboutComponent
+    AboutComponent,
+    MapDemoComponent
   ],
   imports: [
     AppRoutingModule,
