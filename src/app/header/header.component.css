@@ -1,0 +1,13 @@
+.active::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #00a1d6;
+    bottom: -3px;
+}
+
+.barnd-logo {
+    color: #00a1d6;
+    font-size: larger;
+}

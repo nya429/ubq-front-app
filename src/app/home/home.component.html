@@ -1,0 +1,48 @@
+<div class="container-fluid">
+  <div class="col-md-9">
+    <div class="row" >
+      <div class="jumbotron">
+        <h1 id="Intro">Intro</h1>
+      </div>
+    </div>
+    <hr>
+    <div class="row" >
+      <div class="jumbotron">
+        <h1 id="Services">Services</h1>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="jumbotron">
+        <h1 id="Functions">Functions</h1>
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="jumbotron">
+        <h1 id="Contact">Contact</h1>
+      </div>
+    </div>
+    
+  </div>
+  <div class="col-md-3">
+      <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs affix-top"> 
+          <ul class="nav bs-docs-sidenav"> 
+            <li class=""> 
+              <a ng-href="#Intro">Intro</a> 
+            </li> 
+            <li class=""> 
+              <a [routerLink]="['home']" fragment="Intro">What's included</a> 
+              <ul class="nav"> 
+                <li class=""><a ng-href="#Services">Services</a></li> 
+                <li class=""><a ng-href="#Functions">Functions</a></li>
+              </ul> 
+            </li> 
+            <li class=""> 
+                <a ng-href="#Contact">Contact</a> 
+              </li> 
+          </ul> 
+        </nav>
+  </div>
+
+</div>
