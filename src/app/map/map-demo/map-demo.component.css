@@ -13,3 +13,10 @@
 .d3-chart .axis text {
   fill: #999;
 }
+
+.axis path,
+.axis line{
+    fill: none;
+    stroke: red;
+    shape-rendering: crispEdges;
+}
