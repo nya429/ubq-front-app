@@ -75,13 +75,27 @@ export class MapDemoComponent implements OnInit {
             return  padding.left + xScale(i) + rectPadding / 2;
           })
           .attr('y', d =>  {
-                return yScale(d) + padding.top;
+                return yScale(0) + padding.top;
           })
           .attr('width', xScale.bandwidth() - rectPadding)
           .attr('height', d => {
-            return element.offsetHeight - padding.top - padding.bottom - yScale(d);
+            return 0;
           })
-          .attr('fill', 'skyblue');
+          .attr('fill', 'skyblue')
+          .transition()
+          .delay(function(d,i){
+            return i * 50;
+          })
+          .duration(2000)
+          .ease(d3.easeBounceIn)
+          .attr("y",function(d){
+            return yScale(d) + padding.top;;
+          })
+          .attr("height", function(d){
+            return element.offsetHeight - padding.top - padding.bottom - yScale(d);
+          });
+      
+
     
     let texts = svg.selectAll(".BarText")
         .data(dataset)
@@ -104,7 +118,27 @@ export class MapDemoComponent implements OnInit {
         .text(function(d){
             return d;
         })
-        .attr('fill', 'white');;     
+        .attr('fill', 'white').transition()
+        .delay(function(d,i){
+          return i * 50;
+        })
+        .duration(2000)
+        .ease(d3.easeBounceIn)
+        .attr("y",function(d){
+          return yScale(d) + padding.top;;
+        })
+        .attr("height", function(d){
+          return element.offsetHeight - padding.top - padding.bottom - yScale(d);
+        });; 
+
+   let circle1 = svg.append("circle")
+        .attr("cx", 100)
+        .attr("cy", 100)
+        .attr("r", 45)
+        .style("fill","green");
+
+    circle1.transition().ease(d3.easePolyInOut).duration(1000).delay(800).attr('cx',300).attr("r", 25).style("fill","red");
+          
 
   }
 }
