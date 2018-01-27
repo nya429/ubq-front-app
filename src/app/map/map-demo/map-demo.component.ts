@@ -52,8 +52,7 @@ export class MapDemoComponent implements OnInit {
     const yAxis = d3.axisLeft(yScale).tickArguments([5, 's']);
 
     const axis = d3.axisBottom(linear).tickArguments([5, 's']);
-    console.log(element.offsetWidth - padding.left - padding.right, xScale(1), xScale(2), xScale(3), xScale(4))
-    
+
     // svg.append('g').call(axis)
     //       .attr('transform', 'translate(20,200)');
     svg.append("g")
@@ -67,11 +66,11 @@ export class MapDemoComponent implements OnInit {
     .attr("transform","translate(" + padding.left + "," + padding.top + ")")
     .call(yAxis);
 
-    svg.selectAll('rect')
+    let rectBar = svg.selectAll('rect')
           .data(dataset)
-          .enter()
-          .append('rect')
-          .attr('x',  (d, i) =>  {
+          .enter().append('rect');
+
+        rectBar.attr('x',  (d, i) =>  {
             return  padding.left + xScale(i) + rectPadding / 2;
           })
           .attr('y', d =>  {
@@ -89,7 +88,7 @@ export class MapDemoComponent implements OnInit {
           .duration(2000)
           .ease(d3.easeBounceIn)
           .attr("y",function(d){
-            return yScale(d) + padding.top;;
+            return yScale(d) + padding.top;
           })
           .attr("height", function(d){
             return element.offsetHeight - padding.top - padding.bottom - yScale(d);
@@ -107,38 +106,82 @@ export class MapDemoComponent implements OnInit {
             return xScale(i) + rectPadding/2;
         } )
         .attr("y",function(d){
-            return yScale(d);
+            return yScale(0) + padding.top;
         })
         .attr("dx",function(){
             return (xScale.bandwidth() - rectPadding)/2;
         })
         .attr("dy",function(d){
-            return 20;
+            return 0;
         })
         .text(function(d){
             return d;
         })
-        .attr('fill', 'white').transition()
+        .attr('fill', 'skyblue')
+        .transition()
+        .attr('fill', 'white')
         .delay(function(d,i){
           return i * 50;
         })
         .duration(2000)
         .ease(d3.easeBounceIn)
         .attr("y",function(d){
-          return yScale(d) + padding.top;;
+          return yScale(d) + padding.top;
         })
         .attr("height", function(d){
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
-        });; 
+        });
 
    let circle1 = svg.append("circle")
         .attr("cx", 100)
         .attr("cy", 100)
         .attr("r", 45)
-        .style("fill","green");
+        .style("fill","cornflowerblue");
 
-    circle1.transition().ease(d3.easePolyInOut).duration(1000).delay(800).attr('cx',300).attr("r", 25).style("fill","red");
-          
+    circle1.transition().ease(d3.easePolyInOut).duration(1000).delay(800).attr('cx',400).attr("r", 25).style("fill","deepskyblue");
 
+    circle1.on('click', function() {
+      console.log(this);
+      d3.select(this)
+      .transition(500)
+      .style("fill","cyan")
+      .ease(d3.easeBounceIn);
+    });
+
+    rectBar.on('mouseover', function() {
+      let self = this;
+
+      var otherCircles = d3.selectAll('svg rect');
+      // All other elements resize randomly.
+      otherCircles.filter(function() 
+          { return self !== this; }
+        ).transition().style("fill-opacity", 0.6);
+    });
+
+    rectBar.on('mouseout', function() {
+      d3.selectAll('svg rect').transition(100).style("fill-opacity", 1);
+    });
+
+    rectBar.on('click', function() {
+      console.log(d3.event);
+      // d3.select(rectBar)
+      // .transition(500)
+      // .style("fill","red")
+      // .ease(d3.easeBounceIn);
+      d3.select(this)
+      .transition(500)
+      .style("fill","cyan")
+      .ease(d3.easeBounceIn);
+      let self = this;
+
+      let otherCircles = d3.selectAll('svg rect');
+      // All other elements resize randomly.
+      otherCircles.filter(function()
+          { return self !== this; }
+        ).transition().style("fill",'aliceblue');
+
+    });
   }
+
+
 }
