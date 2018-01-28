@@ -32,7 +32,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private yAxis: any;
  
   private initiated = false;
-  
+  private started = false;
+
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
@@ -42,26 +43,39 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-
+    this.onStop();
   }
 
   onStop() {
+    this.started = false;
+    this.initiated = false;
     this.mapService.stop();
     this.trackersSubscription.unsubscribe();
+    this.removePoint(); 
   }
 
   onStart() {
-    this.trackers = this.mapService.getTrackers();
+    
     if(!this.initiated) {
+      this.initiated = true;
+      this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
+      this.mapService.move();
     }
-    this.trackersSubscription = this.mapService.trackerChanges.subscribe(
-      (trackers: Tracker[]) => {
-        this.trackers = trackers;
-        this.movePoint(trackers);
-      }
-    );
-    this.mapService.move();
+
+    if(this.started) {
+      this.started = false;
+      this.trackersSubscription.unsubscribe();
+    }
+    else{
+      this.started = true;
+      this.trackersSubscription = this.mapService.trackerChanges.subscribe(
+        (trackers: Tracker[]) => {
+          this.trackers = trackers;
+          this.movePoint(trackers);
+        }
+      );
+    }
   }
 
   createBase() {
@@ -98,12 +112,20 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr("cx",function(d) {return that.xScale(d.xCrd)})
       .attr("cy",function(d) {return that.yScale(d.yCrd)})
       .attr('r', 1)
+      .on('mouseover',function(d,i){
+         let thisPoint= d3.select(this);
+         that.onMouseOver(thisPoint);
+      })
+      .on("mouseout",function(d,i){
+        let thisPoint= d3.select(this);
+        that.onMouseout(thisPoint);
+      })
       .transition()
       .style('fill-opacity',0.7)
       .attr("fill","cyan")
-      .duration(800)
-      .ease(d3.easeBackOut)
-      .attr('r', 7);
+      .duration(700)
+      .ease(d3.easeQuadOut)
+      .attr('r', 7)
   }
 
   movePoint(trackers: Tracker[]) {
@@ -113,10 +135,49 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition()
     //FIXME
     .duration(1000)
-    .ease(d3.easeBackOut)
+    .ease(d3.easeLinear)
     .attr("cx",function(d) {return that.xScale(d.xCrd)})
     .attr("cy",function(d) {return that.yScale(d.yCrd)})
   }
 
+  removePoint() {
+    let trackerPoints = d3.selectAll('.trackerPoint')
+    
+    trackerPoints.transition()
+    .duration(1000)
+    .ease(d3.easeBackOut)
+    .attr('r', 1)
+    .remove();
+  }
+  
+   onMouseOver(trackerPoint) {
+    let that = this;
+    //append text
+    // trackerPoint.append('text')
+    // .attr('class','crdText')
+    // .style('fill', 'white')
+    // .attr("x", function(d){
+    //   return that.xScale(d.xCrd) - 10
+    //    } )
+    // .attr("y",function(d){
+    //   return that.yScale(d.yCrd) - 10
+    // })
+    // .text(function(d){
+    //   return `(${d.xCrd}, ${d.yCrd})`;
+    // })
+
+    trackerPoint.style('fill-opacity',1)
+    .transition(500)
+    .ease(d3.easeBounceIn)
+    .attr('r', 15);
+   }
+
+   onMouseout(trackerPoint) {
+    trackerPoint
+    .style('fill-opacity',0.7)
+    .transition(1000)
+    .ease(d3.easeQuadIn)
+    .attr('r', 7);
+   }
   
 }

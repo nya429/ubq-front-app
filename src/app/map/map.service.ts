@@ -14,7 +14,16 @@ export class MapService {
         new Tracker(1, 10, 10),
         new Tracker(1, 50, 20),
         new Tracker(1, 30, 30),
+        new Tracker(1, 30, 40),
+        new Tracker(1, 10, 10),
+        new Tracker(1, 50, 20),
+        new Tracker(1, 30, 30),
         new Tracker(1, 80, 40),
+        new Tracker(1, 10, 10),
+        new Tracker(1, 40, 60),
+        new Tracker(1, 20, 37),
+        new Tracker(1, 40, 45),
+
     ]
     
     private step = [
@@ -42,7 +51,7 @@ export class MapService {
             });
             console.log('interval0')
             this.trackerChanges.next(this.trackers.slice());
-        } ,500)
+        } ,800)
     }
 
     dummyMove(tracker: Tracker) {
@@ -51,12 +60,12 @@ export class MapService {
         tracker.yCrd = tracker.yCrd + dirc[1];
         if(tracker.xCrd == 0) 
             tracker.xCrd  = 5;
-        if(tracker.xCrd == 0) 
-            tracker.xCrd = 100;
+        if(tracker.xCrd == 100) 
+            tracker.xCrd = 95;
         if(tracker.yCrd == 0)  
             tracker.yCrd = 2 ;
-        if(tracker.yCrd == 100 )  
-            tracker.yCrd = 95;
+        if(tracker.yCrd == 50 )  
+            tracker.yCrd = 45;
         return tracker;
     } 
 
