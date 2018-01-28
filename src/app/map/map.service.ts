@@ -2,8 +2,8 @@ import { Subject } from 'rxjs/Subject';
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Tracker } from './tracker.model';
-import { setInterval } from 'timers';
-import { clearInterval } from 'timers';
+// import { setInterval } from 'timers';
+// import { clearInterval } from 'timers';
 
 export class MapService {
     trackerChanges = new Subject<Tracker[]>();
@@ -60,12 +60,12 @@ export class MapService {
         tracker.yCrd = tracker.yCrd + dirc[1];
         if(tracker.xCrd == 0) 
             tracker.xCrd  = 5;
-        if(tracker.xCrd == 100) 
-            tracker.xCrd = 95;
+        if(tracker.xCrd == 97) 
+            tracker.xCrd = 92;
         if(tracker.yCrd == 0)  
-            tracker.yCrd = 2 ;
-        if(tracker.yCrd == 50 )  
-            tracker.yCrd = 45;
+            tracker.yCrd = 5 ;
+        if(tracker.yCrd == 47 )  
+            tracker.yCrd = 42;
         return tracker;
     } 
 
