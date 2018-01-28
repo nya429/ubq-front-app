@@ -14,6 +14,7 @@ import { MapMenuComponent } from './map/map-menu/map-menu.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AboutComponent } from './about/about.component';
 import { MapDemoComponent } from './map/map-demo/map-demo.component';
+import { TrackingMapComponent } from './map/tracking-map/tracking-map.component';
 
 
 
@@ -28,7 +29,8 @@ import { MapDemoComponent } from './map/map-demo/map-demo.component';
     MapMenuComponent,
     PageNotFoundComponent,
     AboutComponent,
-    MapDemoComponent
+    MapDemoComponent,
+    TrackingMapComponent
   ],
   imports: [
     AppRoutingModule,

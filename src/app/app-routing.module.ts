@@ -8,6 +8,7 @@ import { HomeComponent } from "./home/home.component";
 import { AboutComponent } from "./about/about.component";
 import { PageNotFoundComponent } from "./page-not-found/page-not-found.component";
 import { MapDemoComponent } from './map/map-demo/map-demo.component';
+import { TrackingMapComponent } from "./map/tracking-map/tracking-map.component";
 
 const appRoutes: Routes = [
     {path: '', redirectTo: 'map', pathMatch: 'full'},
@@ -15,7 +16,8 @@ const appRoutes: Routes = [
     {path: 'dashboard', component: DashboardComponent},
     {path: 'map', component: MapComponent,
     children: [
-         {path: 'barchart', component: MapDemoComponent}
+         {path: 'barchart', component: MapDemoComponent},
+         {path: 'track', component: TrackingMapComponent}
         ]},
     {path: 'about', component: AboutComponent},
     { path: 'not-found',
