@@ -14,6 +14,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   @ViewChild('chart') private chartContainer: ElementRef;
   private trackers: Tracker[];
   private trackersSubscription: Subscription;
+ 
 
   private base = {width:100, height:50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -32,14 +33,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private yAxis: any;
  
   private initiated = false;
-  private started = false;
+  started = false;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
     this.createBase(); 
-
-
   }
 
   ngOnDestroy() {
@@ -145,8 +144,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     
     trackerPoints.transition()
     .duration(1000)
-    .ease(d3.easeBackOut)
-    .attr('r', 1)
+    .ease(d3.easeLinear)
+    .attr('r', 0)
     .remove();
   }
   
