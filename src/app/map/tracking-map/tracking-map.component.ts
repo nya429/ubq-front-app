@@ -194,13 +194,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
      console.log(d3.event.pageX, d3.event.pageY);
      this.selectedPoint.datum().selected = true;
      this.onMouseOver(this.selectedPoint);
-    //  d3.select('.d3-chart').append('div')
-    //     .attr('class', 'tooltip')
-    //     .text('CNMD')
-    //     .style('border', '1px solid white')
-    //     .style('backgoundColor', 'rbga(0,0,0,0.2)')
-    //     .style('top', (d3.event.pageY + 20) + 'px')
-    //     .style('left', (d3.event.pageX) + 'px');
+     this.svg.append('div')
+        .attr('class', 'trackerInfo')
+        .style('fill', 'black')
+        .style('stroke', 'white')
+        .style('fill-opacity', 0.4)
+        .attr('width', 100)
+        .attr('height', 30)
+        .attr('cx', this.xScale(this.selectedPoint.datum().xCrd))
+        .attr('cy', this.yScale(this.selectedPoint.datum().yCrd));
 
      this.diselectOtherPoints();
      d3.event.stopPropagation();
