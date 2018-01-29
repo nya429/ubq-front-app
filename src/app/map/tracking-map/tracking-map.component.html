@@ -2,8 +2,6 @@
   <div class="row">
     <div class="col-xs-2">
       <button class="btn btn-success" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
-    </div>
-    <div class="col-xs-2">
       <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
     </div>
   </div>

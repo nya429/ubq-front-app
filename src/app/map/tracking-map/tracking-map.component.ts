@@ -14,12 +14,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   @ViewChild('chart') private chartContainer: ElementRef;
   private trackers: Tracker[];
   private trackersSubscription: Subscription;
- 
 
-  private base = {width:100, height:50};
+
+  private base = {width: 100, height: 50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
   private padding = {left: 30, right: 30, top: 20, bottom: 20};
-  
+
   private chart: any;
   private svg: any;
   private trackerPoints: any;
@@ -31,14 +31,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private colors: any;
   private xAxis: any;
   private yAxis: any;
- 
+
   private initiated = false;
   started = false;
+  private selectedPoint;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
-    this.createBase(); 
+    this.createBase();
   }
 
   ngOnDestroy() {
@@ -48,25 +49,25 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   onStop() {
     this.started = false;
     this.initiated = false;
+    if (this.trackersSubscription) {
+      this.trackersSubscription.unsubscribe();
+    }
     this.mapService.stop();
-    this.trackersSubscription.unsubscribe();
-    this.removePoint(); 
+    this.removePoint();
   }
 
   onStart() {
-    
-    if(!this.initiated) {
+    if (!this.initiated) {
       this.initiated = true;
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
     }
 
-    if(this.started) {
+    if (this.started) {
       this.started = false;
       this.trackersSubscription.unsubscribe();
-    }
-    else{
+    } else {
       this.started = true;
       this.trackersSubscription = this.mapService.trackerChanges.subscribe(
         (trackers: Tracker[]) => {
@@ -87,71 +88,82 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.yScale = d3.scaleLinear()
               .domain([0, this.base.height])
               .range([0, element.offsetHeight - this.padding.top - this.padding.bottom]);
-    this.svg = d3.select(element).append('svg');
+    d3.select(element).append('svg');
+    this.svg = d3.select('svg');
     this.svg.attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
               .append('rect')
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
-              .attr('fill','white')
+              .attr('fill', 'white')
               .transition()
               .duration(1000)
               .delay(500)
-              .attr('fill','darkslategray');
-  } 
+              .attr('fill', 'darkslategray');
+
+    this.svg.on('click', () => this.diselecPoint());
+  }
 
   initiateTrackPoint(trackers: Tracker[]) {
     let that = this;
 
     this.trackerPoints = this.svg.selectAll('circle')
       .data(trackers)
-      .enter().append('circle')
+      .enter().append('circle');
 
-      this.trackerPoints.attr("class","trackerPoint")
-      .attr("cx",function(d) {return that.xScale(d.xCrd)})
-      .attr("cy",function(d) {return that.yScale(d.yCrd)})
+      this.trackerPoints.attr('class', 'trackerPoint')
+      .attr('cx', function(d) {return that.xScale(d.xCrd); })
+      .attr('cy', function(d) {return that.yScale(d.yCrd); })
       .attr('r', 1)
-      .on('mouseover',function(d,i){
-         let thisPoint= d3.select(this);
+      .on('mouseover', function(d, i) {
+         let thisPoint = d3.select(this);
          that.onMouseOver(thisPoint);
       })
-      .on("mouseout",function(d,i){
-        let thisPoint= d3.select(this);
-        that.onMouseout(thisPoint);
+      .on('mouseout', function(d, i) {
+        let thisPoint = d3.select(this);
+        if (thisPoint.datum().selected) {
+          return false;
+        } else {
+          that.onMouseout(thisPoint);
+        }
+      })
+      .on('click', function() {
+        console.log('click on circle');
+        that.selectedPoint = d3.select(this);
+        that.onMouseClick();
       })
       .transition()
-      .style('fill-opacity',0.7)
-      .attr("fill","cyan")
+      .style('fill-opacity', 0.7)
+      .attr('fill', 'cyan')
       .duration(700)
       .ease(d3.easeQuadOut)
-      .attr('r', 7)
+      .attr('r', 7);
   }
 
   movePoint(trackers: Tracker[]) {
-    console.log(trackers[1].xCrd,trackers[1].yCrd)
+    // console.log(trackers[1].xCrd, trackers[1].yCrd);
     let that = this;
     this.trackerPoints.data(trackers)
     .transition()
-    //FIXME
     .duration(1000)
     .ease(d3.easeLinear)
-    .attr("cx",function(d) {return that.xScale(d.xCrd)})
-    .attr("cy",function(d) {return that.yScale(d.yCrd)})
+    .attr("cx", function(d) {return that.xScale(d.xCrd); })
+    .attr("cy", function(d) {return that.yScale(d.yCrd); });
   }
 
   removePoint() {
-    let trackerPoints = d3.selectAll('.trackerPoint')
-    
+    let trackerPoints = d3.selectAll('.trackerPoint');
+
     trackerPoints.transition()
     .duration(1000)
     .ease(d3.easeLinear)
     .attr('r', 0)
     .remove();
   }
-  
+
    onMouseOver(trackerPoint) {
     let that = this;
-    //append text
+    // append text
     // trackerPoint.append('text')
     // .attr('class','crdText')
     // .style('fill', 'white')
@@ -163,9 +175,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // })
     // .text(function(d){
     //   return `(${d.xCrd}, ${d.yCrd})`;
-    // })
-
-    trackerPoint.style('fill-opacity',1)
+    // })S
+    trackerPoint.style('fill-opacity', 1)
     .transition(500)
     .ease(d3.easeBounceIn)
     .attr('r', 15);
@@ -173,10 +184,43 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
    onMouseout(trackerPoint) {
     trackerPoint
-    .style('fill-opacity',0.7)
+    .style('fill-opacity', 0.7)
     .transition(1000)
     .ease(d3.easeQuadIn)
     .attr('r', 7);
    }
-  
+
+   onMouseClick() {
+     console.log(d3.event.pageX, d3.event.pageY);
+     this.selectedPoint.datum().selected = true;
+     this.onMouseOver(this.selectedPoint);
+    //  d3.select('.d3-chart').append('div')
+    //     .attr('class', 'tooltip')
+    //     .text('CNMD')
+    //     .style('border', '1px solid white')
+    //     .style('backgoundColor', 'rbga(0,0,0,0.2)')
+    //     .style('top', (d3.event.pageY + 20) + 'px')
+    //     .style('left', (d3.event.pageX) + 'px');
+
+     this.diselectOtherPoints();
+     d3.event.stopPropagation();
+   }
+
+   diselecPoint() {
+      if (this.selectedPoint) {
+        this.onMouseout(this.selectedPoint);
+        this.selectedPoint.datum().selected = false;
+        this.selectedPoint = null;
+      }
+   }
+
+   diselectOtherPoints() {
+    let otherSelectedElements = d3.selectAll('svg circle')
+    .filter(d => this.selectedPoint.datum() !== d && d.selected === true);
+    if (otherSelectedElements.data().length) {
+       otherSelectedElements.data().map(point => point.selected = false);
+       console.log(otherSelectedElements.data().length);
+       this.onMouseout(otherSelectedElements);
+    }
+   }
 }

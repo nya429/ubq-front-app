@@ -12,31 +12,31 @@ export class MapService {
 
     private trackers: Tracker[] = [
         new Tracker(1, 10, 10),
-        new Tracker(1, 50, 20),
-        new Tracker(1, 30, 30),
-        new Tracker(1, 30, 40),
-        new Tracker(1, 10, 10),
-        new Tracker(1, 50, 20),
-        new Tracker(1, 30, 30),
-        new Tracker(1, 80, 40),
-        new Tracker(1, 10, 10),
-        new Tracker(1, 40, 60),
-        new Tracker(1, 20, 37),
-        new Tracker(1, 40, 45),
+        new Tracker(2, 50, 20),
+        new Tracker(3, 30, 30),
+        new Tracker(4, 30, 40),
+        new Tracker(5, 10, 10),
+        new Tracker(6, 50, 20),
+        new Tracker(7, 30, 30),
+        new Tracker(8, 80, 40),
+        new Tracker(9, 10, 10),
+        new Tracker(10, 40, 60),
+        new Tracker(11, 20, 37),
+        new Tracker(12, 40, 45),
 
-    ]
-    
+    ];
+
     private step = [
-        [-1, -1], [0, -1],[1, -1],
-        [-1, -0],[0, 0], [1, 0],
+        [-1, -1], [0, -1], [1, -1],
+        [-1, -0], [0, 0], [1, 0],
         [-1, 1], [0, 1], [1, 1]
     ];
 
     getTrackers() {
         return this.trackers.slice();
     }
-    
-    getRecipe(id:number) {
+
+    getRecipe(id: number) {
         return this.trackers.slice()[id];
     }
 
@@ -49,9 +49,9 @@ export class MapService {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
-            console.log('interval0')
+            // console.log('DEBUG: interval0');
             this.trackerChanges.next(this.trackers.slice());
-        } ,800)
+        } ,800);
     }
 
     dummyMove(tracker: Tracker) {
