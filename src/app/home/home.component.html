@@ -2,44 +2,46 @@
   <div class="col-md-9">
     <div class="row" >
       <div class="jumbotron">
-        <h1 id="Intro">Intro</h1>
+        <h1 #intro id="intro">Intro</h1>
       </div>
     </div>
     <hr>
     <section class="row" >
       <div class="jumbotron">
-        <h1 id="Services">Services</h1>
+        <h1 #services id="services">Services</h1>
       </div>
     </section>
     <hr>
     <div class="row">
       <div class="jumbotron">
-        <h1 id="Functions">Functions</h1>
+        <h1 #functions id="functions">Functions</h1>
       </div>
     </div>
     <hr>
     <div class="row">
       <div class="jumbotron">
-        <h1 id="Contact">Contact</h1>
+        <h1 #contact id="contact">Contact</h1>
       </div>
     </div>
     
   </div>
   <div class="col-md-3">
-      <nav class="bs-docs-sidebar hidden-print hidden-sm hidden-xs fixed-top"> 
-          <ul class="nav bs-docs-sidenav"> 
-            <li class="home-nav-item"> 
-              <a ng-href="#Intro">Intro</a> 
+    <hr>
+    <hr>
+      <nav data-spy="affix" class="sidebar hidden-print hidden-sm hidden-xs affix-top"> 
+          <ul class="nav sidenav"> 
+            <li class="home-nav-item">
+              <a (click)='moveTo(intro)'>Intro</a> 
             </li> 
-            <li class="home-nav-item"> 
-              <a [routerLink]="['home']" fragment="Intro">What's included</a> 
+            <li > 
+              <a  (click)='moveTo(intro)'>What's included</a> 
               <ul class="nav"> 
-                <li class=""><a ng-href="#Services">Services</a></li> 
-                <li class=""><a ng-href="#Functions">Functions</a></li>
+                <li class="home-nav-item"><a (click)='moveTo(services)' ng-href="#services">Services</a></li> 
+                <li class="home-nav-item"><a (click)='moveTo(functions)'ng-href="#functions" >Functions</a></li>
               </ul> 
             </li> 
             <li class="home-nav-item"> 
-                <a ng-href="#Contact">Contact</a> 
+                <a (click)='moveTo(contact)' ng-href="#contact">Contact</a> 
               </li> 
           </ul> 
         </nav>

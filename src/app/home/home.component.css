@@ -1,4 +1,4 @@
-.home-nav-item a:hover::before {
+.home-nav-item a:hover::before, .home-nav-item .nav-item-selected a::before{
     content: "";
     position: absolute;
     width: 2px;
@@ -7,3 +7,28 @@
     left: -3px;
     top:-1px;
 }
+
+.nav-item-selected a::before{
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 100%;
+    background: #00a1d6;
+    left: -3px;
+    top:-1px;transition: all 0.5s ease-out;
+}
+
+.affix {
+    top: 70x;
+    width: 100%;
+  }
+  
+  .affix-top {
+    top: 70x;
+    width: 100%;
+  }
+  
+  .affix-bottom {
+    position: absolute;
+    width: 100%;  
+  }
