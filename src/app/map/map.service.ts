@@ -36,7 +36,7 @@ export class MapService {
         return this.trackers.slice();
     }
 
-    getRecipe(id: number) {
+    getTracker(id: number) {
         return this.trackers.slice()[id];
     }
 
@@ -49,15 +49,17 @@ export class MapService {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
+            console.log(this.trackers[7]);
             // console.log('DEBUG: interval0');
             this.trackerChanges.next(this.trackers.slice());
-        } ,800);
+        }, 800);
     }
 
     dummyMove(tracker: Tracker) {
         let dirc = this.step[Math.floor(Math.random() * 9)];
         tracker.xCrd = tracker.xCrd + dirc[0];
         tracker.yCrd = tracker.yCrd + dirc[1];
+        
         if(tracker.xCrd == 0) 
             tracker.xCrd  = 5;
         if(tracker.xCrd == 97) 
@@ -67,6 +69,6 @@ export class MapService {
         if(tracker.yCrd == 47 )  
             tracker.yCrd = 42;
         return tracker;
-    } 
+    }
 
 }

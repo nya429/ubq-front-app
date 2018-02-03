@@ -4,15 +4,3 @@
     height: 500px;
     border: 2px solid skyblue;
   }
-
-
- .trackerInfo{
-  position: absolute;
-  width: 120;
-  height: auto;
-  font-size: 14px;
-  text-align: center;
-  background-color: rgba(0,0,0,0.4);
-  border-radius: 5px;
-  border: 1px solid white;
-  } 

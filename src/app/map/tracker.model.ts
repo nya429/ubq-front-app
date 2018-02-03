@@ -10,4 +10,20 @@ export class Tracker {
         this.yCrd = yCrd;
         this.selected = false;
     }
+
+    setCrd(x: number, y: number) {
+        this.xCrd = x;
+        this.yCrd = y;
+    }
+
+    _getCrd() {
+        return {
+            xCrd: this.xCrd,
+            yCrd: this.yCrd
+        };
+    }
+
+    isSelected() {
+        return this.selected;
+    }
 }
