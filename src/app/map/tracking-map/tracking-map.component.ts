@@ -14,7 +14,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   @ViewChild('chart') private chartContainer: ElementRef;
   private trackers: Tracker[];
   private trackersSubscription: Subscription;
-
+  private onSelectedSubscription: Subscription;
+  private onHidedSubscription: Subscription;
 
   private base = {width: 100, height: 50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -38,19 +39,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private initiated = false;
   stoped = true;
   started = false;
+  stopping = false;
   private selectedPoint;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
     this.createBase();
-    //TODO unsubscribe
-    this.mapService.selectedTrackerIndex.subscribe(
-        id => this.onPointSelected(id)
-    ) 
-    this.mapService.hideTrackerIndex.subscribe(
-      id => this.onPointSelected(id)
-    ) 
   }
 
   ngOnDestroy() {
@@ -58,13 +53,17 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   onStop() {
+    this.stopping = true;
     this.started = false;
     this.initiated = false;
+    this.mapService.stop();
     if (this.trackersSubscription) {
       this.trackersSubscription.unsubscribe();
     }
+
+    this.onSelectedSubscription.unsubscribe();
+    this.onHidedSubscription.unsubscribe();
     this.removeTrackerInfo();
-    this.mapService.stop();
     this.removePoint();
   }
 
@@ -93,6 +92,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         }
       );
     }
+    this.onSelectedSubscription = this.mapService.selectedTrackerIndex.subscribe(
+      id => this.onPointSelected(id)
+    );
+    this.onHidedSubscription = this.mapService.hideTrackerIndex.subscribe(
+    id => this.onPointHided(id)
+  );
   }
 
   createBase() {
@@ -113,8 +118,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('class', 'trackerMapBase')
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
-              .style('stroke','cadetblue')
-              .style('stroke-width',40)
+              .style('stroke', 'cadetblue')
+              .style('stroke-width', 40)
               .attr('fill', 'white')
               .transition()
               .duration(1000)
@@ -155,7 +160,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         return false;
       }
 
-      if(!d3.select(this).datum().isActivated()) {
+      if (!d3.select(this).datum().isActivated()) {
         return false;
       }
 
@@ -166,17 +171,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.trackerPoints.attr('class', 'trackerPoint')
       .attr('cx', d => this.xScale(d.xCrd) + this.padding.left)
       .attr('cy', d => this.yScale(d.yCrd)  + this.padding.top)
-      .attr('r', 1)
       .style('cursor', 'pointer')
       .transition()
-      .style('fill-opacity', 0.7)
-      .attr('fill', 'deepskyblue')
-      .attr('stroke', 'white')
-      .style('stroke-opacity', 0.5)
-      .style('stroke-width', 2)
       .duration(700)
       .ease(d3.easeQuadOut)
-      .attr('r', 7);
+      .attr('r', d => d.isActivated() ? 7 : 0)
+      .style('fill-opacity', 0.7)
+      .style('fill', 'deepskyblue')
+      .style('stroke', 'white')
+      .style('stroke-opacity', 0.5)
+      .style('stroke-width', 2);
   }
 
   movePoint(trackers: Tracker[]) {
@@ -185,8 +189,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition()
     .duration(1000)
     .ease(d3.easeLinear)
-    .attr("cx", d => this.xScale(d.xCrd)  + this.padding.left)
-    .attr("cy", d => this.yScale(d.yCrd) + this.padding.top);
+    .attr('cx', d => this.xScale(d.xCrd)  + this.padding.left)
+    .attr('cy', d => this.yScale(d.yCrd) + this.padding.top);
 
     if (this.trackerInfoG && this.selectedPoint) {
       const x = this.selectedPoint.datum().xCrd;
@@ -201,12 +205,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   removePoint() {
-    let trackerPoints = d3.selectAll('.trackerPoint');
-
+    const trackerPoints = d3.selectAll('.trackerPoint');
     trackerPoints.transition(700)
     .ease(d3.easeLinear)
-    .attr('r', 0)
-    .remove();
+    .attr('r', 0);
+
+    setTimeout(() => {
+      trackerPoints.remove();
+      this.stopping = false;
+    }, 800);
   }
 
    onMouseOver(trackerPoint) {
@@ -230,13 +237,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    onMouseClick() {
-    //  console.log(d3.event.pageX, d3.event.pageY);
+    console.log(this.selectedPoint.datum());
      this.selectedPoint.datum().selected = true;
      this.onMouseOver(this.selectedPoint);
      this.removeTrackerInfo();
      this.diselectOtherPoints();
      this.attachRect();
-     if(d3.event) {
+     if (d3.event) {
       d3.event.stopPropagation();
      }
    }
@@ -251,17 +258,24 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    diselectOtherPoints() {
-    
-    let otherSelectedElements = d3.selectAll('svg circle')
-    .filter(d => this.selectedPoint.datum() !== d && d.selected === true);
-    if (otherSelectedElements.data().length) {
-       otherSelectedElements.data().map(point => point.selected = false);
-       this.onMouseout(otherSelectedElements);
-    }
-   }
-   
-   // TODO: 1 prevent attach on same point
 
+      const otherSelectedElements = d3.selectAll('svg circle')
+        .filter(d => this.selectedPoint.datum() !== d && d.selected === true && d.isActivated());
+      if (otherSelectedElements.data().length) {
+          otherSelectedElements.data().map(point => point.selected = false);
+          this.onMouseout(otherSelectedElements);
+      }
+   }
+
+   hidePoint(selectPoint) {
+    selectPoint.transition(1000)
+       .ease(d3.easeLinear)
+       .attr('r', 0)
+       .style('fill-opacity', 0.7)
+       .style('stroke-width', 2);
+   }
+
+   // TODO: 1 prevent attach on same point
    attachRect() {
     const that = this;
     this.trackerInfoG = this.svg.insert('g')
@@ -281,7 +295,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.trackerInfoG.insert('text')
         .attr('class', 'trackerInfoText')
         .text(d => `ID: ${d.id} (${d.xCrd}, ${d.yCrd})`)
-        .style("text-anchor", "middle")
+        .style('text-anchor', 'middle')
         .attr('fill', 'white')
         .attr('font-weight', 'bolder')
         .attr('x', d => this.xScale(d.xCrd) + this.padding.left)
@@ -294,43 +308,41 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    onPointSelected(id: number) {
-      if(!this.initiated) {
-        return false;
+      if (!this.initiated) {
+          return false;
       }
-      if(this.selectedPoint && !this.selectedPoint.datum().isActivated()) {
-        return false;
+
+      const point = this.trackerPoints.filter(
+         d => d.id === id && d.isActivated()
+      );
+
+      if (point.empty()) {
+          return false;
+      } else {
+        this.selectedPoint = point;
+        this.onMouseClick();
       }
-      this.selectedPoint = this.trackerPoints.filter(
-        d => d.id === id
-      )
-      this.onMouseClick();
    }
 
    onPointHided(id: number) {
-    if(!this.initiated) {
-      return false;
-    }
-     const point = this.trackerPoints
-    .filter(d => !d.activated)
+      if (!this.initiated) {
+          return false;
+      }
 
-     if(point.empty()) {
-       return;
-     }
-     console.log(this.trackerInfoG );
+      const point = this.trackerPoints.filter(
+          d => d.id === id
+      );
 
-    if (this.trackerInfoG && this.trackerInfoG.datum().id === point.data()[0].id) {
-      
-      this.selectedPoint = null;
-      this.removeTrackerInfo();
-    }
+      if (this.trackerInfoG && this.trackerInfoG.datum().id === id) {
+          this.selectedPoint = null;
+          this.removeTrackerInfo();
+      }
 
-     point.transition(700)
-       .ease(d3.easeLinear)
-       .attr('r', 0);
+      point.datum().isActivated() ? this.onMouseout(point) : this.hidePoint(point);
  }
 
   refreshTrackers() {
-     this.trackerPoints.data(this.trackers)
+     this.trackerPoints.data(this.trackers);
     //  const point = this.trackerPoints
     // .filter(d => !d.activated)
 
@@ -340,7 +352,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     //  console.log(this.trackerInfoG );
 
     // if (this.trackerInfoG && this.trackerInfoG.datum().id === point.data()[0].id) {
-      
+
     //   this.selectedPoint = null;
     //   this.removeTrackerInfo();
     // }
@@ -349,5 +361,5 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     //    .ease(d3.easeLinear)
     //    .attr('r', 0);
 
-  } 
-} 
+  }
+}

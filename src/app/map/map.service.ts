@@ -50,25 +50,29 @@ export class MapService {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
-            //console.log(this.trackers[7]);
+            // console.log(this.trackers[7]);
             // console.log('DEBUG: interval0');
             this.trackerChanges.next(this.trackers.slice());
         }, 800);
     }
 
     dummyMove(tracker: Tracker) {
-        let dirc = this.step[Math.floor(Math.random() * 9)];
+        const dirc = this.step[Math.floor(Math.random() * 9)];
         tracker.xCrd = tracker.xCrd + dirc[0];
         tracker.yCrd = tracker.yCrd + dirc[1];
-        
-        if(tracker.xCrd == 0) 
+
+        if (tracker.xCrd === 0) {
             tracker.xCrd  = 5;
-        if(tracker.xCrd == 100) 
+        }
+        if (tracker.xCrd === 100) {
             tracker.xCrd = 95;
-        if(tracker.yCrd == 0)  
+        }
+        if (tracker.yCrd === 0) {
             tracker.yCrd = 5 ;
-        if(tracker.yCrd == 50 )  
+        }
+        if (tracker.yCrd === 50 ) {
             tracker.yCrd = 45;
+        }
         return tracker;
     }
 
@@ -77,28 +81,18 @@ export class MapService {
     }
 
     hideTracker(id: number) {
-        this.selectedTrackerIndex.emit(id);
-        // const newTrackers = this.trackers.filter(
-        //     tracker => {
-        //         console.log(tracker.id)
-        //         return tracker.id !== id;
-        //     }
-        // )
-        // console.log(newTrackers);
-        // this.trackers = newTrackers;
-        // this.trackerChanges.next(this.trackers.slice());
-
-
-        // const newTrackers = this.trackers.map(
-        //     tracker => {
-        //         if(tracker.id === id) {
-        //             tracker.activated = false;
-        //         }
-        //         return tracker;
-        //     }
-        // )
-        // this.trackers = newTrackers;
-        // this.trackerChanges.next(this.trackers.slice());
+        const newTrackers = this.trackers.map(
+            tracker => {
+                if (tracker.id === id) {
+                    tracker.activated = !tracker.isActivated();
+                    console.log('this point activated?' , tracker.isActivated())
+                }
+                return tracker;
+            }
+        );
+        this.trackers = newTrackers;
+        this.trackerChanges.next(this.trackers.slice());
+        this.hideTrackerIndex.emit(id);
         // console.log(this.trackers)
     }
 }
