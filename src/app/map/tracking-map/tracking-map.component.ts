@@ -23,7 +23,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private chart: any;
   private svg: any;
   private trackerPoints: any;
-
+  private trackerInfoG: any;
   private width: number;
   private height: number;
   private xScale: any;
@@ -44,6 +44,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createBase();
+    //TODO unsubscribe
+    this.mapService.selectedTrackerIndex.subscribe(
+        id => this.onPointSelected(id)
+    ) 
+    this.mapService.hideTrackerIndex.subscribe(
+      id => this.onPointSelected(id)
+    ) 
   }
 
   ngOnDestroy() {
@@ -68,9 +75,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
-      setInterval(() => {
-        console.log('this]', this.trackers[7]);
-      }, 800);
+      // setInterval(() => {
+      //   //console.log('DEBUG this', this.trackers[7]);
+      // }, 800);
     }
 
     if (this.started) {
@@ -80,7 +87,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.started = true;
       this.trackersSubscription = this.mapService.trackerChanges.subscribe(
         (trackers: Tracker[]) => {
-          this.trackers = trackers;       // FIXME;
+          this.trackers = trackers;
+          this.refreshTrackers();       // FIXME;
           this.movePoint(this.trackers);
         }
       );
@@ -105,6 +113,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('class', 'trackerMapBase')
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
+              .style('stroke','cadetblue')
+              .style('stroke-width',40)
               .attr('fill', 'white')
               .transition()
               .duration(1000)
@@ -144,18 +154,23 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       if (that.stoped) {
         return false;
       }
+
+      if(!d3.select(this).datum().isActivated()) {
+        return false;
+      }
+
       that.selectedPoint = d3.select(this);
       that.onMouseClick();
     });
 
     this.trackerPoints.attr('class', 'trackerPoint')
-      .attr('cx', d => this.xScale(d.xCrd))
-      .attr('cy', d => this.yScale(d.yCrd))
+      .attr('cx', d => this.xScale(d.xCrd) + this.padding.left)
+      .attr('cy', d => this.yScale(d.yCrd)  + this.padding.top)
       .attr('r', 1)
       .style('cursor', 'pointer')
       .transition()
       .style('fill-opacity', 0.7)
-      .attr('fill', 'cyan')
+      .attr('fill', 'deepskyblue')
       .attr('stroke', 'white')
       .style('stroke-opacity', 0.5)
       .style('stroke-width', 2)
@@ -170,14 +185,14 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition()
     .duration(1000)
     .ease(d3.easeLinear)
-    .attr("cx", d => this.xScale(d.xCrd))
-    .attr("cy", d => this.yScale(d.yCrd));
+    .attr("cx", d => this.xScale(d.xCrd)  + this.padding.left)
+    .attr("cy", d => this.yScale(d.yCrd) + this.padding.top);
 
-    if (!this.svg.select('.trackerInfo').empty() && this.selectedPoint) {
+    if (this.trackerInfoG && this.selectedPoint) {
       const x = this.selectedPoint.datum().xCrd;
       const y = this.selectedPoint.datum().yCrd;
-      this.svg.select('.trackerInfoText').text(d => `ID: ${d.id} (${x}, ${y})`);
-      this.svg.select('.trackerInfo')
+      this.trackerInfoG.select('.trackerInfoText').text(d => `ID: ${d.id} (${x}, ${y})`);
+      this.trackerInfoG
       // .datum(this.selectedPoint.datum())
        .transition()
          .duration(1000)
@@ -221,7 +236,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
      this.removeTrackerInfo();
      this.diselectOtherPoints();
      this.attachRect();
-     d3.event.stopPropagation();
+     if(d3.event) {
+      d3.event.stopPropagation();
+     }
    }
 
    diselecPoint() {
@@ -247,32 +264,90 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
    attachRect() {
     const that = this;
- console.log(this.selectedPoint.datum());
-    const rectGroup = this.svg.insert('g')
+    this.trackerInfoG = this.svg.insert('g')
         .attr('class', 'trackerInfo')
         .datum(JSON.parse(JSON.stringify(this.selectedPoint.datum())));
 
-    rectGroup.insert('rect')
+    this.trackerInfoG.insert('rect')
         .attr('class', 'trackerInfoRect')
         .style('fill', 'dodgerblue')
-        .style('stroke', 'white')
         .style('fill-opacity', 0.4)
         .attr('width', this.trackerInfoWidth)
         .attr('height', this.trackerInfoHeight)
-        .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2)
-        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10)
+        .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2 + this.padding.left)
+        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
         .attr('rx', 5)
         .attr('ry', 5);
-    rectGroup.insert('text')
+    this.trackerInfoG.insert('text')
         .attr('class', 'trackerInfoText')
         .text(d => `ID: ${d.id} (${d.xCrd}, ${d.yCrd})`)
         .style("text-anchor", "middle")
         .attr('fill', 'white')
-        .attr('x', d => this.xScale(d.xCrd))
-        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight);
-   }
+        .attr('font-weight', 'bolder')
+        .attr('x', d => this.xScale(d.xCrd) + this.padding.left)
+        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight + this.padding.top);
+      }
 
    removeTrackerInfo() {
       this.svg.select('.trackerInfo').remove();
+      this.trackerInfoG = null;
    }
-}
+
+   onPointSelected(id: number) {
+      if(!this.initiated) {
+        return false;
+      }
+      if(this.selectedPoint && !this.selectedPoint.datum().isActivated()) {
+        return false;
+      }
+      this.selectedPoint = this.trackerPoints.filter(
+        d => d.id === id
+      )
+      this.onMouseClick();
+   }
+
+   onPointHided(id: number) {
+    if(!this.initiated) {
+      return false;
+    }
+     const point = this.trackerPoints
+    .filter(d => !d.activated)
+
+     if(point.empty()) {
+       return;
+     }
+     console.log(this.trackerInfoG );
+
+    if (this.trackerInfoG && this.trackerInfoG.datum().id === point.data()[0].id) {
+      
+      this.selectedPoint = null;
+      this.removeTrackerInfo();
+    }
+
+     point.transition(700)
+       .ease(d3.easeLinear)
+       .attr('r', 0);
+ }
+
+  refreshTrackers() {
+     this.trackerPoints.data(this.trackers)
+    //  const point = this.trackerPoints
+    // .filter(d => !d.activated)
+
+    //  if(point.empty()) {
+    //    return;
+    //  }
+    //  console.log(this.trackerInfoG );
+
+    // if (this.trackerInfoG && this.trackerInfoG.datum().id === point.data()[0].id) {
+      
+    //   this.selectedPoint = null;
+    //   this.removeTrackerInfo();
+    // }
+
+    //  point.transition(700)
+    //    .ease(d3.easeLinear)
+    //    .attr('r', 0);
+
+  } 
+} 

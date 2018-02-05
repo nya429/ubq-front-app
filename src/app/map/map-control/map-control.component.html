@@ -1,0 +1,23 @@
+<div class="panel panel-default">
+
+  <!-- Default panel contents -->
+  <div class="panel-heading">Trackers  
+    <a><span class="glyphicon glyphicon-refresh"></span></a>
+  </div>
+  <div class="panel-body">
+    <p>...</p>
+  </div>
+  <ul class="list-group" >
+    <!-- <li (click)='onSelect(i)' class="list-group-item tracker" *ngFor='let tracker of trackers;let i = index'>
+      <i class="activated-indicator-circle"> </i>
+      <span class="tracker-info">{{tracker.id}}</span>
+      <a><span (click)='onRemove(i)' class="glyphicon glyphicon-remove"></span></a>
+      <a><span class="glyphicon glyphicon-pencil"></span> </a>
+    </li> -->
+    <app-map-control-item
+    *ngFor='let tracker of trackers;let i = index'
+    [tracker]="tracker"
+    [index] = "i"
+    ></app-map-control-item>
+  </ul>
+</div>

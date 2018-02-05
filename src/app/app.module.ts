@@ -15,6 +15,9 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { AboutComponent } from './about/about.component';
 import { MapDemoComponent } from './map/map-demo/map-demo.component';
 import { TrackingMapComponent } from './map/tracking-map/tracking-map.component';
+import { MapControlComponent } from './map/map-control/map-control.component';
+import { MapControlItemComponent } from './map/map-control/map-control-item/map-control-item.component';
+import { MapControlPenalComponent } from './map/map-control-penal/map-control-penal.component';
 
 
 
@@ -30,7 +33,10 @@ import { TrackingMapComponent } from './map/tracking-map/tracking-map.component'
     PageNotFoundComponent,
     AboutComponent,
     MapDemoComponent,
-    TrackingMapComponent
+    TrackingMapComponent,
+    MapControlComponent,
+    MapControlItemComponent,
+    MapControlPenalComponent
   ],
   imports: [
     AppRoutingModule,

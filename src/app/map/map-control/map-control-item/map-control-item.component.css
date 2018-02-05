@@ -1,0 +1,40 @@
+.tracker-item {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    line-height: 26px;
+    padding: 1.22rem;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+}
+
+
+
+.tracker-item:hover {
+    display: flex;
+}
+
+li.tracker-item:hover {
+    background-color: aliceblue;
+ }
+
+.tracker-info span {
+    display:-moz-inline-box;
+    display:inline-block;
+    width: 30px; 
+}
+
+.tracker-indicator	{
+    margin-right:5px;
+    content:'';
+    width: 26px;
+    height: 26px;
+    color: red;
+    -moz-border-radius: 13px;
+    -webkit-border-radius: 13px;
+    border-radius: 13px;
+    font-size: 26px;
+}
+
+

@@ -8,19 +8,20 @@ import { Tracker } from './tracker.model';
 export class MapService {
     trackerChanges = new Subject<Tracker[]>();
     interval: any;
-
+    selectedTrackerIndex = new EventEmitter<number>();
+    hideTrackerIndex = new EventEmitter<number>();
 
     private trackers: Tracker[] = [
-        new Tracker(1, 10, 10),
-        new Tracker(2, 50, 20),
-        new Tracker(3, 30, 30),
-        new Tracker(4, 30, 40),
+        new Tracker(1, 1, 1),
+        new Tracker(2, 1, 49),
+        new Tracker(3, 99, 1),
+        new Tracker(4, 99, 49),
         new Tracker(5, 10, 10),
         new Tracker(6, 50, 20),
         new Tracker(7, 30, 30),
         new Tracker(8, 80, 40),
         new Tracker(9, 10, 10),
-        new Tracker(10, 40, 60),
+        new Tracker(10, 42, 34),
         new Tracker(11, 20, 37),
         new Tracker(12, 40, 45),
 
@@ -49,7 +50,7 @@ export class MapService {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
-            console.log(this.trackers[7]);
+            //console.log(this.trackers[7]);
             // console.log('DEBUG: interval0');
             this.trackerChanges.next(this.trackers.slice());
         }, 800);
@@ -62,13 +63,42 @@ export class MapService {
         
         if(tracker.xCrd == 0) 
             tracker.xCrd  = 5;
-        if(tracker.xCrd == 97) 
-            tracker.xCrd = 92;
+        if(tracker.xCrd == 100) 
+            tracker.xCrd = 95;
         if(tracker.yCrd == 0)  
             tracker.yCrd = 5 ;
-        if(tracker.yCrd == 47 )  
-            tracker.yCrd = 42;
+        if(tracker.yCrd == 50 )  
+            tracker.yCrd = 45;
         return tracker;
     }
 
+　　onSelectedTracker(id: number) {
+        this.selectedTrackerIndex.emit(id);
+    }
+
+    hideTracker(id: number) {
+        this.selectedTrackerIndex.emit(id);
+        // const newTrackers = this.trackers.filter(
+        //     tracker => {
+        //         console.log(tracker.id)
+        //         return tracker.id !== id;
+        //     }
+        // )
+        // console.log(newTrackers);
+        // this.trackers = newTrackers;
+        // this.trackerChanges.next(this.trackers.slice());
+
+
+        // const newTrackers = this.trackers.map(
+        //     tracker => {
+        //         if(tracker.id === id) {
+        //             tracker.activated = false;
+        //         }
+        //         return tracker;
+        //     }
+        // )
+        // this.trackers = newTrackers;
+        // this.trackerChanges.next(this.trackers.slice());
+        // console.log(this.trackers)
+    }
 }
