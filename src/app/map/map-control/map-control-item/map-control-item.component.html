@@ -1,4 +1,5 @@
-<a (click)='onSelect()'
+<a [ngClass] ="{'isSelected':isSelected}"
+   (click)='onSelect()'
    style="cursor: pointer;"
    class="tracker-item list-group-item clearfix">
   <div class="pull-left">
@@ -7,11 +8,13 @@
       <span class="tracker-id">{{tracker.id}}</span>
       <span class='tracker-alias'*ngIf="!editMode"> #{{tracker.alias}}</span>
       <input class='tracker-alias-input'*ngIf="editMode" type='text' #alias='ngModel' ngModel>
-      <span class='tracker-color'> color</span>
+      <span class='tracker-color'> color      |</span>
     </div>
   </div>
-  <div class="tracker-actions pull-right">
-    <a><span (click)='onRemove($event)' class="glyphicon glyphicon-eye-close"></span></a>
+  <div class="tracker-actions">
+    <a><span (click)='onHide($event)' 
+    [ngClass]="{'glyphicon-eye-close': hidden, 'glyphicon-eye-open': !hidden}" 
+     class="glyphicon"></span></a>
     <a><span (click)='onEdit($event)'class="glyphicon glyphicon-pencil"></span> </a>
   </div>
 </a>

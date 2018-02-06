@@ -17,14 +17,4 @@ export class MapControlComponent implements OnInit {
   ngOnInit() {
     this.trackers = this.mapService.getTrackers();
   }
-
-  // onSelect(index: number) {
-  //   const id = this.trackers[index].id;
-  //   this.mapService.onSelectedTracker(id);
-  // }
-  
-  // onRemove(index: number) {
-  //   const id = this.trackers[index].id;
-  //   this.mapService.removeTracker(id);
-  // }
 }

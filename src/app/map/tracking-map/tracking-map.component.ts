@@ -119,7 +119,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
               .style('stroke', 'cadetblue')
-              .style('stroke-width', 40)
+              .style('stroke-width', 20)
               .attr('fill', 'white')
               .transition()
               .duration(1000)
@@ -239,6 +239,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    onMouseClick() {
     console.log(this.selectedPoint.datum());
      this.selectedPoint.datum().selected = true;
+     this.mapService.onTrackerHasSelected(this.selectedPoint.datum().id);
      this.onMouseOver(this.selectedPoint);
      this.removeTrackerInfo();
      this.diselectOtherPoints();

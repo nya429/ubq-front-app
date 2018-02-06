@@ -1,4 +1,6 @@
-
+.map-body {
+  background: BlanchedAlmond;
+}
 .d3-chart {
     width: 100%;
     height: 500px;

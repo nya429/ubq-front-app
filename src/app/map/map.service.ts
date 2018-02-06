@@ -9,6 +9,7 @@ export class MapService {
     trackerChanges = new Subject<Tracker[]>();
     interval: any;
     selectedTrackerIndex = new EventEmitter<number>();
+    hasSelectedTracker = new Subject<number>();
     hideTrackerIndex = new EventEmitter<number>();
 
     private trackers: Tracker[] = [
@@ -80,12 +81,16 @@ export class MapService {
         this.selectedTrackerIndex.emit(id);
     }
 
+    onTrackerHasSelected(id: number) {
+        this.hasSelectedTracker.next(id);
+    }
+
     hideTracker(id: number) {
         const newTrackers = this.trackers.map(
             tracker => {
                 if (tracker.id === id) {
                     tracker.activated = !tracker.isActivated();
-                    console.log('this point activated?' , tracker.isActivated())
+                    console.log('this point activated?' , tracker.isActivated());
                 }
                 return tracker;
             }

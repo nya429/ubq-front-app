@@ -12,27 +12,33 @@ export class MapControlItemComponent implements OnInit {
   @Input() tracker: Tracker;
   @Input() index: number;
   private id;
-  editMode: boolean = false;
-  selected: boolean = false;
+  hidden = false;
+  editMode = false;
+  isSelected = false;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
-    this.id = this.tracker.id
+    this.id = this.tracker.id;
+    this.mapService.hasSelectedTracker.subscribe(
+      (id: number) => {
+        this.isSelected = id === this.id ? true : false;
+      }
+    );
   }
 
   onSelect() {
     this.mapService.onSelectedTracker(this.id);
   }
-  
-  onRemove(event) {
+
+  onHide(event) {
     this.mapService.hideTracker(this.id);
+    this.hidden = !this.hidden;
     event.stopPropagation();
   }
 
   onEdit(event) {
     this.editMode = !this.editMode;
-    
     event.stopPropagation();
   }
 }
