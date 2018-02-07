@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs/Subscription';
 import * as d3 from 'd3';
 
 import { MapService } from './../map.service';
-import { Tracker } from './../tracker.model';
+import { Tracker } from './../../shared/tracker.model';
 
 @Component({
   selector: 'app-tracking-map',
@@ -60,9 +60,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (this.trackersSubscription) {
       this.trackersSubscription.unsubscribe();
     }
+    if (this.onSelectedSubscription) {
+      this.onSelectedSubscription.unsubscribe();
+    }
+    if (this.onHidedSubscription) {
+      this.onHidedSubscription.unsubscribe();
+    }
 
-    this.onSelectedSubscription.unsubscribe();
-    this.onHidedSubscription.unsubscribe();
     this.removeTrackerInfo();
     this.removePoint();
   }

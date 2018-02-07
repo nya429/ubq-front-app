@@ -1,7 +1,7 @@
 import { MapService } from './../map.service';
 import { Component, OnInit } from '@angular/core';
 
-import { Tracker } from '../tracker.model';
+import { Tracker } from './../../shared/tracker.model';
 import { Output } from '@angular/core/src/metadata/directives';
 
 @Component({

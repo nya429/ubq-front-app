@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./map-control-penal.component.css']
 })
 export class MapControlPenalComponent implements OnInit {
-  
+
   constructor() { }
 
   ngOnInit() {

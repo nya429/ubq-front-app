@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs/Subject';
 import { EventEmitter, Injectable } from '@angular/core';
 
-import { Tracker } from './tracker.model';
+import { Tracker } from '../shared/tracker.model';
 // import { setInterval } from 'timers';
 // import { clearInterval } from 'timers';
 
