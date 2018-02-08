@@ -35,7 +35,7 @@ export class MapDemoComponent implements OnInit {
     const rectHeight = 25;
     const padding = {left: 30, right: 30, top: 20, bottom: 20};
     const rectPadding = 20;
-    const dataset = [ 10, 20, 30, 40, 50,30,20,40,50,33, 24, 12, 5];
+    const dataset = [ 10, 20, 30, 40, 50, 30, 20, 40, 50, 33, 24, 12, 5];
 
     const linear = d3.scaleLinear()
                       .domain([0, d3.max(dataset)])

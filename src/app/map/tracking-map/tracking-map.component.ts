@@ -11,7 +11,7 @@ import { Tracker } from './../../shared/tracker.model';
   styleUrls: ['./tracking-map.component.css']
 })
 export class TrackingMapComponent implements OnInit, OnDestroy {
-  @ViewChild('chart') private chartContainer: ElementRef;
+  @ViewChild('trackingMap') private chartContainer: ElementRef;
   private trackers: Tracker[];
   private trackersSubscription: Subscription;
   private onSelectedSubscription: Subscription;
@@ -124,8 +124,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('class', 'trackerMapBase')
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
-              .style('stroke', 'cadetblue')
-              .style('stroke-width', 5)
+              // .style('stroke', 'cadetblue')
+              // .style('stroke-width', 5)
               .attr('fill', 'white')
               .transition()
               .duration(1000)

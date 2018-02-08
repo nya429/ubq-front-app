@@ -7,15 +7,15 @@ import { Tracker } from '../shared/tracker.model';
 
 export class MapService {
     constructor() {
-        setInterval(
-            () => {
-                console.log('this.mapInitiated', this.mapInitiated);
-                console.log('this.mapStarted', this.mapStarted);
-                console.log('this.mapStopping', this.mapStopping);
-                console.log('this.mapStopped', this.mapStopped);
-                console.log(this.trackers[0].xCrd);
-            }, 2000
-        );
+        // setInterval(
+        //     () => {
+        //         console.log('this.mapInitiated', this.mapInitiated);
+        //         console.log('this.mapStarted', this.mapStarted);
+        //         console.log('this.mapStopping', this.mapStopping);
+        //         console.log('this.mapStopped', this.mapStopped);
+        //         console.log(this.trackers[0].xCrd);
+        //     }, 2000
+        // );
     }
     trackerChanges = new Subject<Tracker[]>();
     serviceInterval: any;
