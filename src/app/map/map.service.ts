@@ -7,7 +7,20 @@ import { Tracker } from '../shared/tracker.model';
 
 export class MapService {
     trackerChanges = new Subject<Tracker[]>();
-    interval: any;
+    serviceInterval: any;
+
+    mapInitiated = false;
+    mapStarted = false;
+    mapStopping = false;
+    mapStopped = true;
+
+    started = new EventEmitter<boolean>();
+    stopped = new EventEmitter<boolean>();
+    stopping = new EventEmitter<boolean>();
+    intiated = new EventEmitter<boolean>();
+    onStarted = new EventEmitter<boolean>();
+    onStopped = new EventEmitter<boolean>();
+
     selectedTrackerIndex = new EventEmitter<number>();
     hasSelectedTracker = new Subject<number>();
     hideTrackerIndex = new EventEmitter<number>();
@@ -25,7 +38,6 @@ export class MapService {
         new Tracker(10, 42, 34),
         new Tracker(11, 20, 37),
         new Tracker(12, 40, 45),
-
     ];
 
     private step = [
@@ -33,6 +45,15 @@ export class MapService {
         [-1, -0], [0, 0], [1, 0],
         [-1, 1], [0, 1], [1, 1]
     ];
+
+    start() {
+        this.onStarted.emit(this.mapStarted);
+    }
+
+    stop() {
+        this.onStopped.emit(this.mapStopped);
+        clearInterval(this.serviceInterval);
+    }
 
     getTrackers() {
         return this.trackers.slice();
@@ -42,12 +63,8 @@ export class MapService {
         return this.trackers.slice()[id];
     }
 
-    stop() {
-        clearInterval(this.interval);
-    }
-
     move() {
-        this.interval = setInterval(() => {
+        this.serviceInterval = setInterval(() => {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
@@ -91,6 +108,7 @@ export class MapService {
                 if (tracker.id === id) {
                     tracker.activated = !tracker.isActivated();
                     console.log('this point activated?' , tracker.isActivated());
+                    console.log('this point selected?' , tracker.selected);
                 }
                 return tracker;
             }

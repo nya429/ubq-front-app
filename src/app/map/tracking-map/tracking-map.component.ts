@@ -16,6 +16,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private trackersSubscription: Subscription;
   private onSelectedSubscription: Subscription;
   private onHidedSubscription: Subscription;
+  private onStartSubscription: Subscription;
+  private onStopSubscription: Subscription;
 
   private base = {width: 100, height: 50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -35,28 +37,29 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private trackerInfoWidth = 100;
   private trackerInfoHeight = 30;
 
-
-  private initiated = false;
-  stoped = true;
-  started = false;
-  stopping = false;
   private selectedPoint;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
     this.createBase();
+    this.onStartSubscription = this.mapService.onStarted.subscribe(() => this.onStart());
+    this.onStopSubscription = this.mapService.onStopped.subscribe(() => this.onStop());
   }
 
   ngOnDestroy() {
     this.onStop();
+    this.onStartSubscription.unsubscribe();
+    this.onStopSubscription.unsubscribe();
   }
 
   onStop() {
-    this.stopping = true;
-    this.started = false;
-    this.initiated = false;
-    this.mapService.stop();
+    this.mapService.mapStopping = true;
+    this.mapService.stopping.emit(true);
+    this.mapService.mapStarted = false;
+    this.mapService.started.emit(false);
+    this.mapService.mapInitiated = false;
+    this.mapService.intiated.emit(false);
     if (this.trackersSubscription) {
       this.trackersSubscription.unsubscribe();
     }
@@ -72,9 +75,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   onStart() {
-    this.stoped = false;
-    if (!this.initiated) {
-      this.initiated = true;
+    this.mapService.mapStopped = false;
+    this.mapService.stopped.emit(false);
+    if (!this.mapService.mapInitiated) {
+      this.mapService.mapInitiated = true;
+      this.mapService.intiated.emit(true);
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
@@ -83,11 +88,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       // }, 800);
     }
 
-    if (this.started) {
-      this.started = false;
+    if (this.mapService.mapStarted) {
+      this.mapService.mapStarted = false;
+      this.mapService.started.emit(false);
       this.trackersSubscription.unsubscribe();
     } else {
-      this.started = true;
+      this.mapService.mapStarted = true;
+      this.mapService.started.emit(true);
       this.trackersSubscription = this.mapService.trackerChanges.subscribe(
         (trackers: Tracker[]) => {
           this.trackers = trackers;
@@ -141,14 +148,14 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .enter().append('circle');
 
     this.trackerPoints.on('mouseover', function(d, i) {
-        if (that.stoped) {
+        if (that.mapService.mapStopped) {
           return false;
         }
        const thisPoint = d3.select(this);
        that.onMouseOver(thisPoint);
     })
     .on('mouseout', function(d, i) {
-      if (that.stoped) {
+      if (that.mapService.mapStopped) {
         return false;
       }
 
@@ -160,7 +167,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       }
     })
     .on('click', function() {
-      if (that.stoped) {
+      if (that.mapService.mapStopped) {
         return false;
       }
 
@@ -214,9 +221,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .ease(d3.easeLinear)
     .attr('r', 0);
 
+    // TODO: replace this with Async state condition
     setTimeout(() => {
       trackerPoints.remove();
-      this.stopping = false;
+      this.mapService.mapStopping = false;
+      this.mapService.stopping.emit(false);
     }, 800);
   }
 
@@ -245,7 +254,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
      this.selectedPoint.datum().selected = true;
      this.mapService.onTrackerHasSelected(this.selectedPoint.datum().id);
      this.onMouseOver(this.selectedPoint);
-     this.removeTrackerInfo();
+      // TODO: delete this condition, when deep copy complete
+     if (this.trackerInfoG && this.selectedPoint && this.trackerInfoG.datum().id !== this.selectedPoint.datum().id) {
+        this.removeTrackerInfo();
+     }
+
      this.diselectOtherPoints();
      this.attachRect();
      if (d3.event) {
@@ -256,14 +269,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    diselecPoint() {
       if (this.selectedPoint) {
         this.removeTrackerInfo();
-        this.onMouseout(this.selectedPoint);
+        if (this.selectedPoint.datum().isActivated()) {
+          this.onMouseout(this.selectedPoint);
+        }
         this.selectedPoint.datum().selected = false;
         this.selectedPoint = null;
+        this.mapService.onTrackerHasSelected(null);
       }
    }
 
    diselectOtherPoints() {
-
       const otherSelectedElements = d3.selectAll('svg circle')
         .filter(d => this.selectedPoint.datum() !== d && d.selected === true && d.isActivated());
       if (otherSelectedElements.data().length) {
@@ -280,8 +295,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
        .style('stroke-width', 2);
    }
 
-   // TODO: 1 prevent attach on same point
    attachRect() {
+    // TODO: delete this condition, when deep copy complete
+    if (this.trackerInfoG) {
+      return false;
+    }
+
     const that = this;
     this.trackerInfoG = this.svg.insert('g')
         .attr('class', 'trackerInfo')
@@ -313,7 +332,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    onPointSelected(id: number) {
-      if (!this.initiated) {
+      if (!this.mapService.mapInitiated) {
           return false;
       }
 
@@ -330,7 +349,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    onPointHided(id: number) {
-      if (!this.initiated) {
+      if (!this.mapService.mapInitiated) {
           return false;
       }
 
@@ -339,11 +358,19 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       );
 
       if (this.trackerInfoG && this.trackerInfoG.datum().id === id) {
-          this.selectedPoint = null;
+          // this.selectedPoint = null;
           this.removeTrackerInfo();
       }
-
-      point.datum().isActivated() ? this.onMouseout(point) : this.hidePoint(point);
+      // console.log('isActivated', this.selectedPoint.datum().isActivated());
+      // console.log('isSelected', this.selectedPoint.datum().selected);
+      if (!point.datum().isActivated()) {
+         this.hidePoint(point);
+      } else if (this.selectedPoint && point.datum().id === this.selectedPoint.datum().id) {
+         this.onMouseClick();
+      } else {
+        this.onMouseout(point);
+      }
+      // point.datum().isActivated() ? this.onMouseout(point) : this.hidePoint(point);
  }
 
   refreshTrackers() {

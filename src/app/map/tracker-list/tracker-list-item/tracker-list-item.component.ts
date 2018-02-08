@@ -5,11 +5,11 @@ import { Tracker } from './../../../shared/tracker.model';
 import { MapService } from '../../map.service';
 
 @Component({
-  selector: 'app-map-control-item',
-  templateUrl: './map-control-item.component.html',
-  styleUrls: ['./map-control-item.component.css']
+  selector: 'app-tracker-list-item',
+  templateUrl: './tracker-list-item.component.html',
+  styleUrls: ['./tracker-list-item.component.css']
 })
-export class MapControlItemComponent implements OnInit, OnDestroy {
+export class TrackerListItemComponent implements OnInit, OnDestroy {
   @Input() tracker: Tracker;
   @Input() index: number;
   private id;

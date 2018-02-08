@@ -5,11 +5,11 @@ import { Tracker } from './../../shared/tracker.model';
 import { Output } from '@angular/core/src/metadata/directives';
 
 @Component({
-  selector: 'app-map-control',
-  templateUrl: './map-control.component.html',
-  styleUrls: ['./map-control.component.css']
+  selector: 'app-tracker-list',
+  templateUrl: './tracker-list.component.html',
+  styleUrls: ['./tracker-list.component.css']
 })
-export class MapControlComponent implements OnInit {
+export class TrackerListComponent implements OnInit {
   trackers: Tracker[];
 
   constructor(private mapService: MapService) { }

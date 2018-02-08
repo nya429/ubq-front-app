@@ -9,8 +9,8 @@ import { MapComponent } from './map.component';
 import { MapMenuComponent } from './map-menu/map-menu.component';
 import { MapDemoComponent } from './map-demo/map-demo.component';
 import { TrackingMapComponent } from './tracking-map/tracking-map.component';
-import { MapControlComponent } from './map-control/map-control.component';
-import { MapControlItemComponent } from './map-control/map-control-item/map-control-item.component';
+import { TrackerListComponent } from './tracker-list/tracker-list.component';
+import { TrackerListItemComponent } from './tracker-list/tracker-list-item/tracker-list-item.component';
 import { MapControlPenalComponent } from './map-control-penal/map-control-penal.component';
 
 
@@ -21,8 +21,8 @@ import { MapControlPenalComponent } from './map-control-penal/map-control-penal.
     MapMenuComponent,
     MapDemoComponent,
     TrackingMapComponent,
-    MapControlComponent,
-    MapControlItemComponent,
+    TrackerListComponent,
+    TrackerListItemComponent,
     MapControlPenalComponent
   ],
   imports: [

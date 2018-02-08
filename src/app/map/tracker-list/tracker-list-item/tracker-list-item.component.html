@@ -1,9 +1,7 @@
 <a [ngClass] ="{'isSelected':isSelected}"
-   (click)='onSelect()'
-   style="cursor: pointer;"
    class="tracker-item list-group-item clearfix">
   <div class="pull-left">
-    <div class="tracker-info">
+    <div class="tracker-info" (click)='onSelect()' style="cursor: pointer;">
       <span class="tracker-indicator"> </span>
       <span class="tracker-id">{{tracker.id}}</span>
       <span class='tracker-alias'*ngIf="!editMode"> #{{tracker.alias}}</span>
