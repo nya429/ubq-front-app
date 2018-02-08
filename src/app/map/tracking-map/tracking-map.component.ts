@@ -54,14 +54,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   onStop() {
-    this.mapService.mapStopping = true;
-    this.mapService.stopping.emit(true);
-    this.mapService.mapStarted = false;
-    this.mapService.started.emit(false);
-    this.mapService.mapStopped = true;
-    this.mapService.stopped.emit(true);
-    this.mapService.mapInitiated = false;
-    this.mapService.intiated.emit(false);
     this.mapService.stopService();
     if (this.trackersSubscription) {
       this.trackersSubscription.unsubscribe();
@@ -133,7 +125,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight)
               .style('stroke', 'cadetblue')
-              .style('stroke-width', 20)
+              .style('stroke-width', 5)
               .attr('fill', 'white')
               .transition()
               .duration(1000)
