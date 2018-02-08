@@ -6,6 +6,17 @@ import { Tracker } from '../shared/tracker.model';
 // import { clearInterval } from 'timers';
 
 export class MapService {
+    constructor() {
+        setInterval(
+            () => {
+                console.log('this.mapInitiated', this.mapInitiated);
+                console.log('this.mapStarted', this.mapStarted);
+                console.log('this.mapStopping', this.mapStopping);
+                console.log('this.mapStopped', this.mapStopped);
+                console.log(this.trackers[0].xCrd);
+            }, 2000
+        );
+    }
     trackerChanges = new Subject<Tracker[]>();
     serviceInterval: any;
 
@@ -52,6 +63,22 @@ export class MapService {
 
     stop() {
         this.onStopped.emit(this.mapStopped);
+    }
+
+    resetServiceState() {
+        this.mapStopping = true;
+        this.stopping.emit(true);
+        this.mapStarted = false;
+        this.started.emit(false);
+        this.mapStopped = true;
+        this.stopped.emit(true);
+        this.mapInitiated = false;
+        this.intiated.emit(false);
+    }
+
+    stopService() {
+        console.log('here');
+        this.resetServiceState();
         clearInterval(this.serviceInterval);
     }
 

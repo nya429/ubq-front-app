@@ -58,8 +58,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.mapService.stopping.emit(true);
     this.mapService.mapStarted = false;
     this.mapService.started.emit(false);
+    this.mapService.mapStopped = true;
+    this.mapService.stopped.emit(true);
     this.mapService.mapInitiated = false;
     this.mapService.intiated.emit(false);
+    this.mapService.stopService();
     if (this.trackersSubscription) {
       this.trackersSubscription.unsubscribe();
     }
