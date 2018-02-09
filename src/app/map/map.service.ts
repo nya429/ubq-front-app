@@ -77,7 +77,6 @@ export class MapService {
     }
 
     stopService() {
-        console.log('here');
         this.resetServiceState();
         clearInterval(this.serviceInterval);
     }

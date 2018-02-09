@@ -4,13 +4,20 @@ import { RouterModule, Routes } from '@angular/router';
 import { MapComponent } from './map.component';
 import { MapDemoComponent } from './map-demo/map-demo.component';
 import { TrackingMapComponent } from './tracking-map/tracking-map.component';
+import { TrackerDetailComponent } from './tracker-detail/tracker-detail.component';
 
 const mapRoutes: Routes = [
     {path: '',
         component: MapComponent,
         children: [
+            {path: '', redirectTo: 'tracker', pathMatch: 'full'},
             {path: 'barchart', component: MapDemoComponent},
-            {path: 'tracker', component: TrackingMapComponent}
+            {path: 'tracker',
+             component: TrackerDetailComponent,
+            //  children: [
+            //     {path: ':id', component: TrackerDetailComponent}
+            // ]
+        },
         ]
     },
 ];
