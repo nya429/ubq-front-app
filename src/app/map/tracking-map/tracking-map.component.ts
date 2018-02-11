@@ -331,7 +331,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
           return false;
       }
 
-     // TODO: reserve the 
       const point = this.trackerPoints.filter(
          d => d.id === id && d.isActivated()
       );

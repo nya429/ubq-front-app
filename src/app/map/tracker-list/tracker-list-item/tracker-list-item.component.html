@@ -1,18 +1,39 @@
 <a [ngClass] ="{'isSelected':isSelected}"
    class="tracker-item list-group-item clearfix">
-  <div class="pull-left">
     <div class="tracker-info" (click)='onSelect()' style="cursor: pointer;">
-      <span class="tracker-indicator"> </span>
-      <span class="tracker-id">{{tracker.id}}</span>
-      <span class='tracker-alias'*ngIf="!editMode"> #{{tracker.alias}}</span>
-      <input class='tracker-alias-input'*ngIf="editMode" type='text' #alias='ngModel' ngModel>
-      <span class='tracker-color'> color  |</span>
+      <div *ngIf="!editMode">
+      <span class="tracker-indicator">
+          <i  [ngClass]="{'fa-circle-o': !mapService.mapStarted, 'fa-circle': mapService.mapStarted}"
+               class="fa"></i>
+        </span>
+      <!-- <span class="tracker-id">{{tracker.id}}</span> -->
+      <span class='tracker-alias'> {{tracker.alias}}</span>
+      <span class='tracker-color'>    </span>
     </div>
-  </div>
-  <div class="tracker-actions">
-    <a><span (click)='onHide($event)' 
+    <div class="input-group" *ngIf="editMode">  
+          <input type="text" name="keyword" id="keyword" class="form-control" maxlength="15" placeholder="Alias">  
+          <span class="input-group-btn">  
+              <button class="btn btn-defualt" type="submit"><i class="glyphicon glyphicon-ok"></i></button>  
+              <button class="btn btn-defualt" type="submit"><i class="glyphicon glyphicon-remove"></i></button>  
+          </span>  
+          <div class="input-group-btn">  
+                <select name="type" class="form-control color-select" style="width: 10px;">  
+                    <option class="color-options" style="background-color:aqua" value="aqua"></option>  
+                    <option class="color-options" style="background-color:red" value="red"></option>  
+                </select>  
+            </div>  
+      </div>  
+    </div>
+  <span class="tracker-actions" align="right">
+    <i (click)='onEdit($event)'class="glyphicon glyphicon-pencil"></i>
+    <i title='hide' (click)='onHide($event)' 
     [ngClass]="{'glyphicon-eye-close': hidden, 'glyphicon-eye-open': !hidden}" 
-     class="glyphicon"></span></a>
-    <a><span (click)='onEdit($event)'class="glyphicon glyphicon-pencil"></span> </a>
-  </div>
+     class="glyphicon"></i>
+  </span>
 </a>
+<!-- <div class="input-group-btn">  
+    <select name="type" class="form-control" style="width: auto;">  
+        <option value="1">全网</option>  
+        <option value="2">本站</option>  
+    </select>  
+</div>   -->

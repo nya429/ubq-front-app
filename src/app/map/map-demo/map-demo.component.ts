@@ -132,56 +132,6 @@ export class MapDemoComponent implements OnInit {
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
         });
 
-   let circle1 = svg.append("circle")
-        .attr("cx", 100)
-        .attr("cy", 100)
-        .attr("r", 45)
-        .style("fill","cornflowerblue");
-
-    circle1.transition().ease(d3.easePolyInOut).duration(1000).delay(800).attr('cx',400).attr("r", 25).style("fill","deepskyblue");
-
-    circle1.on('click', function() {
-      console.log(this);
-      d3.select(this)
-      .transition(500)
-      .style("fill","cyan")
-      .ease(d3.easeBounceIn);
-    });
-
-    rectBar.on('mouseover', function() {
-      let self = this;
-
-      var otherCircles = d3.selectAll('svg rect');
-      // All other elements resize randomly.
-      otherCircles.filter(function() 
-          { return self !== this; }
-        ).transition().style("fill-opacity", 0.6);
-    });
-
-    rectBar.on('mouseout', function() {
-      d3.selectAll('svg rect').transition(100).style("fill-opacity", 1);
-    });
-
-    rectBar.on('click', function() {
-      console.log(d3.event);
-      // d3.select(rectBar)
-      // .transition(500)
-      // .style("fill","red")
-      // .ease(d3.easeBounceIn);
-      d3.select(this)
-      .transition(500)
-      .style("fill","cyan")
-      .ease(d3.easeBounceIn);
-      let self = this;
-
-      let otherCircles = d3.selectAll('svg rect');
-      // All other elements resize randomly.
-      otherCircles.filter(function()
-          { return self !== this; }
-        ).transition().style("fill",'aliceblue');
-
-    });
-  }
-
+ 
 
 }

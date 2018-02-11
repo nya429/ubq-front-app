@@ -7,6 +7,7 @@
       <div class="col-md-6 col-lg-6 " align="right">
         <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
         <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
+        <a  title='config' type="button" class="btn"><i class="	glyphicon glyphicon-cog"></i></a>
       </div>
     </div>
   </div>

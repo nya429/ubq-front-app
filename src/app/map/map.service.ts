@@ -32,6 +32,8 @@ export class MapService {
     onStarted = new EventEmitter<boolean>();
     onStopped = new EventEmitter<boolean>();
 
+    // TODO restructure the selected Tracker
+    selectedTrackerId: number;
     selectedTrackerIndex = new EventEmitter<number>();
     hasSelectedTracker = new Subject<number>();
     hideTrackerIndex = new EventEmitter<number>();
@@ -85,8 +87,8 @@ export class MapService {
         return this.trackers.slice();
     }
 
-    getTracker(id: number) {
-        return this.trackers.slice()[id];
+    getTracker(index: number) {
+        return this.trackers.slice()[index];
     }
 
     move() {
@@ -143,5 +145,12 @@ export class MapService {
         this.trackerChanges.next(this.trackers.slice());
         this.hideTrackerIndex.emit(id);
         // console.log(this.trackers)
+    }
+
+    updateTrackerInfo(index:number, form: any) {
+        
+        // TODO replace this after having backend
+        this.trackers[index].alias = form.alias;
+        this.trackerChanges.next(this.trackers.slice());
     }
 }

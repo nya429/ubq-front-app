@@ -24,7 +24,7 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
     this.id = this.tracker.id;
     this.selectSubscription = this.mapService.hasSelectedTracker.subscribe(
       (id: number) => {
-        this.isSelected = id === this.id ? true : false;
+        this.isSelected = this.id === id ? true : false;
       }
     );
   }

@@ -13,7 +13,7 @@ export class Tracker {
         this.yCrd = yCrd;
         this.selected = false;
         this.activated = true;
-        this.alias = 'Tracker';
+        this.alias = 'Tracker#' + id;
         this.note = 'This is a tracker';
     }
 

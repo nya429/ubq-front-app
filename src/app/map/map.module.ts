@@ -13,6 +13,7 @@ import { TrackerListComponent } from './tracker-list/tracker-list.component';
 import { TrackerListItemComponent } from './tracker-list/tracker-list-item/tracker-list-item.component';
 import { MapControlPenalComponent } from './map-control-penal/map-control-penal.component';
 import { TrackerDetailComponent } from './tracker-detail/tracker-detail.component';
+import { TrackerDetailEditComponent } from './tracker-detail/tracker-detail-edit/tracker-detail-edit.component';
 
 
 
@@ -25,7 +26,8 @@ import { TrackerDetailComponent } from './tracker-detail/tracker-detail.componen
     TrackerListComponent,
     TrackerListItemComponent,
     MapControlPenalComponent,
-    TrackerDetailComponent
+    TrackerDetailComponent,
+    TrackerDetailEditComponent,
   ],
   imports: [
     CommonModule,

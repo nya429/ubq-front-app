@@ -5,10 +5,14 @@
     </h3>  
   </div>
   <div class="panel-body">
-    <input type="text" >
-    <br>
-    <br>
-    <button class="btn btn-Info">Filter</button>
+      <div class="form-group">  
+          <div class="input-group col-xs-12">  
+              <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Tracker Filter">  
+              <span class="input-group-btn">  
+                  <button style="" class="btn btn-defualt" type="submit">Search</button>  
+              </span>  
+          </div>  
+      </div>  
   </div>
   <ul class="list-group"  id='trackers-list'>
     <app-tracker-list-item

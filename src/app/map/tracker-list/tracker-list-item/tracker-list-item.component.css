@@ -1,7 +1,7 @@
 .tracker-item {
     display: flex;
     align-items: center;
-    height: 30px;
+    height: 34px;
     line-height: 26px;
     padding: 1.22rem;
     width: 100%;
@@ -11,21 +11,41 @@
 }
 
 
-a.tracker-item:hover {
+/* a.tracker-item:hover {
     color: rgba(0, 161, 214, 0.7);
-}
+} */
 
  a.tracker-item.isSelected {
      color: white;
      background-color: #00a1d6;
  }
 
- 
-.tracker-info .tracker-actions span {
-    display:-moz-inline-box;
-    display:inline-block;
+
+
+.tracker-info,.tracker-actions,span {
+    display:inline;
+    overflow: hidden;
+    /* white-space: pre-inline;  */
+    text-overflow: clip;
     margin-right: 10px;
 }
+
+.tracker-alias {
+    display:inline-block;
+    line-height: 10px;
+    width: 100px;
+    white-space: pre;
+}
+
+
+.tracker-color {
+    border-radius: 5px;
+    border:2px solid #bce8f1;
+    background-color: #00a1d6;
+    width: 5px;
+    white-space: pre;
+}
+
 
 span.glyphicon {
     color: #555;
@@ -43,16 +63,10 @@ span.glyphicon:hover {
     color: rgba(0, 161, 214, 1);
 }
 
-.tracker-indicator	{
-    margin-right:5px;
-    content:'';
-    width: 26px;
-    height: 26px;
-    color: red;
-    -moz-border-radius: 13px;
-    -webkit-border-radius: 13px;
-    border-radius: 13px;
-    font-size: 26px;
+.color-options:selected {
+    background-color: black;
 }
+
+
 
 
