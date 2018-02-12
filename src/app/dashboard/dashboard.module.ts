@@ -5,10 +5,20 @@ import { FormsModule } from '@angular/forms';
 
 import { DashboardComponent } from './dashboard.component';
 import { DashboardRoutingModule } from './dashboard-routing.module';
+import { DashboardNavComponent } from './dashboard-nav/dashboard-nav.component';
+import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.component';
+import { DashboardTrackersManageComponent } from './dashboard-trackers-manage/dashboard-trackers-manage.component';
+import { DashboardOverviewComponent } from './dashboard-overview/dashboard-overview.component';
+import { DashboardBarchartComponent } from './dashboard-barchart/dashboard-barchart.component';
 
 @NgModule({
     declarations: [
-        DashboardComponent
+        DashboardComponent,
+        DashboardNavComponent,
+        DashboardChartComponent,
+        DashboardTrackersManageComponent,
+        DashboardOverviewComponent,
+        DashboardBarchartComponent
     ],
     imports: [
         CommonModule,

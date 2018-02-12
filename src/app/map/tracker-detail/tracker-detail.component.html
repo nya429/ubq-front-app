@@ -9,11 +9,11 @@
           </div>
           <div class="col-md-3 col-lg-3 " align="center"> 
             <div class="row">
-            <img alt="trackerImg" 
-                 src="../assets/tracker-img.svg"
-                 class="img-circle img-responsive tracker-img"> 
-            <a  title='editImg' type="button" class="btn editImg"><i class="glyphicon glyphicon-edit"></i></a>
-            </div>
+              <img alt="trackerImg" 
+                  src="../assets/tracker-img.svg"
+                  class="img-circle img-responsive tracker-img"> 
+              <a *ngIf="editMode" title='upload Image' type="button" class="btn editImg"><i class="glyphicon glyphicon-edit"></i></a>
+           </div>
             <br>
             <div class="row">
                 <div class="col-md-6 col-lg-6 " align="right"> 

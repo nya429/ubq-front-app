@@ -44,7 +44,17 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
   }
 
   onEdit(event) {
-    this.editMode = !this.editMode;
+    this.editMode = true;
+    event.stopPropagation();
+  }
+
+  onCancle(event) {
+    this.editMode = false;
+    event.stopPropagation();
+  }
+
+  onSubmit(event) {
+    this.editMode = false;
     event.stopPropagation();
   }
 }

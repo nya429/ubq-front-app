@@ -10,7 +10,6 @@
 
 .tracker-img {
     width: 60%;
-    border: 1px solid #00a1d6;
 }
 
 .editImg {
@@ -18,7 +17,7 @@
     height:10%;
     position:absolute;
     top:0;
-    right:10%;
+    right:20%;
 }
 
 .td-title {

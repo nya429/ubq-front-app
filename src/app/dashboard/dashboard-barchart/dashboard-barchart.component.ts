@@ -2,11 +2,11 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
-  selector: 'app-map-demo',
-  templateUrl: './map-demo.component.html',
-  styleUrls: ['./map-demo.component.css']
+  selector: 'app-dashboard-barchart',
+  templateUrl: './dashboard-barchart.component.html',
+  styleUrls: ['./dashboard-barchart.component.css']
 })
-export class MapDemoComponent implements OnInit {
+export class DashboardBarchartComponent implements OnInit {
   @ViewChild('chart') private chartContainer: ElementRef;
   @Input() private data: Array<any>;
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -22,8 +22,18 @@ export class MapDemoComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
+    d3.select('svg').call(this.zoom);
   }
 
+  private zoom = d3.zoom()
+            .scaleExtent([1, 10])
+            .on("zoom", this.zoomed);
+   
+  zoomed() { 
+    d3.select(this).attr("transform", 
+      "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+            
   createMap() {
     const element = this.chartContainer.nativeElement;
     this.width = element.offsetWidth - this.margin.left - this.margin.right;
@@ -131,7 +141,5 @@ export class MapDemoComponent implements OnInit {
         .attr("height", function(d){
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
         });
-
- 
-
+  }
 }

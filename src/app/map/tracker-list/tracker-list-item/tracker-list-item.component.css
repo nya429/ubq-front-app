@@ -10,7 +10,9 @@
     border-bottom: 1px solid rgb(221, 221, 221);
 }
 
-
+.ishide {
+    color:rgba(85,85,85,.5);
+}
 /* a.tracker-item:hover {
     color: rgba(0, 161, 214, 0.7);
 } */
@@ -63,8 +65,8 @@ span.glyphicon:hover {
     color: rgba(0, 161, 214, 1);
 }
 
-.color-options:selected {
-    background-color: black;
+.color-options:autofocus  {
+    color: red;
 }
 
 
