@@ -78,9 +78,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
-      // setInterval(() => {
-      //   //console.log('DEBUG this', this.trackers[7]);
-      // }, 800);
     }
 
     if (this.mapService.mapStarted) {
@@ -93,7 +90,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.trackersSubscription = this.mapService.trackerChanges.subscribe(
         (trackers: Tracker[]) => {
           this.trackers = trackers;
-          this.refreshTrackers();       // FIXME;
+          this.refreshTrackers();       // FIXME solove muttable copy issue;
           this.movePoint(this.trackers);
         }
       );
@@ -190,7 +187,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   movePoint(trackers: Tracker[]) {
-    // console.log(trackers[1].xCrd, trackers[1].yCrd);
     this.trackerPoints.data(trackers)
     .transition()
     .duration(1000)
@@ -356,8 +352,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
           // this.selectedPoint = null;
           this.removeTrackerInfo();
       }
-      // console.log('isActivated', this.selectedPoint.datum().isActivated());
-      // console.log('isSelected', this.selectedPoint.datum().selected);
       if (!point.datum().isActivated()) {
          this.hidePoint(point);
       } else if (this.selectedPoint && point.datum().id === this.selectedPoint.datum().id) {
@@ -365,28 +359,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       } else {
         this.onMouseout(point);
       }
-      // point.datum().isActivated() ? this.onMouseout(point) : this.hidePoint(point);
  }
 
   refreshTrackers() {
      this.trackerPoints.data(this.trackers);
-    //  const point = this.trackerPoints
-    // .filter(d => !d.activated)
-
-    //  if(point.empty()) {
-    //    return;
-    //  }
-    //  console.log(this.trackerInfoG );
-
-    // if (this.trackerInfoG && this.trackerInfoG.datum().id === point.data()[0].id) {
-
-    //   this.selectedPoint = null;
-    //   this.removeTrackerInfo();
-    // }
-
-    //  point.transition(700)
-    //    .ease(d3.easeLinear)
-    //    .attr('r', 0);
-
+     // TODO add change color function
   }
 }

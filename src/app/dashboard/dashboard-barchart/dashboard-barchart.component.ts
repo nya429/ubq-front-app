@@ -22,18 +22,8 @@ export class DashboardBarchartComponent implements OnInit {
 
   ngOnInit() {
     this.createMap();
-    d3.select('svg').call(this.zoom);
   }
-
-  private zoom = d3.zoom()
-            .scaleExtent([1, 10])
-            .on("zoom", this.zoomed);
-   
-  zoomed() { 
-    d3.select(this).attr("transform", 
-      "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-    }
-            
+       
   createMap() {
     const element = this.chartContainer.nativeElement;
     this.width = element.offsetWidth - this.margin.left - this.margin.right;
@@ -41,11 +31,10 @@ export class DashboardBarchartComponent implements OnInit {
     const svg = d3.select(element).append('svg')
               .attr('width', element.offsetWidth)
               .attr('height', element.offsetHeight);
-
     const rectHeight = 25;
     const padding = {left: 30, right: 30, top: 20, bottom: 20};
-    const rectPadding = 20;
-    const dataset = [ 10, 20, 30, 40, 50, 30, 20, 40, 50, 33, 24, 12, 5];
+    const rectPadding = 3;
+    const dataset = [10, 20, 50, 40, 22, 30, 10 ,25];
 
     const linear = d3.scaleLinear()
                       .domain([0, d3.max(dataset)])
@@ -58,6 +47,11 @@ export class DashboardBarchartComponent implements OnInit {
                       .domain([0, d3.max(dataset)])
                       .range([element.offsetHeight - padding.top - padding.bottom, 0]);
 
+
+    const paddingScale = d3.scaleLinear()
+                      .domain([0, 5])
+                      .range([0, xScale.bandwidth()/2]);
+
     const xAxis = d3.axisBottom(xScale).tickArguments([10, 's']);
     const yAxis = d3.axisLeft(yScale).tickArguments([5, 's']);
 
@@ -69,8 +63,7 @@ export class DashboardBarchartComponent implements OnInit {
     .attr("class","axis")
     .attr("transform","translate(" + padding.left + "," + (element.offsetHeight - padding.bottom) + ")")
     .call(xAxis); 
-          
-
+  
   svg.append("g")
     .attr("class","axis")
     .attr("transform","translate(" + padding.left + "," + padding.top + ")")
@@ -81,12 +74,12 @@ export class DashboardBarchartComponent implements OnInit {
           .enter().append('rect');
 
         rectBar.attr('x',  (d, i) =>  {
-            return  padding.left + xScale(i) + rectPadding / 2;
+            return  padding.left + xScale(i) + paddingScale(rectPadding) / 2;
           })
           .attr('y', d =>  {
                 return yScale(0) + padding.top;
           })
-          .attr('width', xScale.bandwidth() - rectPadding)
+          .attr('width', xScale.bandwidth() - paddingScale(rectPadding))
           .attr('height', d => {
             return 0;
           })
@@ -113,13 +106,15 @@ export class DashboardBarchartComponent implements OnInit {
         .attr("class","BarText")
         .attr("transform","translate(" + padding.left + "," + padding.top + ")")
         .attr("x", function(d,i){
-            return xScale(i) + rectPadding/2;
+            console.log(xScale(i))
+            return xScale(i);
         } )
         .attr("y",function(d){
             return yScale(0) + padding.top;
         })
         .attr("dx",function(){
-            return (xScale.bandwidth() - rectPadding)/2;
+          console.log(xScale.bandwidth());
+            return xScale.bandwidth()/2 - 8;
         })
         .attr("dy",function(d){
             return 0;

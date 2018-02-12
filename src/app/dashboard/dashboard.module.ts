@@ -10,6 +10,7 @@ import { DashboardChartComponent } from './dashboard-chart/dashboard-chart.compo
 import { DashboardTrackersManageComponent } from './dashboard-trackers-manage/dashboard-trackers-manage.component';
 import { DashboardOverviewComponent } from './dashboard-overview/dashboard-overview.component';
 import { DashboardBarchartComponent } from './dashboard-barchart/dashboard-barchart.component';
+import { DashboardPiechartComponent } from './dashboard-piechart/dashboard-piechart.component';
 
 @NgModule({
     declarations: [
@@ -18,7 +19,8 @@ import { DashboardBarchartComponent } from './dashboard-barchart/dashboard-barch
         DashboardChartComponent,
         DashboardTrackersManageComponent,
         DashboardOverviewComponent,
-        DashboardBarchartComponent
+        DashboardBarchartComponent,
+        DashboardPiechartComponent
     ],
     imports: [
         CommonModule,

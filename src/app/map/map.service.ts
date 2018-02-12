@@ -2,20 +2,10 @@ import { Subject } from 'rxjs/Subject';
 import { EventEmitter, Injectable } from '@angular/core';
 
 import { Tracker } from '../shared/tracker.model';
-// import { setInterval } from 'timers';
-// import { clearInterval } from 'timers';
 
 export class MapService {
     constructor() {
-        // setInterval(
-        //     () => {
-        //         console.log('this.mapInitiated', this.mapInitiated);
-        //         console.log('this.mapStarted', this.mapStarted);
-        //         console.log('this.mapStopping', this.mapStopping);
-        //         console.log('this.mapStopped', this.mapStopped);
-        //         console.log(this.trackers[0].xCrd);
-        //     }, 2000
-        // );
+
     }
     trackerChanges = new Subject<Tracker[]>();
     serviceInterval: any;
@@ -96,8 +86,6 @@ export class MapService {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
-            // console.log(this.trackers[7]);
-            // console.log('DEBUG: interval0');
             this.trackerChanges.next(this.trackers.slice());
         }, 800);
     }
@@ -144,7 +132,6 @@ export class MapService {
         this.trackers = newTrackers;
         this.trackerChanges.next(this.trackers.slice());
         this.hideTrackerIndex.emit(id);
-        // console.log(this.trackers)
     }
 
     updateTrackerInfo(index:number, form: any) {

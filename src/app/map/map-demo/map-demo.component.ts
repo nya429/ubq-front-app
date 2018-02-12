@@ -131,7 +131,5 @@ export class MapDemoComponent implements OnInit {
         .attr("height", function(d){
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
         });
-
- 
-
+      }
 }
