@@ -111,7 +111,7 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
     return function(d) {
       const i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
       return function(t) {
-        return this.arc(i(t));
+        return this.arc(i(t)); //testq
       };
     };
   }
