@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChild, ElementRef } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -6,22 +6,23 @@ import * as d3 from 'd3';
   templateUrl: './dashboard-piechart.component.html',
   styleUrls: ['./dashboard-piechart.component.css']
 })
-export class DashboardPiechartComponent implements OnInit {
+export class DashboardPiechartComponent implements OnInit, AfterViewInit {
   @ViewChild('pieChart') private chartContainer: ElementRef;
-  private dataset = [30, 10, 43, 55, 13];
+  private dataset = [45, 66, 29, 40];
 
   element;
-  svg:any;
+  svg: any;
   piedata: any;
-  pie = d3.pie();
+  pie: any;
   arc = d3.arc();
 
 
   private width: number;
   private height: number;
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
-  private innerRadius = 100;
-  private outerRadius = 150;
+  private circleWidth = 30;
+  private innerRadius;
+  private outerRadius;
   private xScale: any;
   private yScale: any;
   private colors: any;
@@ -32,58 +33,71 @@ export class DashboardPiechartComponent implements OnInit {
 
   ngOnInit() {
     this.element = this.chartContainer.nativeElement;
+
+    this.createBase();
     this.scaleSize();
-    this.createChart() 
+    this.createChart();
   }
-  
-  createChart() {
-    /* ----------create svg------------*/
 
-    this.width = this.element.offsetWidth;
-    this.height = this.element.offsetHeight;
-    this.svg = d3.select(this.element).append('svg')
-              .attr('class', 'chartBase')
+  ngAfterViewInit() {
+  }
+
+  createBase() {
+    if (this.element.parentNode.parentNode.getBoundingClientRect().height === 300) {
+      console.log('here');
+      this.height = 300;
+      this.circleWidth = 50;
+    }
+     /* ----------create svg------------*/
+    this.svg = d3.select(this.element).append('svg');
+    this.svg.attr('class', 'chartBase')
               .attr('width', this.element.offsetWidth)
-              .attr('height', this.element.offsetHeight);
-     console.log(this.svg.select('g'),this.element.offsetHeight,this.height);   
-              
-    /* ----------------------*/
+              .attr('height', this.height);
+  }
 
+  createChart() {
+     /* ----------create piedata------------*/
+    this.pie = d3.pie().sort(null);
     this.piedata = this.pie(this.dataset);
+     /* ----------create arc generator------------*/
     this.arc.innerRadius(this.innerRadius)
             .outerRadius(this.outerRadius)
-            .startAngle(0)
-            .endAngle(Math.PI / 2)
             .padAngle(.03)
             .cornerRadius(5);
 
-		let color = d3.scaleOrdinal(d3.schemeCategory10);
-  
-  const ss = this.svg.append('g').
-            attr("transform","translate("+ (this.width/2) +","+ (this.element.offsetHeight/2) +")");
+    const color = d3.scaleOrdinal().range(["#1E90FF", "#00CED1", "#4682B4", "#87CEEB", "#4169E1", "#7B68EE"]);
 
+    const g = this.svg.append('g');
+    g.attr('transform', 'translate(' + (this.width / 2) + ',' + (this.height / 2) + ')');
 
-            ss.data(this.piedata).enter().append("g")
+    g.selectAll('g').data(this.piedata).enter().append('g').attr('class', 'arc-g');
 
-            ss.append("path")
-      .attr("d", this.arc)
-      .style("fill", d => color(d.data));
+    this.svg.selectAll('.arc-g').data(this.piedata).append('path')
+      .attr('d', this.arc)
+      .style('fill', d => {console.log(d.data, color(d.data)); return color(d.data)});
 
-    // straightPath.data(arcs).attr("d", this.arc.cornerRadius(5));
-  
-    // arcs.append("text")
-		// 	.attr("transform",function(d){
-		// 		return "translate(" + this.arc.centroid(d) + ")";
-		// 	})
-		// 	.attr("text-anchor","middle")
-		// 	.text(function(d){
-		// 		return d.data;
-		// 	});
-
+      /* ----------append text------------*/
+      g.selectAll('.arc-g')
+        .append('text')
+        .attr('transform', d => 'translate(' + this.arc.centroid(d) + ')')
+        .attr('text-anchor', 'middle')
+        .attr('fill', 'white')
+        .text(d => d.data);
+       /* ----------append  middle text------------*/
+        g.append('text')
+          .attr('text-anchor', 'middle').attr('fill', '#31708f').text(d => '100% ..');
   }
 
   scaleSize() {
-    this.outerRadius = d3.min([this.element.offsetHeight/2,this.element.offsetHeight/2])
-    console.log(this.outerRadius);
+    this.width = this.element.offsetWidth;
+    this.height = this.element.offsetHeight;
+
+    this.svg.attr('height', this.element.offsetHeight);
+    // the differ between element.offsetHeight and svg.height
+    this.outerRadius = d3.min([this.element.offsetWidth, this.element.offsetHeight]) / 2 - 5;
+
+    this.width = this.element.offsetWidth;
+    this.innerRadius = this.outerRadius - this.circleWidth;
   }
+
 }

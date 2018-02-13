@@ -7,7 +7,7 @@ import * as d3 from 'd3';
   styleUrls: ['./dashboard-barchart.component.css']
 })
 export class DashboardBarchartComponent implements OnInit {
-  @ViewChild('chart') private chartContainer: ElementRef;
+  @ViewChild('barChart') private chartContainer: ElementRef;
   @Input() private data: Array<any>;
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
   private chart: any;
@@ -23,18 +23,26 @@ export class DashboardBarchartComponent implements OnInit {
   ngOnInit() {
     this.createMap();
   }
-       
+
   createMap() {
     const element = this.chartContainer.nativeElement;
+
     this.width = element.offsetWidth - this.margin.left - this.margin.right;
     this.height = element.offsetHeight - this.margin.top - this.margin.bottom;
     const svg = d3.select(element).append('svg')
               .attr('width', element.offsetWidth)
-              .attr('height', element.offsetHeight);
+              .attr('height', this.height);
+
+              if (element.parentNode.parentNode.getBoundingClientRect().height === 300) {
+                console.log('here');
+                svg.attr('height', 280);
+              }
+
+
     const rectHeight = 25;
-    const padding = {left: 30, right: 30, top: 20, bottom: 20};
+    const padding = {left: 30, right: 10, top: 20, bottom: 20};
     const rectPadding = 3;
-    const dataset = [10, 20, 50, 40, 22, 30, 10 ,25];
+    const dataset = [10, 20, 50, 40, 22, 30, 10 , 25];
 
     const linear = d3.scaleLinear()
                       .domain([0, d3.max(dataset)])
@@ -50,7 +58,7 @@ export class DashboardBarchartComponent implements OnInit {
 
     const paddingScale = d3.scaleLinear()
                       .domain([0, 5])
-                      .range([0, xScale.bandwidth()/2]);
+                      .range([0, xScale.bandwidth() / 2]);
 
     const xAxis = d3.axisBottom(xScale).tickArguments([10, 's']);
     const yAxis = d3.axisLeft(yScale).tickArguments([5, 's']);
@@ -59,15 +67,16 @@ export class DashboardBarchartComponent implements OnInit {
 
     // svg.append('g').call(axis)
     //       .attr('transform', 'translate(20,200)');
-    svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(" + padding.left + "," + (element.offsetHeight - padding.bottom) + ")")
-    .call(xAxis); 
-  
-  svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(" + padding.left + "," + padding.top + ")")
+    svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + (element.offsetHeight - padding.bottom) + ')')
+    .call(xAxis);
+
+  svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
     .call(yAxis);
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     let rectBar = svg.selectAll('rect')
           .data(dataset)
@@ -76,64 +85,40 @@ export class DashboardBarchartComponent implements OnInit {
         rectBar.attr('x',  (d, i) =>  {
             return  padding.left + xScale(i) + paddingScale(rectPadding) / 2;
           })
-          .attr('y', d =>  {
-                return yScale(0) + padding.top;
-          })
+          .attr('y', d =>  yScale(0) + padding.top)
           .attr('width', xScale.bandwidth() - paddingScale(rectPadding))
-          .attr('height', d => {
-            return 0;
-          })
+          .attr('height', d => 0)
           .attr('fill', 'skyblue')
           .transition()
-          .delay(function(d,i){
-            return i * 50;
-          })
+          .delay((d, i) => i * 50)
           .duration(800)
           .ease(d3.easeQuadOut)
-          .attr("y",function(d){
-            return yScale(d) + padding.top;
-          })
-          .attr("height", function(d){
-            return element.offsetHeight - padding.top - padding.bottom - yScale(d);
-          });
-      
+          .attr('y', d => yScale(d) + padding.top)
+          .attr('height', d => element.offsetHeight - padding.top - padding.bottom - yScale(d));
 
-    
-    let texts = svg.selectAll(".BarText")
+    let texts = svg.selectAll('.BarText')
         .data(dataset)
         .enter()
-        .append("text")
-        .attr("class","BarText")
-        .attr("transform","translate(" + padding.left + "," + padding.top + ")")
-        .attr("x", function(d,i){
-            console.log(xScale(i))
-            return xScale(i);
-        } )
-        .attr("y",function(d){
-            return yScale(0) + padding.top;
-        })
-        .attr("dx",function(){
-          console.log(xScale.bandwidth());
-            return xScale.bandwidth()/2 - 8;
-        })
-        .attr("dy",function(d){
-            return 0;
-        })
-        .text(function(d){
-            return d;
-        })
+        .append('text')
+        .attr('class', 'BarText')
+        .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+        .attr('x', (d, i) => xScale(i))
+        .attr('y', d => yScale(0) + padding.top)
+        .attr('dx', d => xScale.bandwidth() / 2 - 8)
+        .attr('dy', d => 0)
+        .text(d => d)
         .attr('fill', 'skyblue')
         .transition()
         .attr('fill', 'white')
-        .delay(function(d,i){
+        .delay(function(d, i) {
           return i * 50;
         })
         .duration(800)
         .ease(d3.easeQuadOut)
-        .attr("y",function(d){
+        .attr('y', function(d) {
           return yScale(d) + padding.top;
         })
-        .attr("height", function(d){
+        .attr('height', function(d) {
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
         });
   }
