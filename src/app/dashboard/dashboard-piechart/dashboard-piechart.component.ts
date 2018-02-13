@@ -28,6 +28,7 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
   private colors: any;
   private xAxis: any;
   private yAxis: any;
+  private tau = 2 * Math.PI;
 
   constructor() { }
 
@@ -65,7 +66,7 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
             .padAngle(.03)
             .cornerRadius(5);
 
-    const color = d3.scaleOrdinal().range(["#1E90FF", "#00CED1", "#4682B4", "#87CEEB", "#4169E1", "#7B68EE"]);
+    const color = d3.scaleOrdinal().range(['#1E90FF', '#00CED1', '#4682B4', '#87CEEB', '#4169E1', '#7B68EE']);
 
     const g = this.svg.append('g');
     g.attr('transform', 'translate(' + (this.width / 2) + ',' + (this.height / 2) + ')');
@@ -74,18 +75,24 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
 
     this.svg.selectAll('.arc-g').data(this.piedata).append('path')
       .attr('d', this.arc)
-      .style('fill', d => {console.log(d.data, color(d.data)); return color(d.data)});
+      .style('fill', d => color(d.data))
+      // .transition()
+      // .ease(d3.easeQuadOut)
+      // .delay((d, i) =>  1000 + i * 50)
+      // .duration(2000)
+      // .attrTween('d', this.arcTween);
 
-      /* ----------append text------------*/
-      g.selectAll('.arc-g')
-        .append('text')
-        .attr('transform', d => 'translate(' + this.arc.centroid(d) + ')')
-        .attr('text-anchor', 'middle')
-        .attr('fill', 'white')
-        .text(d => d.data);
-       /* ----------append  middle text------------*/
-        g.append('text')
-          .attr('text-anchor', 'middle').attr('fill', '#31708f').text(d => '100% ..');
+    /* ----------append text------------*/
+    g.selectAll('.arc-g')
+      .append('text')
+      .attr('transform', d => 'translate(' + this.arc.centroid(d) + ')')
+      .attr('text-anchor', 'middle')
+      .attr('fill', 'white')
+      .text(d => d.data);
+
+    /* ----------append  middle text------------*/
+    g.append('text')
+      .attr('text-anchor', 'middle').attr('fill', '#31708f').text(d => '100% ..');
   }
 
   scaleSize() {
@@ -100,4 +107,12 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
     this.innerRadius = this.outerRadius - this.circleWidth;
   }
 
+  arcTween(b) {
+    return function(d) {
+      const i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
+      return function(t) {
+        return this.arc(i(t));
+      };
+    };
+  }
 }
