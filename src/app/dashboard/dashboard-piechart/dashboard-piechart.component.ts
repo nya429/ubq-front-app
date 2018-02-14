@@ -8,7 +8,7 @@ import * as d3 from 'd3';
 })
 export class DashboardPiechartComponent implements OnInit, AfterViewInit {
   @ViewChild('pieChart') private chartContainer: ElementRef;
-  private dataset = [45, 66, 29, 40];
+  private dataset = [45, 66, 29, 40, 38];
 
   element;
   svg: any;
@@ -28,7 +28,6 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
   private colors: any;
   private xAxis: any;
   private yAxis: any;
-  private tau = 2 * Math.PI;
 
   constructor() { }
 
@@ -74,13 +73,14 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
     g.selectAll('g').data(this.piedata).enter().append('g').attr('class', 'arc-g');
 
     this.svg.selectAll('.arc-g').data(this.piedata).append('path')
-      .attr('d', this.arc)
       .style('fill', d => color(d.data))
-      // .transition()
-      // .ease(d3.easeQuadOut)
-      // .delay((d, i) =>  1000 + i * 50)
-      // .duration(2000)
-      // .attrTween('d', this.arcTween);
+      .attr('transform', 'rotate(-90, 0, 0)')
+      .transition()
+      .ease(d3.easeLinear)
+      .delay((d, i) =>  200 + i * 50)
+      .duration(800)
+      .attrTween('d', (d, i) => this.arcTween(d, i, this))
+      .attr('transform', 'rotate(0, 0, 0)');
 
     /* ----------append text------------*/
     g.selectAll('.arc-g')
@@ -107,12 +107,11 @@ export class DashboardPiechartComponent implements OnInit, AfterViewInit {
     this.innerRadius = this.outerRadius - this.circleWidth;
   }
 
-  arcTween(b) {
-    return function(d) {
-      const i = d3.interpolate({startAngle: 0, endAngle: 0}, b);
-      return function(t) {
-        return this.arc(i(t)); //testq
-      };
+  arcTween(d, i, that) {
+      return (t) => {
+      const interpolate = d3.interpolate({startAngle: 0, endAngle: 0}, d);
+      return that.arc(interpolate(t));
     };
   }
+
 }
