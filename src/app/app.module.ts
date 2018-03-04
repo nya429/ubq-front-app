@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { MapModule } from './map/map.module';
 import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ParticipantManagementModule } from './participant-management/participant-management.module';
 
 
 
@@ -21,7 +22,8 @@ import { DashboardModule } from './dashboard/dashboard.module';
     AppRoutingModule,
     CoreModule,
     MapModule,
-    DashboardModule
+    DashboardModule,
+    ParticipantManagementModule
   ],
   providers: [],
   bootstrap: [AppComponent]

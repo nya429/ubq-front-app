@@ -87,8 +87,8 @@ private dataset2 = [
     this.dataset2.forEach(d => this.dataparse(d));
 
     /* ----------set scale domain------------*/
-    let min = (d3.min([d3.min(this.dataset2, d => d.value), d3.min(this.dataset, d => d.value)]));
-    let max = (d3.max([d3.max(this.dataset2, d => d.value), d3.max(this.dataset, d => d.value)]));
+    const min = (d3.min([d3.min(this.dataset2, d => d.value), d3.min(this.dataset, d => d.value)]));
+    const max = (d3.max([d3.max(this.dataset2, d => d.value), d3.max(this.dataset, d => d.value)]));
     xScale.domain(d3.extent(this.dataset, d =>  d.year ));
     yScale.domain([min / 1.002, max * 1.002]);
 
@@ -126,7 +126,7 @@ private dataset2 = [
           .delay(500)
           .duration(1000)
           .attr('d', this.line(this.dataset2))
-          .style('stroke', 'SKYBLUE')
+          .style('stroke', 'cyan')
           .ease(d3.easeQuadOut);
 
 

@@ -78,7 +78,7 @@ export class DashboardBarchartComponent implements OnInit {
     .call(yAxis);
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
-    let rectBar = svg.selectAll('rect')
+    const rectBar = svg.selectAll('rect')
           .data(dataset)
           .enter().append('rect');
 
@@ -96,7 +96,7 @@ export class DashboardBarchartComponent implements OnInit {
           .attr('y', d => yScale(d) + padding.top)
           .attr('height', d => element.offsetHeight - padding.top - padding.bottom - yScale(d));
 
-    let texts = svg.selectAll('.BarText')
+      const texts = svg.selectAll('.BarText')
         .data(dataset)
         .enter()
         .append('text')
