@@ -4,9 +4,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Tracker } from '../shared/tracker.model';
 
 export class MapService {
-    constructor() {
+    constructor() {}
 
-    }
     trackerChanges = new Subject<Tracker[]>();
     serviceInterval: any;
 
@@ -134,8 +133,8 @@ export class MapService {
         this.hideTrackerIndex.emit(id);
     }
 
-    updateTrackerInfo(index:number, form: any) {
-        
+    updateTrackerInfo(index: number, form: any) {
+
         // TODO replace this after having backend
         this.trackers[index].alias = form.alias;
         this.trackerChanges.next(this.trackers.slice());

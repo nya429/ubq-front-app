@@ -1,0 +1,23 @@
+<div class="row">
+
+  <div class="form-group col-xs-3">  
+    <div class="input-group">  
+      <select name="type" class="form-control limit-select" style="width: 10;">  
+        <option class="color-options" value="10">10</option>  
+        <option class="color-options" value="15">15</option>  
+        <option class="color-options" value="20">20</option>  
+        <option class="color-options" value="20">25</option>  
+      </select> 
+      <span class="input-group-btn">  
+        <div>Items per page</div>
+      </span>  
+    </div>  
+  </div>
+  <div class="col-xs-6 pagination"  >
+    <div *ngFor="let offset of getPages()">
+    <a href="#">{{ offset }}</a>
+    </div>
+    <a href="#">&laquo; {{ getPrevOffset() }}</a>
+    <a href="#">&raquo; {{ getNextOffset() }}</a>
+  </div>
+</div>
