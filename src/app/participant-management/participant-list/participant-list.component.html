@@ -15,7 +15,7 @@
           </thead>
           <tbody >
             <tr *ngFor="let participant of participants; let i = index">
-              <th scope="row">{{ i + 1 }}</th> 
+              <th scope="row">{{ participant.participantId}}</th> 
               <td>{{participant.firstName}} {{participant.lastName}}</td>
               <td>{{participant.jobTitle}} </td>
               <td>{{participant.companyName}} </td> 

@@ -13,11 +13,11 @@
       </span>  
     </div>  
   </div>
-  <div class="col-xs-6 pagination"  >
+  <div class="col-xs-6 pagination" *ngIf="count > 0" >
     <div *ngFor="let offset of getPages()">
-    <a href="#">{{ offset }}</a>
+      <a (click)="goPage(offset)">{{ offset }}</a>
     </div>
-    <a href="#">&laquo; {{ getPrevOffset() }}</a>
-    <a href="#">&raquo; {{ getNextOffset() }}</a>
+    <a (click)="goPage(getPrevOffset())">&laquo; {{ getPrevOffset() }}</a>
+    <a (click)="goPage(getNextOffset())">&raquo; {{ getNextOffset() }}</a>
   </div>
 </div>

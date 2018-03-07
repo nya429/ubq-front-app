@@ -53,4 +53,24 @@ export class ParticipantService {
           }
       );
   }
+
+  getParticipantListByOpotions(offset: number) {
+    const options = offset ?
+     new HttpParams().set('pg', offset.toString()): null;
+     console.log(options);
+
+    return this.httpClient.get(`${this.httpOptions.url}/list`, {
+        observe: 'body',
+        responseType: 'json',
+        params: options
+      })
+      .subscribe(
+          (result) => {
+            const data = result['data'];
+            this.setParticipants(data);
+          }, (err: HttpErrorResponse)  => {
+            console.error(err);
+          }
+      );
+  }
 }

@@ -49,6 +49,6 @@ export class PaginateComponent implements OnInit {
   }
 
   goPage(offset) {
-    
+    this.pmService.getParticipantListByOpotions(offset);
   }
 }
