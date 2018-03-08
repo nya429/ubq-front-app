@@ -13,6 +13,9 @@ export class PaginateComponent implements OnInit {
   count: number;
   limit: number;
   currentOffset: number;
+
+  pageCount: number;
+  currentPage: number;
   prevOffset: number;
   nextOffset: number;
 
@@ -22,17 +25,20 @@ export class PaginateComponent implements OnInit {
     this.subscription = this.pmService.paginateChanged.subscribe(
       paginateConf => {
         this.count = paginateConf['count'];
-        this.limit = 2;
-        this.currentOffset = 1;
+        this.limit = paginateConf['limit'];
+        this.currentOffset = paginateConf['offset'];
+        this.pageCount = Math.ceil(this.count / this.limit);
+        this.currentPage = Math.floor(this.currentOffset / this.limit) + 1;
       });
   }
 
   getPages() {
-    const pageCount = Math.ceil(this.count / this.limit);
     const pages: number[] = [];
-    for (let i = 0; i < pageCount; i++) {
-      const offset = 0 + i * this.limit;
-      pages.push(offset);
+    const begin = ( this.currentPage < 5 || this.pageCount < 10) ? 1 :
+     (( this.pageCount > 9 && this.pageCount - this.currentPage < 5 ) ? this.pageCount - 8 : this.currentPage - 4);
+    const end = begin > this.pageCount - 8 ? this.pageCount : begin + 8;
+    for (let i = begin; i <= end; i++) {
+      pages.push(i);
     }
     return pages;
   }
@@ -43,12 +49,14 @@ export class PaginateComponent implements OnInit {
   }
 
   getNextOffset() {
-    console.log(this.count);
     this.nextOffset = this.currentOffset + this.limit < this.count ? this.currentOffset + this.limit : 0;
     return this.nextOffset;
   }
 
-  goPage(offset) {
-    this.pmService.getParticipantListByOpotions(offset);
+  goPage(page, limit) {
+    limit = limit ? limit : this.limit;
+    const offset = page ? (page - 1) * this.limit : 0;
+    this.pmService.getParticipantListByOpotions(offset, limit);
   }
+
 }

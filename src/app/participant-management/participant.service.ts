@@ -32,7 +32,7 @@ export class ParticipantService {
     this.participants = participants;
     this.paginageConf = {
       count: data.count,
-      page: data.page,
+      offset: data.offset,
       limit: data.limit,
     };
     this.participantsChanged.next(this.participants.slice());
@@ -54,10 +54,10 @@ export class ParticipantService {
       );
   }
 
-  getParticipantListByOpotions(offset: number) {
-    const options = offset ?
-     new HttpParams().set('pg', offset.toString()): null;
-     console.log(options);
+  getParticipantListByOpotions(offset: number, limit: number) {
+    const options = new HttpParams()
+    .set('offset', offset.toString())
+    .set('ltd', limit.toString());
 
     return this.httpClient.get(`${this.httpOptions.url}/list`, {
         observe: 'body',

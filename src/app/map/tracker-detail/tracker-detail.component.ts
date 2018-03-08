@@ -16,10 +16,10 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   editMode = false;
   editedTrackerIndex: number;
   tracker: Tracker;
-  id:number;
-  name:string;
-  status:number;
-  note:string;
+  id: number;
+  name: string;
+  status: number;
+  note: string;
   private selectedTrackerSubscription: Subscription;
   private hasSelectedTrackerSubscription: Subscription;
   constructor(private mapService: MapService) { }
@@ -36,7 +36,7 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
         this.name = this.tracker.alias ? this.tracker.alias : 'tracker';
         this.note = this.tracker.note ? this.tracker.note : 'N/A';
       }
-    )
+    );
     this.hasSelectedTrackerSubscription = this.mapService.hasSelectedTracker.subscribe(
       (index: number) => {
         this.editMode = false;
@@ -53,7 +53,7 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
         this.name = this.tracker.alias ? this.tracker.alias : 'tracker';
         this.note = this.tracker.note ? this.tracker.note : 'N/A';
       }
-    )
+    );
   }
 
   ngOnDestroy() {
@@ -68,7 +68,6 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   }
 
   onUpdate(form: NgForm) {
-    console.log(form.value)
     const value = form.value;
     this.mapService.updateTrackerInfo(this.editedTrackerIndex, value);
     this.name = value.alias;
