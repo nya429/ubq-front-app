@@ -12,7 +12,8 @@ export class ParticipantService {
   paginateChanged = new Subject<object>();
   private participants: Participant[];
   private paginageConf: object;
-
+  private sortBy: string;
+  private orderBy: string;
   private keyword: string;
 
   private httpOptions = {
@@ -39,6 +40,11 @@ export class ParticipantService {
     this.paginateChanged.next(this.paginageConf);
   }
 
+  setOrderer(orderBy: string, sortBy: string) {
+    this.orderBy = orderBy;
+    this.sortBy = sortBy;
+  }
+
   getParticipantList() {
     return this.httpClient.get(`${this.httpOptions.url}/list`, {
         observe: 'body',
@@ -54,10 +60,17 @@ export class ParticipantService {
       );
   }
 
-  getParticipantListByOpotions(offset: number, limit: number) {
-    const options = new HttpParams()
-    .set('offset', offset.toString())
-    .set('ltd', limit.toString());
+  getParticipantListByOpotions(offset?: number, limit?: number) {
+    let options = new HttpParams();
+    if (offset) {
+      options = options.append('offset', offset.toString());
+    }
+    if (limit) {
+      options = options.append('ltd', limit.toString());
+    }
+    if (this.sortBy) {
+      options = options.append('sortBy', this.sortBy.toString()).append('orderBy', this.orderBy);
+    }
 
     return this.httpClient.get(`${this.httpOptions.url}/list`, {
         observe: 'body',

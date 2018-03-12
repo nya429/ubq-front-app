@@ -13,6 +13,7 @@ export class PaginateComponent implements OnInit {
   count: number;
   limit: number;
   currentOffset: number;
+  pageLen = 9;
 
   pageCount: number;
   currentPage: number;
@@ -34,9 +35,11 @@ export class PaginateComponent implements OnInit {
 
   getPages() {
     const pages: number[] = [];
-    const begin = ( this.currentPage < 5 || this.pageCount < 10) ? 1 :
-     (( this.pageCount > 9 && this.pageCount - this.currentPage < 5 ) ? this.pageCount - 8 : this.currentPage - 4);
-    const end = begin > this.pageCount - 8 ? this.pageCount : begin + 8;
+    const begin = ( this.currentPage < Math.floor(this.pageLen / 2) + 1 || this.pageCount < this.pageLen + 1) ? 1 :
+     (( this.pageCount > this.pageLen && this.pageCount - this.currentPage < Math.floor(this.pageLen / 2) + 1 )
+     ? this.pageCount - this.pageLen - 1
+     : this.currentPage - Math.floor(this.pageLen / 2));
+    const end = begin > this.pageCount - (this.pageLen - 1) ? this.pageCount : begin + (this.pageLen - 1);
     for (let i = begin; i <= end; i++) {
       pages.push(i);
     }
@@ -54,8 +57,9 @@ export class PaginateComponent implements OnInit {
   }
 
   goPage(page, limit) {
-    limit = limit ? limit : this.limit;
+    limit = limit ? +limit : this.limit;
     const offset = page ? (page - 1) * this.limit : 0;
+    console.log(page, limit);
     this.pmService.getParticipantListByOpotions(offset, limit);
   }
 

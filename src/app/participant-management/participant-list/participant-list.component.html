@@ -3,13 +3,25 @@
       <table class="table table-striped table-hover">
           <thead class="thead-inverse">
               <tr>
-                  <th>#</th>
-                  <th>Name<span class="caret"></span></th>
-                  <th>Job Title<span class="caret"></span></th>
-                  <th>Company<span class="caret"></span></th>
-                  <th>Priority<span class="caret"></span></th>
-                  <th>Email<span class="caret"></span></th>
-                  <th>Phone<span class="caret"></span></th>
+                  <th (click)="sortByCloumn('create_time')">#</th>
+                  <th [ngClass]="{'isSorted': sortBy === 'first_name'}" (click)="sortByCloumn('first_name')">Name <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'first_name' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'first_name' && orderBy === 'ASC'}"></span></th>
+                  <th [ngClass]="{'isSorted': sortBy === 'job_title'}" (click)="sortByCloumn('job_title')">Job Title <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'job_title' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'job_title' && orderBy === 'ASC'}"></span></th>
+                  <th [ngClass]="{'isSorted': sortBy === 'company_name'}" (click)="sortByCloumn('company_name')">Company <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'company_name' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'company_name' && orderBy === 'ASC'}"></span></th>
+                  <th  [ngClass]="{'isSorted': sortBy === 'priority_status'}" (click)="sortByCloumn('priority_status')">Priority <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'priority_status' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'priority_status' && orderBy === 'ASC'}"></span></th>
+                  <th [ngClass]="{'isSorted': sortBy === 'email'}" (click)="sortByCloumn('email')">Email <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'email' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'email' && orderBy === 'ASC'}"></span></th>
+                  <th [ngClass]="{'isSorted': sortBy === 'phone'}" (click)="sortByCloumn('phone')">Phone <span  class="glyphicon"
+                    [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'phone' && orderBy === 'DESC',
+                    'glyphicon-triangle-top': sortBy === 'phone' && orderBy === 'ASC'}"></span></th>
                   <th></th>
                 </tr>
           </thead>
