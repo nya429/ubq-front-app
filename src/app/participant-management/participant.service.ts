@@ -1,5 +1,5 @@
 
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs/Subject';
@@ -10,11 +10,15 @@ import { Participant } from './../shared/participant.model';
 export class ParticipantService {
   participantsChanged = new Subject<Participant[]>();
   paginateChanged = new Subject<object>();
+  termChanged = new Subject<string>();
+  orderChanged = new Subject();
+
   private participants: Participant[];
   private paginageConf: object;
   private sortBy: string;
   private orderBy: string;
-  private keyword: string;
+  private limit: number;
+  private term: string;
 
   private httpOptions = {
     headers: new HttpHeaders({
@@ -25,6 +29,16 @@ export class ParticipantService {
   };
 
   constructor(private httpClient: HttpClient) {}
+
+  reset() {
+    this.limit = null;
+    this.sortBy = null;
+    this.orderBy = null;
+    this.term = null;
+    this.paginageConf = null;
+    this.termChanged.next(this.term);
+    this.orderChanged.next();
+  }
 
   setParticipants(data) {
     const participants = data['participants'].map(
@@ -45,34 +59,36 @@ export class ParticipantService {
     this.sortBy = sortBy;
   }
 
-  getParticipantList() {
-    return this.httpClient.get(`${this.httpOptions.url}/list`, {
-        observe: 'body',
-        responseType: 'json'
-      })
-      .subscribe(
-          (result) => {
-            const data = result['data'];
-            this.setParticipants(data);
-          }, (err: HttpErrorResponse)  => {
-            console.error(err);
-          }
-      );
+  getTerm() {
+    return this.term;
+  }
+
+  setTerm(term: string) {
+    this.term = term;
+    this.termChanged.next(this.term);
+  }
+
+  setLimit(limit?: number) {
+    this.limit = limit;
   }
 
   getParticipantListByOpotions(offset?: number, limit?: number) {
+    const urlSuffix = this.term ? '/search' : '/list';
     let options = new HttpParams();
     if (offset) {
       options = options.append('offset', offset.toString());
     }
-    if (limit) {
+    if (this.limit) {
       options = options.append('ltd', limit.toString());
     }
     if (this.sortBy) {
       options = options.append('sortBy', this.sortBy.toString()).append('orderBy', this.orderBy);
     }
+    if (this.term) {
+      options = options.append('term', this.term);
+    }
 
-    return this.httpClient.get(`${this.httpOptions.url}/list`, {
+    return this.httpClient.get(`${this.httpOptions.url}${urlSuffix}`, {
         observe: 'body',
         responseType: 'json',
         params: options

@@ -16,7 +16,7 @@
                   <th  [ngClass]="{'isSorted': sortBy === 'priority_status'}" (click)="sortByCloumn('priority_status')">Priority <span  class="glyphicon"
                     [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'priority_status' && orderBy === 'DESC',
                     'glyphicon-triangle-top': sortBy === 'priority_status' && orderBy === 'ASC'}"></span></th>
-                  <th [ngClass]="{'isSorted': sortBy === 'email'}" (click)="sortByCloumn('email')">Email <span  class="glyphicon"
+                  <th [ngClass]="{'isSorted': sortBy === 'email'}" (click)="sortByCloumn('email')">Email <span align="right" class="glyphicon"
                     [ngClass]="{'glyphicon-triangle-bottom': sortBy === 'email' && orderBy === 'DESC',
                     'glyphicon-triangle-top': sortBy === 'email' && orderBy === 'ASC'}"></span></th>
                   <th [ngClass]="{'isSorted': sortBy === 'phone'}" (click)="sortByCloumn('phone')">Phone <span  class="glyphicon"
@@ -30,7 +30,7 @@
               <th scope="row">{{ participant.participantId}}</th> 
               <td>{{participant.firstName}} {{participant.lastName}}</td>
               <td>{{participant.jobTitle}} </td>
-              <td>{{participant.companyName}} </td> 
+              <td (click)="goCompany(participant.companyName)">{{participant.companyName}} </td> 
               <td>{{participant.priorityStatus}} </td> 
               <td>{{participant.email}} </td>
               <td>{{participant.phone}} </td>

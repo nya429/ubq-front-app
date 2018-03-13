@@ -1,5 +1,5 @@
 import { ParticipantService } from './../participant.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './paginate.component.html',
   styleUrls: ['./paginate.component.css']
 })
-export class PaginateComponent implements OnInit {
+export class PaginateComponent implements OnInit, OnDestroy {
   subscription: Subscription;
   count: number;
   limit: number;
@@ -33,11 +33,15 @@ export class PaginateComponent implements OnInit {
       });
   }
 
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
   getPages() {
     const pages: number[] = [];
-    const begin = ( this.currentPage < Math.floor(this.pageLen / 2) + 1 || this.pageCount < this.pageLen + 1) ? 1 :
+    const begin = ( this.currentPage < (Math.floor(this.pageLen / 2) + 1) || this.pageCount < this.pageLen + 1) ? 1 :
      (( this.pageCount > this.pageLen && this.pageCount - this.currentPage < Math.floor(this.pageLen / 2) + 1 )
-     ? this.pageCount - this.pageLen - 1
+     ? this.pageCount - (this.pageLen - 1)
      : this.currentPage - Math.floor(this.pageLen / 2));
     const end = begin > this.pageCount - (this.pageLen - 1) ? this.pageCount : begin + (this.pageLen - 1);
     for (let i = begin; i <= end; i++) {
@@ -57,10 +61,10 @@ export class PaginateComponent implements OnInit {
   }
 
   goPage(page, limit) {
-    limit = limit ? +limit : this.limit;
+    this.limit = limit ? +limit : this.limit;
+    this.pmService.setLimit(this.limit);
     const offset = page ? (page - 1) * this.limit : 0;
-    console.log(page, limit);
-    this.pmService.getParticipantListByOpotions(offset, limit);
+    this.pmService.getParticipantListByOpotions(offset, this.limit);
   }
 
 }

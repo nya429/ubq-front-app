@@ -6,10 +6,19 @@ th {
     cursor: pointer;
 }
 
+
+.isSorted:hover {
+    background-color: #00a1d6;
+    color:#fff;
+}
+
+
 th:hover {
-    background-color: lightcyan;
+    background-color: #eee;
 }
 
 .isSorted {
-    background-color: skyblue;
+    background-color: #00a1d6;
+    color:#fff;
 }
+

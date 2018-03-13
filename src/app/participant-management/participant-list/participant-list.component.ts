@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Participant } from './../../shared/participant.model';
@@ -9,19 +9,30 @@ import { ParticipantService } from './../participant.service';
   templateUrl: './participant-list.component.html',
   styleUrls: ['./participant-list.component.css']
 })
-export class ParticipantListComponent implements OnInit {
-  participants: Participant[];
-  subscription: Subscription;
-  orderBy: string;
-  sortBy: string;
+export class ParticipantListComponent implements OnInit, OnDestroy {
+  private participants: Participant[];
+  private orderBy: string;
+  private sortBy: string;
+
+  private subscription: Subscription;
+  private resetSubscription: Subscription;
+
   constructor(private pmService: ParticipantService) { }
 
   ngOnInit() {
     this.subscription = this.pmService.participantsChanged.subscribe(
       (participants: Participant[]) => {
         this.participants = participants;
-        console.log('after listing', this.participants);
       });
+    this.resetSubscription = this.pmService.orderChanged.subscribe(() => {
+      this.orderBy = null;
+      this.sortBy = null;
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+    this.resetSubscription.unsubscribe();
   }
 
   sortByCloumn(columnName: string) {
@@ -35,6 +46,11 @@ export class ParticipantListComponent implements OnInit {
       this.orderBy = null;
     }
     this.pmService.setOrderer(this.orderBy, this.sortBy);
+    this.pmService.getParticipantListByOpotions();
+  }
+
+  goCompany() {
+    this.pmService.setTerm('ubq');
     this.pmService.getParticipantListByOpotions();
   }
 }

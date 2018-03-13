@@ -11,7 +11,11 @@ export class ParticipantManagementComponent implements OnInit {
   constructor(private pmService: ParticipantService) { }
 
   ngOnInit() {
-    this.pmService.getParticipantList();
+    this.pmService.getParticipantListByOpotions();
   }
 
+  refresh() {
+    this.pmService.reset();
+    this.pmService.getParticipantListByOpotions();
+  }
 }

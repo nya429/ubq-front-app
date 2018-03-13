@@ -1,8 +1,8 @@
   <div class="form-group">  
     <div class="input-group">  
-      <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Filter">  
+      <input (keyup.enter)="search(term.value)" type="text" name="term" id="term" #term class="form-control" placeholder="Filter" maxlength="50">  
       <span class="input-group-btn">  
-        <button class="btn btn-info" type="submit">Search</button>  
+        <button class="btn btn-info" type="submit"  (click)="search(term.value)">Search</button>  
       </span>  
     </div>  
   </div>
