@@ -1,0 +1,86 @@
+<form [formGroup]="participantForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="col-md-12 col-lg-12 " align="center"> 
+      <br>
+            <img alt="user Img" 
+                src="../assets/user.svg"
+                class="img-circle img-responsive user-img">
+      <br><br>
+    </div>
+  </div>
+   <div class="row">
+            <div class="col-sm-3 col-sm-offset-3">
+                <div class="form-group" >
+                    <label for="firstName">First name</label>
+                    <input type="text" id="first-name"
+                            class="form-control"
+                            formControlName="firstName">
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="form-group" >
+                    <label for="lastName">Last name</label>
+                    <input type="text" id="last-name"
+                            class="form-control"
+                            formControlName="lastName">
+                </div>
+            </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+          <div class="form-group" >
+              <label for="tagId">Tag</label>
+              <input type="text" id="tag-id"
+                      class="form-control"
+                      formControlName="tagId">
+          </div>
+      </div>
+
+      <div class="col-sm-3">
+          <div class="form-group" >
+              <label for="priorityStatus">Priority status</label>
+              <input type="text" id="priority-status"
+                      class="form-control"
+                      formControlName="priorityStatus">
+          </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+          <div class="form-group" >
+              <label for="companyName">Company</label>
+              <input type="tag" id="company-name"
+                      class="form-control"
+                      formControlName="companyName">
+          </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="form-group" >
+                <label for="jobTitle">Job title</label>
+                <input type="tag" id="job-title"
+                        class="form-control"
+                        formControlName="jobTitle">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+            <div class="form-group" >
+                <label for="email">Email</label>
+                <input type="tag" id="email"
+                        class="form-control"
+                        formControlName="email">
+          </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 col-sm-offset-3">
+            <div class="form-group" >
+                <label for="phone">Phone</label>
+                <input type="tag" id="phone"
+                        class="form-control"
+                        formControlName="phone">
+            </div>
+       </div>
+   </div>
+</form>

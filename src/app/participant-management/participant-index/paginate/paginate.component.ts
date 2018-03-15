@@ -1,4 +1,4 @@
-import { ParticipantService } from './../participant.service';
+import { ParticipantService } from './../../participant.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';

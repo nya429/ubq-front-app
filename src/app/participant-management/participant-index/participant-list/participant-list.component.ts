@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
-import { Participant } from './../../shared/participant.model';
-import { ParticipantService } from './../participant.service';
+import { Participant } from './../../../shared/participant.model';
+import { ParticipantService } from './../../participant.service';
 
 @Component({
   selector: 'app-participant-list',
@@ -10,7 +10,7 @@ import { ParticipantService } from './../participant.service';
   styleUrls: ['./participant-list.component.css']
 })
 export class ParticipantListComponent implements OnInit, OnDestroy {
-  private participants: Participant[];
+  participants: Participant[];
   private orderBy: string;
   private sortBy: string;
 
@@ -28,6 +28,7 @@ export class ParticipantListComponent implements OnInit, OnDestroy {
       this.orderBy = null;
       this.sortBy = null;
     });
+    this.pmService.getParticipantListByOpotions();
   }
 
   ngOnDestroy() {

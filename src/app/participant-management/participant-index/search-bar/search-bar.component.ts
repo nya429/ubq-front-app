@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 
 import { Subscription } from 'rxjs/Subscription';
 
-import { ParticipantService } from './../participant.service';
+import { ParticipantService } from './../../participant.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -18,7 +18,6 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscription = this.pmService.termChanged.subscribe(
       term => {
-        console.log('got it');
         this.term.nativeElement.value = term;
       });
   }

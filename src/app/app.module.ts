@@ -10,8 +10,6 @@ import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ParticipantManagementModule } from './participant-management/participant-management.module';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

@@ -1,4 +1,3 @@
-
 import { Injectable, EventEmitter } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
@@ -79,7 +78,7 @@ export class ParticipantService {
       options = options.append('offset', offset.toString());
     }
     if (this.limit) {
-      options = options.append('ltd', limit.toString());
+      options = options.append('ltd', this.limit.toString());
     }
     if (this.sortBy) {
       options = options.append('sortBy', this.sortBy.toString()).append('orderBy', this.orderBy);

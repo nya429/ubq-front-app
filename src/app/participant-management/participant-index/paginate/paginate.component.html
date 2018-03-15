@@ -14,7 +14,7 @@
       <li style="cursor:pointer;"><a (click)="currentPage > 1 && goPage(currentPage - 1)">&laquo;</a></li> 
       <li *ngFor="let page of getPages()" style="cursor:pointer;" [ngClass]="{active: page == currentPage}"><a (click)="page != currentPage && goPage(page)">{{ page }}</a><li>
       <li style="cursor:pointer;"><a (click)="currentPage < pageCount && goPage(currentPage + 1)">&raquo;</a></li> 
-      <span id="pagination-text">{{ currentOffset + 1 }} - {{ currentOffset + limit > count ? count : currentOffset + limit }} of {{ count }}</span>
+      <span id="pagination-text">{{ currentOffset + 1 }} - {{ currentOffset + limit > count ? count : currentOffset + limit }} of {{ count }} {{ pmService.getTerm() && 'results' }}</span>
     </ul>
   </div> 
 </div>

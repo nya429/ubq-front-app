@@ -1,4 +1,3 @@
-import { ParticipantListComponent } from './../participant-management/participant-list/participant-list.component';
 export class Participant {
     public participantId: number;
     public tagId: String;
