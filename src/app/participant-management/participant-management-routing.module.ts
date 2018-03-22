@@ -11,7 +11,8 @@ const participantManagementRoutes: Routes = [
     children: [
         {path: '', redirectTo: 'list', pathMatch: 'full'},
         {path: 'list', component: ParticipantIndexComponent},
-        {path: 'edit', component: ParticipantItemComponent},
+        {path: 'new', component: ParticipantItemComponent},
+        {path: ':id/edit', component: ParticipantItemComponent},
         {path: 'company', component: CompanyListingComponent}]
     },
 ];

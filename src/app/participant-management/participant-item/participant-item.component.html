@@ -1,4 +1,17 @@
-<form [formGroup]="participantForm" (ngSubmit)="onSubmit()">
+<app-loading *ngIf='!participantForm'></app-loading>
+<form *ngIf='participantForm' [formGroup]="participantForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-3 col-md-offset-9">
+        <div *ngIf="!editMode" class="form-group pull-right" style="vertical-align: center;">
+          <button type="button" [disabled]='!participantForm.valid' class="btn btn-success" (click)='onSubmit()'>Add</button>
+          <button type="button" class="btn btn-danger" (click)='onCancel()'>Cancel</button>
+        </div> 
+        <div *ngIf="editMode" class="form-group pull-right" style="vertical-align: center;">
+          <button type="button"  class="btn btn-success" (click)='onUpdate()'>Save</button>
+          <button type="button" class="btn btn-danger" (click)='onDelete()'>Delete</button>
+        </div>
+    </div>
+  </div>
   <div class="row">
     <div class="col-md-12 col-lg-12 " align="center"> 
       <br>
@@ -8,16 +21,75 @@
       <br><br>
     </div>
   </div>
-   <div class="row">
-            <div class="col-sm-3 col-sm-offset-3">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <legend for="Info">Tracker</legend>
+        </div>
+        <div class="col-md-6 col-md-offset-3">
                 <div class="form-group" >
-                    <label for="firstName">First name</label>
+                    <label for="tagId">Tag</label>
+                    <input  
+                            (keyup)="getTracker()"
+                            type="text"
+                            id="tag-id" class="form-control" autocomplete="off"
+                            formControlName="tagId">
+                </div>
+                <app-tracker-result-list 
+                *ngIf='tagFocused'
+                appClickOutside 
+                (clickOutside)="onTagBlur()"
+                (trackerSelected)="onTrackerSelected($event)" 
+                [trackers]="trackers"
+                ></app-tracker-result-list>
+                <div class='alert alert-danger' *ngIf=" participantForm.get('tagId').touched && !participantForm.get('tagId').valid && participantForm.get('tagId').errors">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <Strong *ngIf="participantForm.get('tagId').errors['required']">Tracker is required</Strong>
+                    <Strong *ngIf="participantForm.get('tagId').errors['InvalidTrackerId']">Tracker ID dosen't exist</Strong>
+                    <Strong *ngIf="participantForm.get('tagId').errors['SignedTracker']">This Tracker has been signed</Strong>
+                </div>
+                <div class='alert alert-success' *ngIf=" participantForm.get('tagId').touched && participantForm.get('tagId').valid">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong> All Set</strong>
+                </div>
+                <div class='alert alert-info' *ngIf=" participantForm.get('tagId').touched && participantForm.get('tagId').pending">
+                        <div class="row">
+                                <div class="col-xs-2">
+                                        <app-loader-small></app-loader-small>
+                                    </div>
+                                    <div class="col-xs-10">
+                                      <a>  Looking up Availibiltiy </a>
+                               </div>
+                        </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                    <div class="form-group" >
+                        <label for="priorityStatus">Priority status</label>
+                        <select required id="priority-status"
+                        class="form-control"
+                        formControlName="priorityStatus">
+                            <option style='color: #aaa;' value="" disabled hidden selected>Select participant Identity</option>
+                            <option value="2">Visitor</option>
+                            <option value="1">VIP</option>
+                            <option value="0">Superme</option>
+                        </select>
+                    </div>
+          
+                </div>
+    </div>
+   <div class="row">
+      <div class="col-md-8 col-md-offset-2">
+           <legend for="Info">Info</legend>
+      </div>
+            <div class="col-md-3 col-md-offset-3">
+                <div class="form-group" >
+                    <label data-icon=“u”  for="firstName">First name</label>
                     <input type="text" id="first-name"
                             class="form-control"
                             formControlName="firstName">
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-md-3">
                 <div class="form-group" >
                     <label for="lastName">Last name</label>
                     <input type="text" id="last-name"
@@ -26,27 +98,9 @@
                 </div>
             </div>
     </div>
-    <div class="row">
-        <div class="col-sm-3 col-sm-offset-3">
-          <div class="form-group" >
-              <label for="tagId">Tag</label>
-              <input type="text" id="tag-id"
-                      class="form-control"
-                      formControlName="tagId">
-          </div>
-      </div>
 
-      <div class="col-sm-3">
-          <div class="form-group" >
-              <label for="priorityStatus">Priority status</label>
-              <input type="text" id="priority-status"
-                      class="form-control"
-                      formControlName="priorityStatus">
-          </div>
-      </div>
-    </div>
     <div class="row">
-        <div class="col-sm-3 col-sm-offset-3">
+        <div class="col-md-3 col-md-offset-3">
           <div class="form-group" >
               <label for="companyName">Company</label>
               <input type="tag" id="company-name"
@@ -54,7 +108,7 @@
                       formControlName="companyName">
           </div>
         </div>
-        <div class="col-sm-3">
+        <div class="col-md-3">
             <div class="form-group" >
                 <label for="jobTitle">Job title</label>
                 <input type="tag" id="job-title"
@@ -64,7 +118,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-3 col-sm-offset-3">
+        <div class="col-md-3 col-md-offset-3">
             <div class="form-group" >
                 <label for="email">Email</label>
                 <input type="tag" id="email"
@@ -72,12 +126,10 @@
                         formControlName="email">
           </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-3 col-sm-offset-3">
+        <div class="col-md-3">
             <div class="form-group" >
                 <label for="phone">Phone</label>
-                <input type="tag" id="phone"
+                <input type="tel" id="phone"
                         class="form-control"
                         formControlName="phone">
             </div>

@@ -67,4 +67,8 @@ export class PaginateComponent implements OnInit, OnDestroy {
     this.pmService.getParticipantListByOpotions(offset, this.limit);
   }
 
+  getTerm() {
+    return this.pmService.getTerm();
+  }
+
 }

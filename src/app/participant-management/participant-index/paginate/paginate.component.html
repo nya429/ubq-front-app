@@ -1,7 +1,7 @@
 <div class="row">
   <div  class="col-xs-3">  
       <select [ngModel]="limit" (change)="goPage(null, $event.target.value)" id="limit-select" class="form-control">  
-          <option value="5">5</option>  
+        <option value="5">5</option>  
         <option value="10">10</option>  
         <option value="15">15</option>  
         <option value="20">20</option>  
@@ -14,7 +14,7 @@
       <li style="cursor:pointer;"><a (click)="currentPage > 1 && goPage(currentPage - 1)">&laquo;</a></li> 
       <li *ngFor="let page of getPages()" style="cursor:pointer;" [ngClass]="{active: page == currentPage}"><a (click)="page != currentPage && goPage(page)">{{ page }}</a><li>
       <li style="cursor:pointer;"><a (click)="currentPage < pageCount && goPage(currentPage + 1)">&raquo;</a></li> 
-      <span id="pagination-text">{{ currentOffset + 1 }} - {{ currentOffset + limit > count ? count : currentOffset + limit }} of {{ count }} {{ pmService.getTerm() && 'results' }}</span>
+      <span id="pagination-text">{{ currentOffset + 1 }} - {{ currentOffset + limit > count ? count : currentOffset + limit }} of {{ count }} {{ getTerm() && 'results' }}</span>
     </ul>
   </div> 
 </div>

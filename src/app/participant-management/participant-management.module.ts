@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
@@ -16,6 +17,11 @@ import { PaginateComponent } from './participant-index/paginate/paginate.compone
 import { ParticipantIndexComponent } from './participant-index/participant-index.component';
 import { ParticipantNavComponent } from './participant-nav/participant-nav.component';
 import { ParticipantItemComponent } from './participant-item/participant-item.component';
+import { ParticipantDetailComponent } from './participant-detail/participant-detail.component';
+import { ShowDetailDirective } from './show-detail.directive';
+import { TableStripedDirective } from './table-striped.directive';
+import { TrackerResultListComponent } from './tracker-result-list/tracker-result-list.component';
+import { ClickOutsideDirective } from './click-outside.directive';
 
 @NgModule({
     declarations: [
@@ -26,14 +32,20 @@ import { ParticipantItemComponent } from './participant-item/participant-item.co
     PaginateComponent,
     ParticipantNavComponent,
     ParticipantIndexComponent,
-    ParticipantItemComponent],
+    ParticipantItemComponent,
+    ParticipantDetailComponent,
+    ShowDetailDirective,
+    TableStripedDirective,
+    TrackerResultListComponent,
+    ClickOutsideDirective],
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
         HttpClientModule,
-        ParticipantManagementRoutingModule
+        ParticipantManagementRoutingModule,
+        SharedModule
     ],
     exports: [
 

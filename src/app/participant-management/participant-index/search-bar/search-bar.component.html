@@ -2,7 +2,8 @@
     <div class="input-group">  
       <input (keyup.enter)="search(term.value)" type="text" name="term" id="term" #term class="form-control" placeholder="Filter" maxlength="50">  
       <span class="input-group-btn">  
-        <button class="btn btn-info" type="submit"  (click)="search(term.value)">Search</button>  
+          <button class="btn btn-info" type="submit" (click)="clear()"><span class="glyphicon glyphicon-remove"></span></button> 
+        <button class="btn btn-info" type="submit"  (click)="search(term.value)"><span class="glyphicon glyphicon-search"></span></button>  
       </span>  
     </div>  
   </div>

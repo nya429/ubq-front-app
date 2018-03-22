@@ -1,5 +1,6 @@
 th, td {
     padding: 20px;
+    vertical-align: middle;
 }
 
 th {
@@ -7,6 +8,9 @@ th {
     color: #31708f;
 }
 
+.stripped {
+    background-color: #fafafa;
+}
 
 .isSorted:hover {
     background-color: #00a1d6;
@@ -23,3 +27,24 @@ th:hover {
     color:#fff;
 }
 
+.table-head-cog {
+    cursor: auto;
+    text-align: center;
+}
+
+.table-date-cog {
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: auto;
+    text-align: center;
+    border-left: 1px solid #ddd;
+}
+
+.table-date-cog>a {
+    padding: 5px;
+}
+
+.gi-2x{font-size: 1.5em;}
+.gi-3x{font-size: 3em;}
+.gi-4x{font-size: 4em;}
+.gi-5x{font-size: 5em;}

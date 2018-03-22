@@ -11,6 +11,7 @@ import { ParticipantService } from './../../participant.service';
 })
 export class ParticipantListComponent implements OnInit, OnDestroy {
   participants: Participant[];
+  detailedIndex: number;
   private orderBy: string;
   private sortBy: string;
 
@@ -23,10 +24,12 @@ export class ParticipantListComponent implements OnInit, OnDestroy {
     this.subscription = this.pmService.participantsChanged.subscribe(
       (participants: Participant[]) => {
         this.participants = participants;
+        this.detailedIndex = null;
       });
     this.resetSubscription = this.pmService.orderChanged.subscribe(() => {
       this.orderBy = null;
       this.sortBy = null;
+      this.detailedIndex = null;
     });
     this.pmService.getParticipantListByOpotions();
   }
@@ -53,5 +56,28 @@ export class ParticipantListComponent implements OnInit, OnDestroy {
   goCompany() {
     this.pmService.setTerm('ubq');
     this.pmService.getParticipantListByOpotions();
+  }
+
+  showDetail(index: number) {
+    this.detailedIndex = index === this.detailedIndex ? null : index;
+  }
+
+  onRemove(participantId: number) {
+    if (confirm('Are you sure you want to delete this?')) {
+      this.pmService.deleteParticipantById(participantId);
+    }
+  }
+
+  getPriorityStatus(priorityStatus: number) {
+    switch (priorityStatus) {
+      case 0:
+        return 'Supereme';
+      case 1:
+        return 'VIP';
+      case 2:
+        return 'Vistor';
+      default:
+        return 'not assigned yet';
+    }
   }
 }

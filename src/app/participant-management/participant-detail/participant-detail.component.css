@@ -1,0 +1,20 @@
+.trivia {
+    color: #aaa;
+}
+
+.user-img {
+    height: 150px;
+    width: 150px;
+}
+
+ul.no-circle {
+    list-style-type: none;
+}
+
+li {
+    line-height: 2em;
+}
+
+li>span {
+    color: #31708f;
+}

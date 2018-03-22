@@ -1,0 +1,34 @@
+<!-- <div class="container list">
+  <div class="row">
+    <div class="col-md-3"> -->
+   
+        <div  *ngIf='trackers' class="dropdown-content list-group">
+          <a  style="cursor:pointer;" *ngFor='let tracker of trackers;' class="list-group-item"
+              (click)="onSelect($event, tracker.tracker_id)">
+              <span class="badge">used</span>
+              {{ tracker.tracker_id }}
+          </a>
+          <li *ngIf='trackers.length > 0' class="list-group-item">
+            <a style="cursor:pointer;">Tracker Management</a> 
+            <span title='close' class="pull-right glyphicon glyphicon-remove"></span>
+           </li>
+        </div>
+        <div  *ngIf='trackers && trackers.length === 0' class="dropdown-content list-group">
+            <a  class="list-group-item"> No result </a>
+        </div>
+        <div  *ngIf='!trackers' class="dropdown-content list-group">
+          <div class="list-group-item">
+            <div class="row">
+                <div class="col-xs-2">
+                    <app-loader-small></app-loader-small>
+                </div>
+                <div class="col-xs-10">
+                  <a>  Looking up trackers </a>
+                </div>
+            </div>
+          </div>
+        </div>
+      
+    <!-- </div>
+  </div>
+</div> -->

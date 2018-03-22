@@ -25,6 +25,12 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
+
+  clear() {
+    this.pmService.setTerm(null);
+    this.pmService.getParticipantListByOpotions();
+  }
+
   search(term: string) {
     term = term.trim();
     if (this.term.nativeElement.value  === this.pmService.getTerm() ) {
@@ -32,6 +38,5 @@ export class SearchBarComponent implements OnInit, OnDestroy {
     }
     this.pmService.setTerm(term);
     this.pmService.getParticipantListByOpotions();
-
   }
 }

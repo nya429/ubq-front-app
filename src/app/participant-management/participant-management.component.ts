@@ -1,5 +1,5 @@
 import { Router, ActivatedRoute, Params, UrlSegment, RouterEvent, NavigationEnd, NavigationStart } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { ParticipantService } from './participant.service';
 
@@ -8,7 +8,7 @@ import { ParticipantService } from './participant.service';
   templateUrl: './participant-management.component.html',
   styleUrls: ['./participant-management.component.css']
 })
-export class ParticipantManagementComponent implements OnInit {
+export class ParticipantManagementComponent implements OnInit, OnDestroy {
   onEdit: boolean;
   title: string;
 
@@ -21,12 +21,17 @@ export class ParticipantManagementComponent implements OnInit {
       (e: RouterEvent) => {
         if (e instanceof NavigationStart) {
           const lastUrlSegment = e['url'].substr((e['url'].lastIndexOf('/') + 1));
-          this.onEdit = lastUrlSegment === 'edit';
-          this.title = this.onEdit ? 'Add a participant' : 'Participants';
+          this.onEdit = lastUrlSegment === 'new' || lastUrlSegment === 'edit';
+          this.title = this.onEdit ? (lastUrlSegment === 'new' ? 'Add a participant' : 'Edit') : 'Participants';
         }
       });
-      this.onEdit = this.router.url.substr((this.router.url.lastIndexOf('/') + 1)) === 'edit';
-      this.title = this.onEdit ? 'Add a participant' : 'Participants';
+      const lastUrl = this.router.url.substr((this.router.url.lastIndexOf('/') + 1));
+      this.onEdit = lastUrl === 'edit' || lastUrl === 'new';
+      this.title = this.onEdit ? (lastUrl === 'new' ? 'Add a participant' : 'Edit')  : 'Participants';
+  }
+
+  ngOnDestroy() {
+    this.pmService.reset();
   }
 
   refresh() {
@@ -35,7 +40,7 @@ export class ParticipantManagementComponent implements OnInit {
   }
 
   goAdd() {
-    this.router.navigate(['edit'], { relativeTo: this.route });
+    this.router.navigate(['new'], { relativeTo: this.route });
   }
 
   goIndex() {
