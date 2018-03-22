@@ -7,15 +7,17 @@ import { Component, OnInit, Input, Output, OnChanges, SimpleChange, SimpleChange
 })
 export class TrackerResultListComponent implements OnInit, OnChanges {
   @Input() trackers;
+  @Input() trackersLookingUp;
+  @Input() signedTagId;
   @Output() trackerSelected = new EventEmitter<string> ();
-
+  @Output() trackerResultClosed = new EventEmitter ();
   constructor() { }
 
   ngOnInit() {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['trackers'].currentValue) {
+    if (changes['trackers'] && changes['trackers'].currentValue) {
       this.trackers = changes['trackers'].currentValue;
     }
   }
@@ -25,4 +27,8 @@ export class TrackerResultListComponent implements OnInit, OnChanges {
     this.trackerSelected.emit(tracker_id);
   }
 
+  onClose(event) {
+    this.trackerResultClosed.emit();
+    event.stopPropagation();
+  }
 }

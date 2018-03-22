@@ -8,3 +8,31 @@
 .list-group-item {
     box-shadow: 2px 2px 5px  rgba(180,180,180, .5);
 }
+
+.tracker-available {
+    background-color: #468847;
+}
+
+.tracker-signed {
+    background-color:#953b39 ;
+}
+
+.tracker-using {
+    background-color: #3a87ad;
+}
+
+.list-group-item:hover>.tracker-available {
+    background-color: #356635;
+}
+
+/* .list-group-item:hover>.tracker-signed {
+    background-color: #953b39;#b94a48
+} */
+
+.list-group-item:hover>.tracker-using {
+    background-color: #2d6987;
+}
+
+.list-group-item.disabled {
+    cursor: not-allowed;
+}

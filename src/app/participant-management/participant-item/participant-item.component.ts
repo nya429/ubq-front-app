@@ -22,6 +22,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
   subcription: Subscription;
   emailRegex = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
   serchTimer;
+  trackersLookingUp: boolean;
   trackerTimer;
   tagFocused: boolean;
   trackers: object[];
@@ -39,7 +40,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
       (participant: Participant) => {
         this.participant = participant;
         this.participantForm = new FormGroup({
-                'tagId': new FormControl(this.participant.tagId, Validators.required),
+                'tagId': new FormControl(this.participant.tagId, Validators.required, this.trackerValidate.bind(this)),
                 'companyId': new FormControl(this.participant.companyId, Validators.required),
                 'companyName': new FormControl(this.participant.companyName),
                 'firstName': new FormControl(this.participant.firstName),
@@ -69,7 +70,6 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
     const jobTitle = '';
     const avatarUri = '';
     const priorityStatus = '';
-    console.log(this.editMode );
    if (this.editMode) {
     this.pmService.getParticipantById(this.participantId);
    } else {
@@ -122,13 +122,16 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
 
   getTracker() {
     clearTimeout(this.serchTimer);
-    if (!this.participantForm.value.tagId) {
+    if (!this.participantForm.value.tagId || this.participantForm.value.tagId.length === 0) {
       this.trackers = null;
+      this.trackersLookingUp = false;
       return;
     }
      this.tagFocused = true;
+     this.trackersLookingUp = true;
      this.serchTimer = setTimeout(() => this.pmService.getTracker(this.participantForm.value.tagId).subscribe(
       result => {
+        this.trackersLookingUp = false;
         this.trackers = result['data'];
        }), 500);
 
@@ -147,6 +150,9 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
 
   trackerValidate(control: FormControl): Observable<any> | Promise<any> {
     clearTimeout(this.trackerTimer);
+    if (this.editMode && control.value.trim() === this.participant.tagId) {
+      return new Promise(resolve => resolve(null));
+    }
     if (control.value.trim().length === 0) {
       return new Promise(resolve => resolve(null));
     }
@@ -154,7 +160,6 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
     return Observable.create((observer: Observer<any>) => {
       this.trackerTimer = setTimeout(() => {
         this.pmService.isTrackerValid(control.value).subscribe(result => {
-          console.log(result['data']['isValid']);
           switch (result['data']['isValid']) {
             case 0:
               observer.next({'InvalidTrackerId': true});
