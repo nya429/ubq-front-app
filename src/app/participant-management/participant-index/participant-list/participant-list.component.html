@@ -52,7 +52,7 @@
          </tr>
           <tr *ngIf="[i] == detailedIndex" class="row">
               <td colspan="7">
-                  <app-participant-detail [participant]="participant"></app-participant-detail>
+                  <app-participant-detail (removed)="onRemove($event)" [participant]="participant"></app-participant-detail>
               </td>      
             </tr>
           </tbody>

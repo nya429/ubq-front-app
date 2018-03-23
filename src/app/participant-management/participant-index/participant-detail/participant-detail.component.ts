@@ -1,6 +1,6 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 
-import { Participant } from './../../shared/participant.model';
+import { Participant } from './../../../shared/participant.model';
 
 @Component({
   selector: 'app-participant-detail',
@@ -9,9 +9,9 @@ import { Participant } from './../../shared/participant.model';
 })
 export class ParticipantDetailComponent implements OnInit {
   @Input() participant: Participant;
+  @Output() removed = new EventEmitter<number> ();
+
   createAt: string;
-
-
 
   constructor() {
   }
@@ -48,5 +48,10 @@ export class ParticipantDetailComponent implements OnInit {
 
   getTimeString(time: number) {
     return time < 9 ? `0${time}` : time.toString();
+  }
+
+  onRemove(event, participantId: number) {
+    event.stopPropagation();
+    this.removed.emit(participantId);
   }
 }

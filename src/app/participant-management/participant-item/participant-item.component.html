@@ -1,14 +1,18 @@
 <app-loading *ngIf='!participantForm'></app-loading>
+<div class='alert alert-success' *ngIf="resultMessage">
+        <!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button> -->
+        <Strong>{{ resultMessage }}</Strong>, redirecting to Participant List ...
+    </div>
 <form *ngIf='participantForm' [formGroup]="participantForm" (ngSubmit)="onSubmit()">
     <div class="row">
       <div class="col-md-3 col-md-offset-9">
         <div *ngIf="!editMode" class="form-group pull-right" style="vertical-align: center;">
-          <button type="button" [disabled]='!participantForm.valid' class="btn btn-success" (click)='onSubmit()'>Add</button>
-          <button type="button" class="btn btn-danger" (click)='onCancel()'>Cancel</button>
+          <button type="button" [disabled]='!participantForm.valid || resultMessage' class="btn btn-success" (click)='onSubmit()'>Add</button>
+          <!-- <button type="button" class="btn btn-danger" (click)='onCancel()'>Cancel</button> -->
         </div> 
         <div *ngIf="editMode" class="form-group pull-right" style="vertical-align: center;">
-          <button type="button"  class="btn btn-success" (click)='onUpdate()'>Save</button>
-          <button type="button" class="btn btn-danger" (click)='onDelete()'>Delete</button>
+          <button type="button"  [disabled]='!participantForm.dirty || !participantForm.valid || resultMessage' class="btn btn-success" (click)='onSubmit()'>Save</button>
+          <!-- <button type="button" class="btn btn-danger" (click)='onDelete()'>Delete</button> -->
         </div>
     </div>
   </div>

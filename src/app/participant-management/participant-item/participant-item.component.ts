@@ -19,7 +19,9 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
   participant: Participant;
   participantForm: FormGroup;
   editMode;
-  subcription: Subscription;
+  participantChangedSubscription: Subscription;
+  submitSubscription: Subscription;
+  resultMessage: string;
   emailRegex = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
   serchTimer;
   trackersLookingUp: boolean;
@@ -32,11 +34,11 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
               private pmService: ParticipantService) { }
 
  ngOnDestroy() {
-   this.subcription.unsubscribe();
+   this.participantChangedSubscription.unsubscribe();
  }
 
   ngOnInit() {
-    this.subcription = this.pmService.participantChanged.subscribe(
+    this.participantChangedSubscription = this.pmService.participantChanged.subscribe(
       (participant: Participant) => {
         this.participant = participant;
         this.participantForm = new FormGroup({
@@ -89,27 +91,19 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    this.pmService.addParticipant(this.participantForm.value)
-      .subscribe(
-        (result) => {
-          const code = result['code'];
-          console.log(code);
-        }, (err)  => {
-          this.pmService.handleError(err);
-        }
-    );
-  }
-
-  onUpdate() {
-    this.pmService.updateParticipantById(this.participantId, this.participantForm.value)
-      .subscribe(
-        (result) => {
-          const code = result['code'];
-          console.log(code);
-        }, (err)  => {
-          this.pmService.handleError(err);
-        }
-    );
+    const submit = this.editMode ?
+                    this.pmService.updateParticipantById(this.participantId, this.participantForm.value) :
+                    this.pmService.addParticipant(this.participantForm.value);
+    this.submitSubscription = submit.subscribe(
+      (result) => {
+        const code = result['code'];
+        this.resultMessage = this.editMode ? 'Update Success' : 'Participant has been singed';
+        setTimeout(() => {
+          this.router.navigate(['/participant/list']);
+        }, 2000);
+      }, (err)  => {
+        this.pmService.handleError(err);
+      });
   }
 
   onDelete() {
@@ -154,6 +148,10 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
       return new Promise(resolve => resolve(null));
     }
     if (control.value.trim().length === 0) {
+      return new Promise(resolve => resolve(null));
+    }
+    if (this.trackers &&
+      this.trackers.filter(tracker => tracker['tracker_id'] === control.value.trim() && tracker['p_cnt'] === 0).length > 0) {
       return new Promise(resolve => resolve(null));
     }
 

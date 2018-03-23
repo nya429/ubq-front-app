@@ -17,7 +17,7 @@ import { PaginateComponent } from './participant-index/paginate/paginate.compone
 import { ParticipantIndexComponent } from './participant-index/participant-index.component';
 import { ParticipantNavComponent } from './participant-nav/participant-nav.component';
 import { ParticipantItemComponent } from './participant-item/participant-item.component';
-import { ParticipantDetailComponent } from './participant-detail/participant-detail.component';
+import { ParticipantDetailComponent } from './participant-index/participant-detail/participant-detail.component';
 import { ShowDetailDirective } from './show-detail.directive';
 import { TableStripedDirective } from './table-striped.directive';
 import { TrackerResultListComponent } from './tracker-result-list/tracker-result-list.component';
