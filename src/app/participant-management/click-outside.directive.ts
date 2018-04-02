@@ -4,11 +4,10 @@ import { Directive, Output, ElementRef, EventEmitter, HostListener } from '@angu
   selector: '[appClickOutside]'
 })
 export class ClickOutsideDirective {
+  @Output() clickOutside = new EventEmitter();
 
   constructor(private elRef: ElementRef) {
   }
-
-  @Output() clickOutside = new EventEmitter();
 
   @HostListener('document:click', ['$event.target'])
   onClick(targetElement) {

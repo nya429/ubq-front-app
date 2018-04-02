@@ -1,14 +1,15 @@
-import { ParticipantService } from './../../participant.service';
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
+import { CompanyService } from './../../company.service';
+
 @Component({
-  selector: 'app-paginate',
-  templateUrl: './paginate.component.html',
-  styleUrls: ['./paginate.component.css']
+  selector: 'app-company-pagination',
+  templateUrl: './company-pagination.component.html',
+  styleUrls: ['./company-pagination.component.css']
 })
-export class PaginateComponent implements OnInit, OnDestroy {
+export class CompanyPaginationComponent implements OnInit, OnDestroy {
   @Input() lessDetailed: boolean;
   subscription: Subscription;
   count: number;
@@ -21,10 +22,10 @@ export class PaginateComponent implements OnInit, OnDestroy {
   prevOffset: number;
   nextOffset: number;
 
-  constructor(private pmService: ParticipantService) { }
+  constructor(private service: CompanyService) { }
 
   ngOnInit() {
-    this.subscription = this.pmService.paginateChanged.subscribe(
+    this.subscription = this.service.paginateChanged.subscribe(
       paginateConf => {
         this.count = paginateConf['count'];
         this.limit = paginateConf['limit'];
@@ -63,13 +64,13 @@ export class PaginateComponent implements OnInit, OnDestroy {
 
   goPage(page, limit) {
     this.limit = limit ? +limit : this.limit;
-    this.pmService.setLimit(this.limit);
+    this.service.setLimit(this.limit);
     const offset = page ? (page - 1) * this.limit : 0;
-    this.pmService.getParticipantListByOptions(offset, this.limit);
+    this.service.getCompanyListByOptions(offset, this.limit);
   }
 
   getTerm() {
-    return this.pmService.getTerm();
+    return this.service.getTerm();
   }
-
 }
+

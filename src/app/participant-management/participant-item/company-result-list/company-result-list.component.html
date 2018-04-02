@@ -1,0 +1,47 @@
+<div  *ngIf='companys' class="dropdown-content list-group">
+  <a   *ngFor="let company of companys;"
+         style="cursor:pointer;"
+         (click)="onSelect($event, company.company_id)"
+         class="list-group-item result-list">
+         {{ company.company_name }}
+        <span 
+          class="badge">{{ company.p_cnt }} </span>
+    </a>
+
+    <li *ngIf='companys.length > 0' class="list-group-item result-list">
+      <a routerLink='/visitor/company' style="cursor:pointer;">Company Management</a> 
+      <span (click)="onClose($event)" 
+             style="cursor:pointer;"
+             title='close' 
+             class="pull-right glyphicon glyphicon-remove"></span>
+     </li>
+     <li  *ngIf='companysLookingUp' class="list-group-item result-list">
+        <div class="row">
+            <div class="col-xs-2">
+                <app-loader-small></app-loader-small>
+            </div>
+            <div class="col-xs-10">
+              <a>  Looking up .. </a>
+            </div>
+        </div>
+  </li> 
+  </div>
+  <div  *ngIf='companys && companys.length === 0 && !companysLookingUp' class="dropdown-content list-group">
+      <a  class="list-group-item result-list"> No result </a>
+      <span (click)="onClose($event)" 
+      style="cursor:pointer;"
+      title='close' 
+      class="pull-right glyphicon glyphicon-remove"></span>
+  </div>
+  <div  *ngIf='companysLookingUp && !companys' class="dropdown-content list-group">
+    <div class="list-group-item result-list">
+      <div class="row">
+          <div class="col-xs-2">
+              <app-loader-small></app-loader-small>
+          </div>
+          <div class="col-xs-10">
+            <a>  Looking up companys .. </a>
+          </div>
+      </div>
+    </div>
+  </div>

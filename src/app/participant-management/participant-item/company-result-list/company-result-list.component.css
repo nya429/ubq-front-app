@@ -1,0 +1,9 @@
+.dropdown-content {
+    position: absolute;
+    margin-top: -15px;
+    z-index: 2;   
+}
+
+.result-list {
+    width: 250px;
+}

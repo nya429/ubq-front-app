@@ -1,0 +1,171 @@
+<app-loading *ngIf='!companyForm'></app-loading>
+<div class='alert alert-success' *ngIf="resultMessage">
+        <Strong>{{ resultMessage }}</Strong>, redirecting to Company List ...
+    </div>
+<form *ngIf='companyForm' [formGroup]="companyForm">
+    <div class="row">
+        <div class="col-md-3 col-md-offset-9">
+          <div *ngIf="!editMode" class="form-group pull-right" style="vertical-align: center;">
+            <button type="button"  [disabled]='!companyForm.dirty || !companyForm.valid || resultMessage' class="btn btn-success" (click)='onSubmit()'>Add</button>
+            <!-- <button type="button" class="btn btn-danger" (click)='onCancel()'>Cancel</button> -->
+          </div> 
+          <div *ngIf="editMode" class="form-group pull-right" style="vertical-align: center;">
+            <button type="button"  [disabled]='!companyForm.dirty || !companyForm.valid || resultMessage' class="btn btn-success" (click)='onSubmit()'>Save</button>
+            <!-- <button type="button" class="btn btn-danger" (click)='onDelete()'>Delete</button> -->
+          </div>
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+             <legend for="Info">Basic Info</legend>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="name">Company Profile Name</label>
+                <input type="text" id="name"
+                        class="form-control"
+                        formControlName="name">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-street1">Address Line 1</label>
+                <input type="text" id="address-street1"
+                        class="form-control"
+                        formControlName="addressStreet1">
+            </div>
+        </div>
+   
+        <div class="col-md-4">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-street2">Address Line 2</label>
+                <input type="text" id="address-street2"
+                        class="form-control"
+                        formControlName="addressStreet2">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 col-md-offset-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-city">City</label>
+                <input type="text" id="address-city"
+                        class="form-control"
+                        formControlName="addressCity">
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-state">State</label>
+                <input type="text" id="address-state"
+                        class="form-control"
+                        (keyup)="lookUpState()" pattern="[a-zA-Z]*"
+                        formControlName="addressState">
+            </div>
+            <app-state-list-item
+            *ngIf='states.length > 0'
+            appClickOutside 
+            (clickOutside)='onStateBlur()'
+            (stateSelected)="onStateSelected($event)" 
+            (statesResultClosed)="onStateBlur()"
+            [states]="states"
+             ></app-state-list-item>
+        </div>
+
+        <div class="col-md-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-zip">Postal</label>
+                <input type="text" id="address-zip"
+                        class="form-control"
+                        formControlName="addressZip">
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="address-country">Country</label>
+                <select  id="address-country"
+                        class="form-control"
+                        formControlName="addressCountry">
+                        <option *ngFor="let country of countryList" value="country">{{ country }}</option>
+                    
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+             <legend for="Info">Contact</legend>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2  col-md-offset-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="contact-title">Title</label>
+                <select type="text" id="contact-title"
+                        class="form-control"
+                        formControlName="contactTitle">
+                  <option *ngFor= "let title of titleList; let i = index" 
+                          value='title'>{{ title }}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="form-group" >
+                <label data-icon=“u”  for="contact-firstname">First name</label>
+                <input type="text" id="contact-firstname"
+                        class="form-control"
+                        formControlName="contactFirstName">
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="form-group" >
+                <label data-icon=“u”  for="contact-lastname">Last name</label>
+                <input type="text" id="contact-lastname"
+                        class="form-control"
+                        formControlName="contactLastName">
+            </div>
+        </div>
+
+ 
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-2">
+            <div class="form-group" >
+                <label data-icon=“u”  for="contact-phone">Phone</label>
+                <input type="text" id="contact-phone"
+                        class="form-control"
+                        formControlName="contactPhone">
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group" >
+                <label data-icon=“u”  for="contact-email">Email</label>
+                <input type="text" id="contact-email"
+                        class="form-control"
+                        formControlName="contactEmail">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+             <legend for="Info">Note</legend>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="form-group" >
+                <textarea type="text" id="info"
+                        class="form-control"
+                        cols="30" rows="5"
+                        formControlName="info"></textarea>
+            </div>
+        </div>
+    </div>
+      
+</form>

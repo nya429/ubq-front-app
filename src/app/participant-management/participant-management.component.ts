@@ -11,6 +11,7 @@ import { ParticipantService } from './participant.service';
 export class ParticipantManagementComponent implements OnInit, OnDestroy {
   onEdit: boolean;
   title: string;
+  dataType: string;
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -20,14 +21,20 @@ export class ParticipantManagementComponent implements OnInit, OnDestroy {
     this.router.events.subscribe(
       (e: RouterEvent) => {
         if (e instanceof NavigationStart) {
+          this.dataType = e['url'].replace('/visitor/', '').split('/', 1)[0];
           const lastUrlSegment = e['url'].substr((e['url'].lastIndexOf('/') + 1));
           this.onEdit = lastUrlSegment === 'new' || lastUrlSegment === 'edit';
-          this.title = this.onEdit ? (lastUrlSegment === 'new' ? 'Add a participant' : 'Edit') : 'Participants';
+          this.title = this.onEdit ?
+                       (lastUrlSegment === 'new' ? `Add a ${this.dataType}` : 'Edit') :
+                       (this.dataType === 'company' ? 'Companies' : 'Participants');
         }
       });
+      this.dataType = this.router.url.replace('/visitor/', '').split('/', 1)[0];
       const lastUrl = this.router.url.substr((this.router.url.lastIndexOf('/') + 1));
       this.onEdit = lastUrl === 'edit' || lastUrl === 'new';
-      this.title = this.onEdit ? (lastUrl === 'new' ? 'Add a participant' : 'Edit')  : 'Participants';
+      this.title = this.onEdit ?
+      (lastUrl === 'new' ? 'Add a participant' : 'Edit') :
+      (lastUrl === 'company' ? 'Companies' : 'Participants');
   }
 
   ngOnDestroy() {
@@ -36,14 +43,14 @@ export class ParticipantManagementComponent implements OnInit, OnDestroy {
 
   refresh() {
     this.pmService.reset();
-    this.pmService.getParticipantListByOpotions();
+    this.pmService.getParticipantListByOptions();
   }
 
-  goAdd() {
-    this.router.navigate(['new'], { relativeTo: this.route });
+  goNew() {
+    this.router.navigate([`${this.dataType}/new`], { relativeTo: this.route });
   }
 
   goIndex() {
-    this.router.navigate(['list'], { relativeTo: this.route });
+    this.router.navigate([`${this.dataType}`], { relativeTo: this.route });
   }
 }

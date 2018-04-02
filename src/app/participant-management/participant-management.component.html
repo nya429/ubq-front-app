@@ -14,7 +14,7 @@
                     <h3 class="panel-title">{{ title }}</h3>
                   </div>
                   <div *ngIf="!onEdit" class="col-md-6 col-lg-6 button-group" align="right">
-                      <a (click)="goAdd()" id="add-button" style="cursor:pointer"><span title="Add a participant" class="glyphicon glyphicon-plus"></span> Add </a>
+                      <a (click)="goNew()" id="add-button" style="cursor:pointer"><span title="Add a participant" class="glyphicon glyphicon-plus"></span> Add </a>
                       <a (click)="refresh()" id="refresh-button" style="cursor:pointer"><span title="Refresh" class="glyphicon glyphicon-refresh"></span> Refresh </a>
                   </div>
                   <div *ngIf="onEdit" class="col-md-6 col-lg-6 button-group" align="right">

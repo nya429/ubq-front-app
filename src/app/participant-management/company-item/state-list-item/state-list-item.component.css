@@ -1,0 +1,24 @@
+.dropdown-content {
+    position: absolute;
+    margin-top: -14px;
+    z-index: 2;
+}
+
+.state-list {
+    width: 200px;
+    line-height: .2em;
+}
+
+.borderless {
+    border-top: 0 none;
+}
+
+#state-code {
+    font-weight: bolder;
+    color: #777;
+}
+
+#close-buttom {
+    height: 2em;
+    padding-bottom: 10px;
+}

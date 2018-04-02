@@ -31,7 +31,7 @@ export class ParticipantListComponent implements OnInit, OnDestroy {
       this.sortBy = null;
       this.detailedIndex = null;
     });
-    this.pmService.getParticipantListByOpotions();
+    this.pmService.getParticipantListByOptions();
   }
 
   ngOnDestroy() {
@@ -50,12 +50,12 @@ export class ParticipantListComponent implements OnInit, OnDestroy {
       this.orderBy = null;
     }
     this.pmService.setOrderer(this.orderBy, this.sortBy);
-    this.pmService.getParticipantListByOpotions();
+    this.pmService.getParticipantListByOptions();
   }
 
-  goCompany() {
-    this.pmService.setTerm('ubq');
-    this.pmService.getParticipantListByOpotions();
+  goCompany(companyName: string) {
+    this.pmService.setTerm(companyName);
+    this.pmService.getParticipantListByOptions();
   }
 
   showDetail(index: number) {

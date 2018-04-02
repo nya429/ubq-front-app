@@ -1,0 +1,36 @@
+
+a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+#limit-select {
+    margin: 20px 0;
+    width: 3em;
+    display: inline-block;
+}
+
+#limit-select-text {
+    display: inline-block;
+}
+
+#pagination-text {
+    padding: 8px 12px;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.a-not-active {
+    pointer-events: none;
+    cursor: default;
+    text-decoration:none;
+    color:black;
+  }
+
+.active>a {
+    cursor: default;
+    background-color: #00a1d6;
+    border-color: #00a1d6;
+}

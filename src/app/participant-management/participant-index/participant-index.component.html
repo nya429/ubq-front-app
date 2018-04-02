@@ -5,13 +5,19 @@
 </div>
 <br>
 <div class="row">
-    <div class="col-sm-12 col-md-12 content-table">
-      <app-paginate></app-paginate>
+    <div class="col-sm-12 col-md-12 ">
+      <app-paginate [lessDetailed] = "true"></app-paginate>
     </div>
 </div>
 
 <div class="row">
-  <div class="col-sm-12 col-md-12 content-table">
+  <div class="col-sm-12 col-md-12 ">
     <app-participant-list></app-participant-list>
   </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 col-md-12">
+      <app-paginate></app-paginate>
+    </div>
 </div>

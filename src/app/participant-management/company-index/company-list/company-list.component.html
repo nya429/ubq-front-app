@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="col-xs-12">
+      <a  
+      *ngFor="let company of companys;let i = index"
+      style="cursor: pointer;"
+      class="list-group-item clearfix">
+      <div class="row">
+          <div class="col-xs-1">
+              <div class="pull-left">
+                  <span title="participants" class="glyphicon glyphicon-user">{{ company.participantCnt }}</span>
+              </div>
+          </div>   
+        <div class="col-xs-3">
+            <div class="pull-left">
+                <h5 class="list-group-item-heading">{{company.name}}</h5>
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="pull-left">
+                <p>{{ company.contactName }}</p>
+                <p>{{ company.contactPhone }}</p>
+            </div>
+        </div>
+        <div class="col-xs-2">
+            <div class="pull-left">
+                <span>{{ company.address }}</span>
+                
+            </div>
+        </div>
+        <div class="col-xs-1">
+            <div class="pull-left">
+                <th class='table-date-cog'>
+                    <a [routerLink]="['./', company.companyId,'edit']" style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-pencil"></span></a>
+                    <a style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
+              </th> 
+            </div>
+        </div>    
+
+      </div>
+
+    </a>
+  </div>
+</div>
+

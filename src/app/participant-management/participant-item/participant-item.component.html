@@ -33,7 +33,7 @@
                 <div class="form-group" >
                     <label for="tagId">Tag</label>
                     <input  
-                            (keyup)="getTracker()"
+                            (keyup)="getTrackers()"
                             type="text"
                             id="tag-id" class="form-control" autocomplete="off"
                             formControlName="tagId">
@@ -97,10 +97,22 @@
         <div class="col-md-3 col-md-offset-3">
           <div class="form-group" >
               <label for="companyName">Company</label>
-              <input type="tag" id="company-name"
+              <input  autocomplete="off"
+                      (keyup)="getCompanys()"
+                      type="tag" id="company-name"
                       class="form-control"
                       formControlName="companyName">
           </div>
+          <app-company-result-list 
+          *ngIf='companyFocused'
+          appClickOutside 
+          (clickOutside)="onCompanyBlur()"
+          (companySelected)="onCompanySelected($event)" 
+          (companysResultClosed)="onCompanyBlur()"
+          [companys]="companys"
+          [companysLookingUp]="companysLookingUp"
+
+          ></app-company-result-list>
         </div>
         <div class="col-md-3">
             <div class="form-group" >

@@ -28,7 +28,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
 
   clear() {
     this.pmService.setTerm(null);
-    this.pmService.getParticipantListByOpotions();
+    this.pmService.getParticipantListByOptions();
   }
 
   search(term: string) {
@@ -37,6 +37,6 @@ export class SearchBarComponent implements OnInit, OnDestroy {
       return;
     }
     this.pmService.setTerm(term);
-    this.pmService.getParticipantListByOpotions();
+    this.pmService.getParticipantListByOptions();
   }
 }

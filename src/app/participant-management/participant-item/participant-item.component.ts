@@ -23,11 +23,18 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
   submitSubscription: Subscription;
   resultMessage: string;
   emailRegex = /^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/;
+  USPhoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
+
   serchTimer;
   trackersLookingUp: boolean;
   trackerTimer;
   tagFocused: boolean;
   trackers: object[];
+
+  companysLookingUp: boolean;
+  companyTimer;
+  companyFocused: boolean;
+  companys: object[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -43,13 +50,13 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
         this.participant = participant;
         this.participantForm = new FormGroup({
                 'tagId': new FormControl(this.participant.tagId, Validators.required, this.trackerValidate.bind(this)),
-                'companyId': new FormControl(this.participant.companyId, Validators.required),
-                'companyName': new FormControl(this.participant.companyName),
-                'firstName': new FormControl(this.participant.firstName),
-                'lastName': new FormControl(this.participant.lastName),
+                'companyId': new FormControl(this.participant.companyId),
+                'companyName': new FormControl(this.participant.companyName, Validators.max(50)),
+                'firstName': new FormControl(this.participant.firstName, Validators.max(50)),
+                'lastName': new FormControl(this.participant.lastName, Validators.max(50)),
                 'email': new FormControl(this.participant.email, [Validators.pattern(this.emailRegex)]),
-                'phone': new FormControl(this.participant.phone),
-                'jobTitle': new FormControl(this.participant.jobTitle),
+                'phone': new FormControl(this.participant.phone, Validators.pattern(this.USPhoneRegex)),
+                'jobTitle': new FormControl(this.participant.jobTitle, Validators.max(50)),
                 'avatarUri': new FormControl(this.participant.avatarUri),
                 'priorityStatus': new FormControl(this.participant.priorityStatus, Validators.required),
               });
@@ -63,8 +70,8 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
 
   private initForm() {
     const tagId = '';
-    const companyId = 1;
-    const companyName = 'UBQ';
+    const companyId = '';
+    const companyName = '';
     const firstName = '';
     const lastName = '';
     const email = '';
@@ -77,12 +84,12 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
    } else {
     this.participantForm = new FormGroup({
       'tagId': new FormControl(tagId, Validators.required, this.trackerValidate.bind(this)),
-      'companyId': new FormControl(companyId, Validators.required),
+      'companyId': new FormControl(companyId),
       'companyName': new FormControl(companyName),
       'firstName': new FormControl(firstName),
       'lastName': new FormControl(lastName),
       'email': new FormControl(email, [Validators.pattern(this.emailRegex)]),
-      'phone': new FormControl(phone),
+      'phone': new FormControl(phone, Validators.pattern(this.USPhoneRegex)),
       'jobTitle': new FormControl(jobTitle),
       'avatarUri': new FormControl(avatarUri),
       'priorityStatus': new FormControl(priorityStatus, Validators.required),
@@ -91,6 +98,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
+    this.participantForm.patchValue({phone: this.participantForm.value.phone.replace(/[\s.-]/g, '')});
     const submit = this.editMode ?
                     this.pmService.updateParticipantById(this.participantId, this.participantForm.value) :
                     this.pmService.addParticipant(this.participantForm.value);
@@ -99,22 +107,20 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
         const code = result['code'];
         this.resultMessage = this.editMode ? 'Update Success' : 'Participant has been singed';
         setTimeout(() => {
-          this.router.navigate(['/participant/list']);
-        }, 2000);
+          this.router.navigate(['/visitor/participant']);
+        }, 1500);
       }, (err)  => {
         this.pmService.handleError(err);
       });
   }
 
   onDelete() {
-
   }
 
   onCancel() {
-    console.log(this.participantForm.get('tagId').errors);
   }
 
-  getTracker() {
+  getTrackers() {
     clearTimeout(this.serchTimer);
     if (!this.participantForm.value.tagId || this.participantForm.value.tagId.length === 0) {
       this.trackers = null;
@@ -123,7 +129,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
     }
      this.tagFocused = true;
      this.trackersLookingUp = true;
-     this.serchTimer = setTimeout(() => this.pmService.getTracker(this.participantForm.value.tagId).subscribe(
+     this.serchTimer = setTimeout(() => this.pmService.getTrackers(this.participantForm.value.tagId).subscribe(
       result => {
         this.trackersLookingUp = false;
         this.trackers = result['data'];
@@ -135,11 +141,40 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
     this.tagFocused = false;
   }
 
-  onTrackerSelected(tarcker_id) {
+  onTrackerSelected(tarcker_id: string) {
     this.participantForm.patchValue({
       tagId: tarcker_id
     });
     this.onTagBlur();
+  }
+
+  getCompanys() {
+    clearTimeout(this.serchTimer);
+    if (!this.participantForm.value.companyName || this.participantForm.value.companyName.length === 0) {
+      this.companys = null;
+      this.companysLookingUp = false;
+      return;
+    }
+     this.companyFocused = true;
+     this.companysLookingUp = true;
+     this.serchTimer = setTimeout(() => this.pmService.getCompanys(this.participantForm.value.companyName).subscribe(
+      result => {
+        this.companysLookingUp = false;
+        this.companys = result['data'];
+       }), 500);
+
+  }
+
+  onCompanyBlur() {
+    this.companyFocused = false;
+  }
+
+  onCompanySelected(company_id: number) {
+    this.participantForm.patchValue({
+      companyId: company_id,
+      companyName: this.companys.filter(company => company['company_id'] === company_id)[0]['company_name']
+    });
+    this.onCompanyBlur();
   }
 
   trackerValidate(control: FormControl): Observable<any> | Promise<any> {

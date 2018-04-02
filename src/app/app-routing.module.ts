@@ -13,7 +13,7 @@ const appRoutes: Routes = [
     {path: 'about', component: AboutComponent},
     {path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule'},
     {path: 'map', loadChildren: './map/map.module#MapModule'},
-    {path: 'participant', loadChildren: './participant-management/participant-management.module#ParticipantManagementModule'},
+    {path: 'visitor', loadChildren: './participant-management/participant-management.module#ParticipantManagementModule'},
     { path: 'not-found',
         component: PageNotFoundComponent,
         data: {message: 'Page not Found'} },

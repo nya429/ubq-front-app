@@ -1,0 +1,17 @@
+<div  *ngIf='states' class="dropdown-content list-group">
+    <a   *ngFor="let state of states; let i = index"
+           style="cursor:pointer;"
+           (click)="onSelect($event, i)"
+           [ngClass]="{'borderless': i !== 0}"
+           class="list-group-item state-list">
+           {{ stateList[state] }} 
+           <span id="state-code" class="pull-right">{{ state }}</span>
+      </a>
+  
+      <li *ngIf='states.length > 0' class="list-group-item borderless" id="close-buttom">
+        <span (click)="onClose($event)" 
+               style="cursor:pointer;"
+               title='close' 
+               class="pull-right glyphicon glyphicon-remove"></span>
+       </li>
+</div>

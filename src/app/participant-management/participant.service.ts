@@ -28,7 +28,8 @@ export class ParticipantService {
       'Content-Type':  'application/json',
       'Authorization': 'my-auth-token'
     }),
-    url: 'http://localhost:3000/participant',
+    participanUrl: 'http://localhost:3000/participant',
+    companyUrl: 'http://localhost:3000/company'
 
     // url: 'http://192.168.0.108:3000/participant'
   };
@@ -83,7 +84,7 @@ export class ParticipantService {
 
   addParticipant(participant: Participant) {
     const urlSuffix = '/new';
-    return this.httpClient.post(`${this.httpOptions.url}${urlSuffix}`, participant, {
+    return this.httpClient.post(`${this.httpOptions.participanUrl}${urlSuffix}`, participant, {
       observe: 'body',
       responseType: 'json'
     });
@@ -94,7 +95,7 @@ export class ParticipantService {
       this.participant = this.participants.filter(item => item.participantId === participantId)[0];
       this.participantChanged.next(this.participant);
     } else {
-      return this.httpClient.get(`${this.httpOptions.url}/${participantId}`, {
+      return this.httpClient.get(`${this.httpOptions.participanUrl}/${participantId}`, {
         observe: 'body',
         responseType: 'json',
       }).subscribe(
@@ -106,8 +107,8 @@ export class ParticipantService {
     }
   }
 
-  getParticipantListByOpotions(offset?: number, limit?: number) {
-    const urlSuffix = this.term ? '/search' : '/list';
+  getParticipantListByOptions(offset?: number, limit?: number) {
+    const urlSuffix = this.term ? '/lookup' : '/list';
     let options = new HttpParams();
     if (offset) {
       options = options.append('offset', offset.toString());
@@ -122,7 +123,39 @@ export class ParticipantService {
       options = options.append('term', this.term);
     }
 
-    return this.httpClient.get(`${this.httpOptions.url}${urlSuffix}`, {
+    return this.httpClient.get(`${this.httpOptions.participanUrl}${urlSuffix}`, {
+        observe: 'body',
+        responseType: 'json',
+        params: options
+      })
+      .subscribe(
+          (result) => {
+            const data = result['data'];
+            this.setParticipants(data);
+          }, (err: HttpErrorResponse)  => {
+            console.error(err);
+          }
+      );
+  }
+
+
+  getCompanyListByOpotions(offset?: number, limit?: number) {
+    const urlSuffix = this.term ? '/lookup' : '/list';
+    let options = new HttpParams();
+    if (offset) {
+      options = options.append('offset', offset.toString());
+    }
+    if (this.limit) {
+      options = options.append('ltd', this.limit.toString());
+    }
+    if (this.sortBy) {
+      options = options.append('sortBy', this.sortBy.toString()).append('orderBy', this.orderBy);
+    }
+    if (this.term) {
+      options = options.append('term', this.term);
+    }
+
+    return this.httpClient.get(`${this.httpOptions.participanUrl}${urlSuffix}`, {
         observe: 'body',
         responseType: 'json',
         params: options
@@ -158,14 +191,14 @@ export class ParticipantService {
       return;
     }
 
-    return this.httpClient.delete(`${this.httpOptions.url}/${participantId}`, {
+    return this.httpClient.delete(`${this.httpOptions.participanUrl}/${participantId}`, {
       observe: 'body',
       responseType: 'json'
     }).subscribe(
       (result) => {
         const code = result['code'];
         if (code === 0) {
-          this.getParticipantListByOpotions();
+          this.getParticipantListByOptions();
         }
       }, (err: HttpErrorResponse)  => {
         console.error(err);
@@ -177,19 +210,32 @@ export class ParticipantService {
     if (!participantId) {
       return;
     }
-    return this.httpClient.patch(`${this.httpOptions.url}/${participantId}`, patch, {
+    return this.httpClient.patch(`${this.httpOptions.participanUrl}/${participantId}`, patch, {
       observe: 'body',
       responseType: 'json'
     });
   }
 
-  getTracker(term: string) {
+  getTrackers(term: string) {
     if (!term) {
       return;
     }
     let options = new HttpParams();
     options = options.append('key', term.trim());
-    return this.httpClient.get(`http://localhost:3000/event/trackers/search`, {
+    return this.httpClient.get(`http://localhost:3000/event/tracker/lookup`, {
+      observe: 'body',
+      responseType: 'json',
+      params: options
+    });
+  }
+
+  getCompanys(term: string) {
+    if (!term) {
+      return;
+    }
+    let options = new HttpParams();
+    options = options.append('name', term.trim());
+    return this.httpClient.get(`http://localhost:3000/company/lookup`, {
       observe: 'body',
       responseType: 'json',
       params: options
@@ -199,7 +245,7 @@ export class ParticipantService {
   isTrackerValid(tracker_id: string) {
     let options = new HttpParams();
     options = options.append('id', tracker_id.trim());
-    return this.httpClient.get(`http://localhost:3000/event/trackers/valid`, {
+    return this.httpClient.get(`http://localhost:3000/event/tracker/valid`, {
       observe: 'body',
       responseType: 'json',
       params: options
