@@ -29,7 +29,7 @@ export class CompanyItemComponent implements OnInit {
   USPhoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
   USPostalRegex = /^\d{5}(?:[-\s]\d{4})?$/;
 
-  titleList = [ 'Mr.', 'Mrs.', 'Miss.', 'Ms.', 'Sir.', 'Dr.', 'Lady', 'Lord'];
+  titleList = [ 'Mr', 'Mrs', 'Miss', 'Ms', 'Sir', 'Dr', 'Lady', 'Lord'];
 
   constructor(private route: ActivatedRoute,
     private router: Router,
@@ -106,8 +106,10 @@ export class CompanyItemComponent implements OnInit {
       {contactPhone: this.companyForm.value.contactPhone.replace(/[\s.-]/g, ''),
     });
 
-    const submit = this.service.addCompany(this.companyForm.value);
-
+    const submit = this.editMode ?
+                   this.service.updateCompanyById(this.companyId, this.companyForm.value) :
+                   this.service.addCompany(this.companyForm.value);
+    console.log(this.editMode);
     this.submitSubscription = submit.subscribe(result => {
       const code = result['code'];
       this.resultMessage = this.editMode ? 'Update Success' : 'Company added';

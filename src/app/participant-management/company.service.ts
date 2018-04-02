@@ -127,6 +127,16 @@ export class CompanyService {
         });
       }
 
+    updateCompanyById(companyId: number, patch: Object) {
+        if (!companyId) {
+          return;
+        }
+        return this.httpClient.patch(`${this.httpOptions.companyUrl}/${companyId}`, patch, {
+          observe: 'body',
+          responseType: 'json'
+        });
+      }
+
       deleteCompanyById(companyId: number) {
         return this.httpClient.delete(`${this.httpOptions.companyUrl}/${companyId}`, {
           observe: 'body',

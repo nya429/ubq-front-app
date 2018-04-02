@@ -90,7 +90,7 @@
                 <select  id="address-country"
                         class="form-control"
                         formControlName="addressCountry">
-                        <option *ngFor="let country of countryList" value="country">{{ country }}</option>
+                        <option *ngFor="let country of countryList" [value]='country'>{{ country }}</option>
                     
                 </select>
             </div>
