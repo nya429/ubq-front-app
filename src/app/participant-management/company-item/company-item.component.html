@@ -109,7 +109,7 @@
                         class="form-control"
                         formControlName="contactTitle">
                   <option *ngFor= "let title of titleList; let i = index" 
-                          value='title'>{{ title }}</option>
+                          [value]="title">{{ title }}</option>
                 </select>
             </div>
         </div>

@@ -29,7 +29,7 @@ export class CompanyItemComponent implements OnInit {
   USPhoneRegex = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/;
   USPostalRegex = /^\d{5}(?:[-\s]\d{4})?$/;
 
-  titleList = [ 'Mr', 'Mrs', 'Miss', 'Ms', 'Sir', 'Dr', 'Lady', 'Lord'];
+  titleList = [ 'Mr.', 'Mrs.', 'Miss.', 'Ms.', 'Sir.', 'Dr.', 'Lady', 'Lord'];
 
   constructor(private route: ActivatedRoute,
     private router: Router,

@@ -29,9 +29,11 @@ import { CompanyPaginationComponent } from './company-index/company-pagination/c
 import { CompanyItemComponent } from './company-item/company-item.component';
 import { StateListItemComponent } from './company-item/state-list-item/state-list-item.component';
 import { CompanyListItemComponent } from './company-index/company-list/company-list-item/company-list-item.component';
+import { SignTimePipe } from './signtime.pipe';
 
 @NgModule({
     declarations: [
+    SignTimePipe,
     ParticipantManagementComponent,
     ParticipantListComponent,
     SearchBarComponent,

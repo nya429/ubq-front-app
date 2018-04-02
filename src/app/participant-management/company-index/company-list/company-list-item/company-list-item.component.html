@@ -1,3 +1,33 @@
-<p>
-  company-list-item works!
-</p>
+
+<div class="row">
+    <div class="col-sm-10">
+      <h4 class="list-group-item-heading inline">{{company.name}}</h4>
+
+        <a id="participant">      
+            <span class="glyphicon glyphicon-user"></span>
+            <span class="bdage badge-success" id="participant-count" title="participants">{{ company.participantCnt }}</span>
+        </a>
+      </div>
+    <div class="col-sm-2">
+      <div class="pull-left">
+          <a [routerLink]="['./', company.companyId,'edit']" style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-pencil table-date-cog"></span></a>
+          <a (click)="onRemove()" style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove table-date-cog"></span></a>
+      </div>
+    </div>  
+</div>
+<hr>
+<div class="row">
+  <div class="col-md-4 indent">
+    <h5><span *ngIf='company.contactTitle'>{{ company.contactTitle }} </span>{{ company.contactFirstName }} {{ company.contactLastName }}</h5>
+    <p><span class="glyphicon glyphicon-envelope"></span> {{ company.contactEmail }} </p>
+  </div>
+  <div class="col-md-5">
+    <p><span class="glyphicon glyphicon-earphone"></span> {{ company.contactPhone }} </p>
+      <p>
+        <span class="glyphicon glyphicon-map-marker"></span> {{ company.addressStreet1 && company.addressStreet1 + ', ' }}{{ company.addressStreet2 && company.addressStreet2 + ', ' }}{{ company.addressCity && company.addressCity + ', '  }}{{ company.addressState && company.addressState + ', '}}{{ company.addressZip && company.addressZip }}
+      </p>
+  </div>
+  <div class="col-md-2">
+    <p class='info-trivia'>{{ company.createTime | signtime }}</p> 
+  </div>
+</div>

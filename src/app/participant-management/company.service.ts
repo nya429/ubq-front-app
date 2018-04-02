@@ -126,4 +126,11 @@ export class CompanyService {
           responseType: 'json'
         });
       }
+
+      deleteCompanyById(companyId: number) {
+        return this.httpClient.delete(`${this.httpOptions.companyUrl}/${companyId}`, {
+          observe: 'body',
+          responseType: 'json'
+        });
+      }
 }

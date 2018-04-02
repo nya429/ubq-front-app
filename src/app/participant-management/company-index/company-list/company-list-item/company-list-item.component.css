@@ -1,0 +1,27 @@
+.inline {
+    display: inline;
+}
+
+.list-group-item-heading {
+    margin-right: 10px;
+}
+
+hr {
+    margin: 5px 0; 
+ }
+
+ #participant-count {
+     font-size: 18px;
+ }
+
+ .table-date-cog {
+     margin: 0 5px;
+ }
+
+ .indent {
+     margin-left: 10px
+ }
+ 
+ .info-trivia {
+     color: #777;
+ }
