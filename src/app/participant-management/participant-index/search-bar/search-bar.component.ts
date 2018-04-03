@@ -20,6 +20,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
       term => {
         this.term.nativeElement.value = term;
       });
+      this.term.nativeElement.value  = this.pmService.getTerm() ? this.pmService.getTerm() : null;
   }
 
   ngOnDestroy() {

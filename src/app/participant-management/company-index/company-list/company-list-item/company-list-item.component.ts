@@ -1,7 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { ParticipantService } from './../../../participant.service';
+import { CompanyService } from '../../../company.service';
 
 import { Company } from '../../../../shared/company.model';
-import { CompanyService } from '../../../company.service';
 
 @Component({
   selector: 'app-company-list-item',
@@ -12,13 +15,20 @@ export class CompanyListItemComponent implements OnInit {
   @Input() company: Company;
   @Input() index: number;
 
-  constructor(private service: CompanyService) { }
+  confFolded = true;
+
+  constructor(private service: CompanyService,
+              private pmService: ParticipantService,
+              private router: Router) { }
 
   ngOnInit() { }
 
   onRemove() {
     if (this.company.participantCnt > 0) {
       // TODO: popup dialog
+      alert(`The company still has ${this.company.participantCnt} participant${
+        this.company.participantCnt > 1 ? 's' : ''} \n see next version`
+    );
       return;
     }
     if (confirm('Are you sure you want to delete this Company?')) {
@@ -28,6 +38,20 @@ export class CompanyListItemComponent implements OnInit {
         },
         error => this.service.handleError(error));
     }
+  }
+
+   // TODO add quray by ID
+  goParticipantsByCompanyId() {
+    this.pmService.setTerm(this.company.name);
+    this.router.navigate(['/visitor/participant']);
+  }
+
+  unfoldConf() {
+    this.confFolded = false;
+  }
+
+  foldConf() {
+    this.confFolded = true;
   }
 }
 

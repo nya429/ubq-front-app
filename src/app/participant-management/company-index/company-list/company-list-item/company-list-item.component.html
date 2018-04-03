@@ -3,15 +3,18 @@
     <div class="col-xs-10">
       <h4 class="list-group-item-heading inline">{{company.name}}</h4>
 
-        <a id="participant">      
+        <a (click)="goParticipantsByCompanyId()" id="participant">      
             <span class="glyphicon glyphicon-user"></span>
             <span class="bdage badge-success" id="participant-count" title="participants">{{ company.participantCnt }}</span>
         </a>
       </div>
     <div class="col-xs-2">
-      <div class="pull-left">
-          <a [routerLink]="['./', company.companyId,'edit']" style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-pencil table-date-cog"></span></a>
-          <a (click)="onRemove()" style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove table-date-cog"></span></a>
+      <div (mouseover)="unfoldConf()"  (mouseout)="foldConf()">
+          <span style='font-size: 20px;' [ngClass]="{rotate: !confFolded}" class="data-config glyphicon glyphicon-cog"></span>
+          <div style='font-size: 18px;' [ngClass]="{unfold: !confFolded, fold: confFolded}" class="data-config-fold pull-left">
+              <a [routerLink]="['./', company.companyId,'edit']" style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-pencil table-date-cog"></span></a>
+              <a (click)="onRemove()" style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove table-date-cog"></span></a>
+          </div>
       </div>
     </div>  
 </div>

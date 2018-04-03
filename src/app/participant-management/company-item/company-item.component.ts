@@ -44,7 +44,7 @@ export class CompanyItemComponent implements OnInit {
             'name': new FormControl(this.company.name, Validators.required),
             'info': new FormControl(this.company.info),
             'addressStreet1': new FormControl(this.company.addressStreet1, Validators.required),
-            'addressStreet2': new FormControl(this.company.addressStreet2, Validators.required),
+            'addressStreet2': new FormControl(this.company.addressStreet2),
             'addressCity': new FormControl(this.company.addressCity, Validators.required),
             'addressState': new FormControl(this.company.addressState, Validators.required),
             'addressZip': new FormControl(this.company.addressZip, Validators.required),
