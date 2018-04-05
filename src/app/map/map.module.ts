@@ -1,3 +1,4 @@
+import { SharedModule } from './../shared/shared.module';
 import { MapRoutingModule } from './map-routing.module';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -14,7 +15,7 @@ import { TrackerListItemComponent } from './tracker-list/tracker-list-item/track
 import { MapControlPenalComponent } from './map-control-penal/map-control-penal.component';
 import { TrackerDetailComponent } from './tracker-detail/tracker-detail.component';
 import { TrackerDetailEditComponent } from './tracker-detail/tracker-detail-edit/tracker-detail-edit.component';
-
+import { SearchResultListComponent } from './search-result-list/search-result-list.component';
 
 
 @NgModule({
@@ -28,12 +29,14 @@ import { TrackerDetailEditComponent } from './tracker-detail/tracker-detail-edit
     MapControlPenalComponent,
     TrackerDetailComponent,
     TrackerDetailEditComponent,
+    SearchResultListComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     HttpModule,
-    MapRoutingModule
+    MapRoutingModule,
+    SharedModule
   ],
   providers: [MapService],
 })

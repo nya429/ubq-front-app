@@ -21,7 +21,7 @@ import { ParticipantDetailComponent } from './participant-index/participant-deta
 import { ShowDetailDirective } from './show-detail.directive';
 import { TableStripedDirective } from './table-striped.directive';
 import { TrackerResultListComponent } from './participant-item/tracker-result-list/tracker-result-list.component';
-import { ClickOutsideDirective } from './click-outside.directive';
+// import { ClickOutsideDirective } from '../shared/click-outside.directive';
 import { CompanyResultListComponent } from './participant-item//company-result-list/company-result-list.component';
 import { CompanyIndexComponent } from './company-index/company-index.component';
 import { CompanyListComponent } from './company-index/company-list/company-list.component';
@@ -45,7 +45,7 @@ import { SignTimePipe } from './signtime.pipe';
     ShowDetailDirective,
     TableStripedDirective,
     TrackerResultListComponent,
-    ClickOutsideDirective,
+    // ClickOutsideDirective,
     CompanyResultListComponent,
     CompanyIndexComponent,
     CompanyListComponent,

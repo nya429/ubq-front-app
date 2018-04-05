@@ -1,3 +1,10 @@
+.panel-body {
+    transition: height .3s ease-out;
+    overflow: hidden;
+    height: 64px;
+  
+}
+
 .panel-title {
     padding-top: 7px;
 }

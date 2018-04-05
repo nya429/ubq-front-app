@@ -2,17 +2,38 @@
   <div class="panel-heading">
     <div class="row">
       <div class="col-md-6 col-lg-6 " align="left">
-        <h3 class="panel-title">Control Penal</h3>
+        <h3 class="panel-title">Control Panel</h3>
       </div>
       <div class="col-md-6 col-lg-6 " align="right">
-        <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
-        <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
-        <a  title='config' type="button" class="btn"><i class="	glyphicon glyphicon-cog"></i></a>
-      </div>
+          <a  title='config' type="button" class="btn"><i class="	glyphicon glyphicon-cog"></i></a>
+       </div>
     </div>
   </div>
-  <div class="panel-body">
+  <div #penal class="panel-body">
     <div class="row">
+        <div class="col-md-3">
 
+        </div>
+        <div class="col-md-6 form-group"
+            appClickOutside 
+            (clickOutside)="onFilterFold()">  
+            <div class="input-group">  
+                <input (click)='onFilterClick()' autocomplete="off" type="text" name="keyword" id="keyword" class="form-control" placeholder="Tracker Filter">  
+                <span class="input-group-btn">  
+                    <button (click)='onSearch()'class="btn btn-info" type="submit">Search</button>  
+                </span>  
+            </div>  
+            <div 
+                *ngIf='!filterFolded' class="checkbox">
+                <label><input type="checkbox" value="">First Name </label>
+                <label><input type="checkbox" value="">Last Name</label>
+                <label><input type="checkbox" value="">WithCompany</label>
+              </div>
+        </div>  
+        <div class="col-md-3" align="right">
+            <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
+            <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
+        </div>
+       
     </div>
   </div>

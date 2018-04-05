@@ -4,11 +4,65 @@
 
 .list-group-item-heading {
     margin-right: 10px;
+    margin-left: 10px;
+    cursor: pointer;
 }
 
-hr {
-    margin: 5px 0; 
- }
+.list-group-item-heading.inactive:hover::after {
+    align-content: center;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    left: 0px;
+    bottom: -7px;
+    margin: none;
+    background: #00a1d6;
+    transition:  width .4s ease-out; 
+}
+
+.list-group-item-heading.inactive:hover::before {
+    align-content: center;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 2px;
+    height: 35px;
+    left: 0px;
+    bottom: -7px;
+    margin: none;
+    background: #00a1d6;
+    transition: height .2s ease-out; 
+}
+
+.list-group-item-heading.active::before {
+    align-content: center;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 2px; 
+    height: 2px;
+    bottom: -7px;
+    left: 0px;
+    margin: none; 
+    background: #00a1d6;
+    transition: height .2s ease-out; 
+}
+
+.list-group-item-heading.active::after {
+    align-content: center;
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    left: 0px;
+    bottom: -7px;
+    margin: none;
+    background: #00a1d6;
+    transition:  width .4s ease-out;
+}
 
  #participant-count {
      font-size: 18px;
@@ -16,6 +70,10 @@ hr {
 
  .table-date-cog {
      margin: 0 5px;
+ }
+
+ .margin-bt {
+     margin-bottom: 8px;
  }
 
  .indent {
@@ -42,6 +100,11 @@ hr {
     transform: rotate(270deg)
  }
 
+ .info {
+     overflow: hidden;
+     padding-top: 15px;
+ }
+ 
  @keyframes unfold {
      0% {
         opacity: 0;

@@ -3,3 +3,7 @@
     border-left: none;
     border-right: none;
 }
+
+.list-group-item:hover {
+    background-color: #f5f5f5;
+}

@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ParticipantService } from './../../../participant.service';
 import { CompanyService } from '../../../company.service';
@@ -9,13 +10,27 @@ import { Company } from '../../../../shared/company.model';
 @Component({
   selector: 'app-company-list-item',
   templateUrl: './company-list-item.component.html',
-  styleUrls: ['./company-list-item.component.css']
+  styleUrls: ['./company-list-item.component.css'],
+  animations: [
+    trigger('contentFoldedState', [
+            state('folded',  style({
+                backgroundColor: '#999',
+                height: '0px',
+                display: 'none'
+             })),
+             state('unfolded',  style({
+                height: '100px',
+            })),
+            transition('folded <=> unfolded', animate(200))
+    ])]
 })
+
 export class CompanyListItemComponent implements OnInit {
   @Input() company: Company;
   @Input() index: number;
 
   confFolded = true;
+  contentFolded = true;
 
   constructor(private service: CompanyService,
               private pmService: ParticipantService,
@@ -52,6 +67,14 @@ export class CompanyListItemComponent implements OnInit {
 
   foldConf() {
     this.confFolded = true;
+  }
+
+  isContentFolded() {
+    return this.contentFolded ? 'folded' : 'unfolded';
+  }
+
+  toggleFoldedContent() {
+    this.contentFolded = !this.contentFolded;
   }
 }
 

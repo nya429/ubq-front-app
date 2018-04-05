@@ -1,3 +1,7 @@
+:host {
+    transition: height .7s ease-in;
+}
+
 .tracker-item {
     display: flex;
     align-items: center;

@@ -1,0 +1,7 @@
+.dropdown-content {
+    position: absolute;
+    margin-top: -33px;
+    z-index: 9; 
+    box-shadow: 2px 2px 5px  rgba(180,180,180, .5);
+    background-color: #FFF;
+}

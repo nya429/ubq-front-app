@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
 import { MapService } from '../map.service';
@@ -14,13 +14,16 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   private onStopSubscription: Subscription;
   private onInitiatedSubscription: Subscription;
   private onStoppingSubscription: Subscription;
-
+  @ViewChild('penal') private penal: ElementRef;
   started: boolean;
   initiated: boolean;
   stopped: boolean;
   stopping: boolean;
 
-  constructor(private mapService: MapService) { }
+  filterFolded = true;
+
+  constructor(private mapService: MapService,
+              private render: Renderer2) { }
 
   ngOnInit() {
     this.onStartSubscription = this.mapService.started.subscribe(started => this.started = started);
@@ -42,5 +45,19 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
 
   onStop() {
     this.mapService.stop();
+  }
+
+  onFilterClick() {
+    this.render.setStyle(this.penal.nativeElement, 'height', '90px');
+    this.filterFolded = false;
+  }
+
+  onSearch() {
+     this.onFilterFold();
+  }
+
+  onFilterFold() {
+    this.render.setStyle(this.penal.nativeElement, 'height', '64px');
+    this.filterFolded = true;
   }
 }

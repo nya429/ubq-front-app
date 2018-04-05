@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
 import { MapModule } from './map/map.module';
 import { AppComponent } from './app.component';
@@ -16,6 +17,7 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     HttpModule,
     AppRoutingModule,
