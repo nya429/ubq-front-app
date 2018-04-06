@@ -16,10 +16,13 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
           <li routerLinkActive="active"><a routerLink="/home">Home</a></li>
-          <li routerLinkActive="active"><a routerLink="/dashboard">Dashboard</a></li>
-          <li routerLinkActive="active"><a routerLink="/map">Map</a></li>
-          <li routerLinkActive="active"><a routerLink="/visitor">Visitors</a></li>
-          <li class="dropdown">
+          <li routerLinkActive="active"><a routerLink="/dashboard"><span class="
+            glyphicon glyphicon-list-alt"></span> Dashboard</a></li>
+          <li routerLinkActive="active"><a routerLink="/map"><span class="
+            glyphicon glyphicon-map-marker"></span> Tracker Map</a></li>
+          <li routerLinkActive="active"><a routerLink="/visitor"><span class="
+            glyphicon glyphicon-user"></span> Visitors</a></li>
+          <!-- <li class="dropdown">
             <a  class="dropdown-toggle" style="cursor: pointer;" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Action</a></li>
@@ -30,9 +33,9 @@
               <li role="separator" class="divider"></li>
               <li><a href="#">One more separated link</a></li>
             </ul>
-          </li>
-          <li routerLinkActive="active"><a routerLink="/about">About</a></li>
-          <li><a ng-href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          </li> -->
+          <li routerLinkActive="active"><a routerLink="/auth"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li routerLinkActive="active"><a routerLink="/about">Manule</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div>

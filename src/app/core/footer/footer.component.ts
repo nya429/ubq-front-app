@@ -12,4 +12,8 @@ export class FooterComponent implements OnInit {
   ngOnInit() {
   }
 
+  goUrl(url: string) {
+    console.log(url);
+    window.location.href = url;
+  }
 }

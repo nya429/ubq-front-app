@@ -1,10 +1,15 @@
 <div class="col-sm-6 col-sm-offset-3 dropdown-content panel panel-info"> 
     <div class="row ">
-     
+        <div 
+        *ngIf='!filterFolded' class="checkbox">
+        <label><input type="checkbox" value="">First Name </label>
+        <label><input type="checkbox" value="">Last Name</label>
+        <label><input type="checkbox" value="">WithCompany</label>
+      </div>
         <span 
         (click)="onClose($event)" 
         style="cursor:pointer;"
         title='close' 
-        class="pull-right glyphicon glyphicon-remove"></span>
+        class="pull-right" id='close-buttom'>&times;</span>
       </div>
 </div>

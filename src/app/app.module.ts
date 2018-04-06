@@ -6,6 +6,7 @@ import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
+import { AuthModule } from './auth/auth.module';
 import { MapModule } from './map/map.module';
 import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -22,6 +23,7 @@ import { SharedModule } from './shared/shared.module';
     HttpModule,
     AppRoutingModule,
     CoreModule,
+    AuthModule,
     SharedModule,
     MapModule,
     DashboardModule,

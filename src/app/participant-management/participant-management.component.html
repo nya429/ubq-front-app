@@ -1,34 +1,40 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
-      <app-participant-nav></app-participant-nav>
-    </div>
-      <div class="col-sm-9 col-md-10">
-        <br>
-        <div class="row">
-          <div class="panel panel-info  main">
-            
-            <div class="panel-heading">
-              <div class="row">
-                <div class="col-xs-6 " align="left">
-                    <h3 class="panel-title">{{ title }}</h3>
-                  </div>
-                  <div *ngIf="!onEdit" class="col-xs-6 button-group" align="right">
-                      <a (click)="goNew()" id="add-button" style="cursor:pointer"><span title="Add a participant" class="glyphicon glyphicon-plus"></span> Add </a>
-                      <a (click)="refresh()" id="refresh-button" style="cursor:pointer"><span title="Refresh" class="glyphicon glyphicon-refresh"></span> Refresh </a>
-                  </div>
-                  <div *ngIf="onEdit" class="col-xs-6 button-group" align="right">
-                      <a (click)="goIndex()" id="add-button" style="cursor:pointer"><span title="Go back to list" class="glyphicon glyphicon-arrow-left"></span> Back </a>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+              <app-participant-nav></app-participant-nav>
+            </div>
+              <div class="col-sm-9 col-md-10">
+                <br>
+                <div class="row">
+                  <div class="panel panel-info  main">
+                    
+                    <div class="panel-heading">
+                      <div class="row">
+                        <div class="col-xs-6 " align="left">
+                            <h3 class="panel-title">{{ title }}</h3>
+                          </div>
+                          <div *ngIf="!onEdit" class="col-xs-6 button-group" align="right">
+                              <a (click)="goNew()" id="add-button" style="cursor:pointer"><span title="Add a participant" class="glyphicon glyphicon-plus"></span> Add </a>
+                              <a (click)="refresh()" id="refresh-button" style="cursor:pointer"><span title="Refresh" class="glyphicon glyphicon-refresh"></span> Refresh </a>
+                          </div>
+                          <div *ngIf="onEdit" class="col-xs-6 button-group" align="right">
+                              <a (click)="goIndex()" id="add-button" style="cursor:pointer"><span title="Go back to list" class="glyphicon glyphicon-arrow-left"></span> Back </a>
+                          </div>
+                      </div>
+                    </div>
+                    
+                    <div class="panel-body">
+                      <router-outlet></router-outlet>
+                    </div>
                   </div>
               </div>
             </div>
-            
-            <div class="panel-body">
-              <router-outlet></router-outlet>
-            </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 

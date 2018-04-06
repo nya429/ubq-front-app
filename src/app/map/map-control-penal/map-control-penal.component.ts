@@ -48,7 +48,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   }
 
   onFilterClick() {
-    this.render.setStyle(this.penal.nativeElement, 'height', '90px');
+    this.render.setStyle(this.penal.nativeElement, 'height', '115px');
     this.filterFolded = false;
   }
 
@@ -57,7 +57,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   }
 
   onFilterFold() {
-    this.render.setStyle(this.penal.nativeElement, 'height', '64px');
+    this.render.setStyle(this.penal.nativeElement, 'height', '90px');
     this.filterFolded = true;
   }
 }

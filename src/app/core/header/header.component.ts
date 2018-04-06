@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute,Params } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { Location } from '@angular/common';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  currentHref: string = "";
+  currentHref: string;
 
   constructor(private route: ActivatedRoute,
               private location: Location,
@@ -16,10 +16,10 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.route.url.subscribe((val) => {
-      if(this.location.path() != ''){
-        console.log(this.route.snapshot)
+      if (this.location.path() !== '') {
+        console.log(this.route.snapshot);
       } else {
-        this.currentHref = 'Home'
+        this.currentHref = 'Home';
       }
     });
   }

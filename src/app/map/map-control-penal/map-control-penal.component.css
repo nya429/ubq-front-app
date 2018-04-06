@@ -1,7 +1,7 @@
 .panel-body {
     transition: height .3s ease-out;
     overflow: hidden;
-    height: 64px;
+    height: 90px;
   
 }
 

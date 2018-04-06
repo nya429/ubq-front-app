@@ -8,10 +8,10 @@
            <span id="state-code" class="pull-right">{{ state }}</span>
       </a>
   
-      <li *ngIf='states.length > 0' class="list-group-item borderless" id="close-buttom">
+      <li *ngIf='states.length > 0' class="list-group-item borderless">
         <span (click)="onClose($event)" 
                style="cursor:pointer;"
                title='close' 
-               class="pull-right glyphicon glyphicon-remove"></span>
+               class="pull-right close-buttom">&times;</span>
        </li>
 </div>

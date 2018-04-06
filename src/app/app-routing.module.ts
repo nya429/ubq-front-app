@@ -11,6 +11,7 @@ const appRoutes: Routes = [
     {path: '', redirectTo: '/home', pathMatch: 'full'},
     {path: 'home', component: HomeComponent},
     {path: 'about', component: AboutComponent},
+    {path: 'auth', loadChildren: './auth/auth.module#AuthModule'},
     {path: 'dashboard', loadChildren: './dashboard/dashboard.module#DashboardModule'},
     {path: 'map', loadChildren: './map/map.module#MapModule'},
     {path: 'visitor', loadChildren: './participant-management/participant-management.module#ParticipantManagementModule'},

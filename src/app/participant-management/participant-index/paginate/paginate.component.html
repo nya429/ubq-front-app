@@ -1,11 +1,9 @@
 <div class="row">
   <div  *ngIf='lessDetailed' class="col-xs-3">  
       <select [ngModel]="limit" (change)="goPage(null, $event.target.value)" id="limit-select" class="form-control">  
-        <option value="5">5</option>  
-        <option value="10">10</option>  
-        <option value="15">15</option>  
-        <option value="20">20</option>  
+        <option value="10">10</option>   
         <option value="25">25</option>  
+        <option value="25">50</option> 
       </select> 
       <div id="limit-select-text"><span>Items per page</span></div> 
   </div>

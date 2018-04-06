@@ -5,3 +5,8 @@
     box-shadow: 2px 2px 5px  rgba(180,180,180, .5);
     background-color: #FFF;
 }
+
+#close-buttom {
+    font-size: 20px;
+    margin: 15px;
+}
