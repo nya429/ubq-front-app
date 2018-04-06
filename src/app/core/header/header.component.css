@@ -11,3 +11,10 @@
     color: #00a1d6;
     font-size: larger;
 }
+
+.avatar {
+    margin-top: 8px;
+    margin-left: 9px;
+    height: 35px;
+    width: 35px;
+}

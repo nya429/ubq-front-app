@@ -1,3 +1,4 @@
+import { AuthService } from './../auth/auth.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -17,6 +18,7 @@ import { AppRoutingModule } from '../app-routing.module';
         PageNotFoundComponent
     ],
     imports: [
+        CommonModule,
         AppRoutingModule
     ],
     exports: [

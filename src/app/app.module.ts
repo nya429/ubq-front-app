@@ -1,3 +1,4 @@
+import { AuthGuard } from './auth/auth-guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +13,8 @@ import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ParticipantManagementModule } from './participant-management/participant-management.module';
 import { SharedModule } from './shared/shared.module';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -21,6 +24,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     BrowserModule,
     HttpModule,
+    HttpClientModule,
     AppRoutingModule,
     CoreModule,
     AuthModule,
@@ -29,7 +33,7 @@ import { SharedModule } from './shared/shared.module';
     DashboardModule,
     ParticipantManagementModule
   ],
-  providers: [],
+  providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

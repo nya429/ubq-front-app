@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
+import { AuthService } from './../../auth/auth.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -12,7 +13,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
               private location: Location,
-              private router: Router) { }
+              private router: Router,
+              private authService: AuthService) { }
 
   ngOnInit() {
     this.route.url.subscribe((val) => {
@@ -24,4 +26,11 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  isAuth() {
+    return this.authService.isAuthenticated();
+  }
+
+  logOut() {
+    this.authService.logOut();
+  }
 }
