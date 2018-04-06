@@ -12,8 +12,8 @@ import { ParticipantService } from './../../participant.service';
 export class ParticipantListComponent implements OnInit, OnDestroy {
   participants: Participant[];
   detailedIndex: number;
-  private orderBy: string;
-  private sortBy: string;
+  orderBy: string;
+  sortBy: string;
 
   private subscription: Subscription;
   private resetSubscription: Subscription;
