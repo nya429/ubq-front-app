@@ -35,12 +35,13 @@
             </ul>
           </li> -->
           <li *ngIf="!isAuth()" routerLinkActive="active"><a routerLink="/auth"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-          <li *ngIf="isAuth()" (click)='logOut()' style='display:block; width:50px;'>
+          <li *ngIf="isAuth()" style='display:block; width:50px;'>
                   <img alt="user Img" 
                   src="../assets/user.svg"
                   class="img-circle img-responsive avatar">
-               
+                 
           </li>
+          <li *ngIf="isAuth()" (click)='logOut()'><a><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
           <li routerLinkActive="active"><a routerLink="/about">Manule</a></li>
       </ul>
     </div><!-- /.navbar-collapse -->

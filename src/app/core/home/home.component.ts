@@ -15,15 +15,6 @@ export class HomeComponent implements OnInit {
   }
 
   moveTo(el) {
-    // Array.from(document.getElementsByClassName('home-nav-item'))
-    // .map( element => {
-    //     if (element.children[0].innerHTML !== el.innerText) {
-    //       element.classList.remove('nav-item-selected');
-    //     } else {
-    //       element.classList.add('nav-item-selected');
-    //     }
-    //   }
-    // );
     el.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'start' });
   }
 }

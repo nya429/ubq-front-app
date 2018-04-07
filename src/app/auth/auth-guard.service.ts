@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
                         return true;
                     } else {
                         this.authService.changeSigninScale();
-                        this.router.navigate(['/auth/signin', { signed: 'false' }]);
+                        this.router.navigate(['/auth/signin']);
                         return false;
                     }
                 }

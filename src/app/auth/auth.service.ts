@@ -6,6 +6,7 @@ import { Injectable, EventEmitter, Output } from '@angular/core';
 export class AuthService {
   errorEmiiter = new EventEmitter<string> ();
   token: string = null;
+  authFaded = false;
   errorMessage: string = null;
   signInScaled: boolean;
   signInScaleChanged = new Subject<boolean> ();
@@ -18,12 +19,16 @@ export class AuthService {
 
   setToken() {
     this.token = 'true';
+  }
+
+  authedNav() {
     this.router.navigate(['/dashboard']);
   }
 
   logOut() {
     this.token = null;
-    this.router.navigate(['/auth/signin']);
+    this.authFaded = false;
+    this.router.navigate(['/home']);
   }
 
   changeSigninScale() {

@@ -1,3 +1,5 @@
+import { OnDestroy } from '@angular/core/src/metadata/lifecycle_hooks';
+import { Subscription } from 'rxjs/Subscription';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 
@@ -9,42 +11,56 @@ import { trigger, state, style, transition, animate, keyframes } from '@angular/
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css'],
   animations: [
-    trigger('bigger', [
-            state('bigger',  style({ })),
-             state('default',  style({ })),
-            transition('bigger => default', animate('500ms', keyframes([
+    trigger('scale', [
+            state('fail',  style({  })),
+            state('default',  style({ })),
+            state('authed',  style({transform: 'scale(0)'})),
+            transition('fail => default', animate('500ms', keyframes([
               style({transform: 'scale(1.0)'}),
               style({transform: 'scale(1.1)'}),
               style({transform: 'scale(1.0)'}),
               style({transform: 'scale(1.1)'}),
               style({transform: 'scale(1.0)'}),
             ]) )),
-    ])]
+            transition('default => authed', animate('400ms 100ms ease-out', keyframes([
+              style({transform: 'scale(1.1)', offset: 0.7}),
+              style({transform: 'scale(0)', offset: 1}),
+            ])))
+      ])
+    ]
 })
 
-export class SigninComponent implements OnInit {
+export class SigninComponent implements OnInit, OnDestroy {
   required: boolean;
-  biggerState: string;
+  scaleState: string;
+  Subscription: Subscription;
 
   constructor(private authService: AuthService,
   private route: ActivatedRoute,
   private router: Router) { }
 
   ngOnInit() {
-    this.biggerState = 'default';
-    this.authService.signInScaleChanged.subscribe((bigger: boolean) => {
+    this.scaleState = 'default';
+    this.Subscription = this.authService.signInScaleChanged.subscribe((bigger: boolean) => {
       if (bigger) {
-        this.biggerState = 'bigger';
+        this.scaleState = 'fail';
         setTimeout(() => {
-          this.biggerState = 'default';
+          this.scaleState = 'default';
         }, 100);
       }
     });
   }
 
+  ngOnDestroy() {
+    this.Subscription.unsubscribe();
+  }
+
   onSignIn() {
     this.authService.setToken();
-    this.router.navigate(['/dashboard']);
+    this.scaleState = 'authed';
+    setTimeout(() => {
+      this.authService.authedNav();
+    }, 400);
   }
 
   isRequired() {

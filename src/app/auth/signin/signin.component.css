@@ -23,7 +23,7 @@ input::after {
 .fluid-gradient {
     background: linear-gradient(-45deg, #DDA0DD, #7B68EE, #23A6D5, #23D5AB);
 	background-size: 400% 400%;
-	animation: Gradient 10s ease infinite;
+    animation: Gradient 10s ease infinite;
 }
 
 @keyframes Gradient {
