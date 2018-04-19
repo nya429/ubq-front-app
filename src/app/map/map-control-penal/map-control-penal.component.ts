@@ -5,14 +5,14 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { ParticipantService } from './../../participant-management/participant.service';
 import { MapService } from '../map.service';
-import { hiddenItemStateTrigger } from './../map.animation';
+import { hiddenItemStateTrigger, companyFilterSlideStateTrigger } from './../map.animation';
 
 
 @Component({
   selector: 'app-map-control-penal',
   templateUrl: './map-control-penal.component.html',
   styleUrls: ['./map-control-penal.component.css'],
-  animations: [ hiddenItemStateTrigger ]
+  animations: [ hiddenItemStateTrigger, companyFilterSlideStateTrigger ]
 })
 export class MapControlPenalComponent implements OnInit, OnDestroy {
   private onStartSubscription: Subscription;

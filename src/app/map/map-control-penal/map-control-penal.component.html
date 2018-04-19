@@ -36,11 +36,12 @@
                         style="cursor:pointer;"
                         [ngClass]="{'dropdown-expand': !dropdownFolded}" 
                         class="input-group-prepend"> 
-                      <span  
+                      <span 
                         *ngIf="companyFilter['company_id']"
                         (click)='onDropdownRemove($event)' 
-                         class="glyphicon glyphicon-remove vertical-middle-remove"></span> 
-                      <span  class="company-filter-text">{{ companyFilter['company_name'] }}</span>
+                         class="vertical-middle-remove">&times;</span> 
+                      <span [@companyFilterSlideState]="companyFilter['company_id'] ? 'removal' : 'all'"
+                       class="company-filter-text">{{ companyFilter['company_name'] }}</span>
                       <span [ngClass]="{'dropdownFocus': !dropdownFolded}"
                             class="caret vertical-middle-caret"></span>
                   </div> 
