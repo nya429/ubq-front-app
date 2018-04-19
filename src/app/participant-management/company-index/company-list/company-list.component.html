@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-12">
+  <div [@listItemSlideState]="companys?.length" class="col-xs-12">
     <app-loading *ngIf="!companys"></app-loading>
     <app-company-list-item 
     *ngFor="let company of companys;let i = index"

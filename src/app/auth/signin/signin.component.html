@@ -17,12 +17,12 @@
           <form (ngSubmit)="onSignIn(f)" #f="ngForm">
             <div class="form-group">
               <label for="email">Mail</label>
-              <input type='email' id ='email' name="email" ngModel class="form-control" required email>
+              <input #email='ngModel' type='email' id ='email' name="email" ngModel class="form-control" required email>
               <span *ngIf="f.touched && f.controls.email.touched && !f.controls.email.valid" class="help-block"><p>Invlaid</p></span>
             </div>
             <div class="form-group">
               <label for="password">Password</label>
-              <input type='password' id ='password' name="password" ngModel class="form-control" required minlength="6" >
+              <input #password='ngModel' type='password' id ='password' name="password" ngModel class="form-control" required minlength="6" >
               <span *ngIf="f.touched && f.controls.password.touched && !f.controls.password.valid" class="help-block"><p>Invlaid</p></span>
             </div>
             <button (click)='onSignIn()' class="btn btn-primary" type='submit' [disabled]="!f.valid">Sign In</button>

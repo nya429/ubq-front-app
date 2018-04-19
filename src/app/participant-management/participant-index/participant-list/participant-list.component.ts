@@ -3,11 +3,13 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { Participant } from './../../../shared/participant.model';
 import { ParticipantService } from './../../participant.service';
+import { listItemSlideStateTrigger } from '../../participant-list.animation';
 
 @Component({
   selector: 'app-participant-list',
   templateUrl: './participant-list.component.html',
-  styleUrls: ['./participant-list.component.css']
+  styleUrls: ['./participant-list.component.css'],
+  animations: [ listItemSlideStateTrigger ]
 })
 export class ParticipantListComponent implements OnInit, OnDestroy {
   participants: Participant[];

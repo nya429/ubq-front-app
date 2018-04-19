@@ -1,3 +1,5 @@
+import { ParticipantService } from './../participant-management/participant.service';
+import { CompanyService } from './../participant-management/company.service';
 import { SharedModule } from './../shared/shared.module';
 import { MapRoutingModule } from './map-routing.module';
 import { NgModule } from '@angular/core';
@@ -16,6 +18,8 @@ import { MapControlPenalComponent } from './map-control-penal/map-control-penal.
 import { TrackerDetailComponent } from './tracker-detail/tracker-detail.component';
 import { TrackerDetailEditComponent } from './tracker-detail/tracker-detail-edit/tracker-detail-edit.component';
 import { SearchResultListComponent } from './search-result-list/search-result-list.component';
+import { FilterPriorityListComponent } from './filter-priority-list/filter-priority-list.component';
+import { FilterCompanyDropdownComponent } from './filter-company-dropdown/filter-company-dropdown.component';
 
 
 @NgModule({
@@ -29,7 +33,9 @@ import { SearchResultListComponent } from './search-result-list/search-result-li
     MapControlPenalComponent,
     TrackerDetailComponent,
     TrackerDetailEditComponent,
-    SearchResultListComponent
+    SearchResultListComponent,
+    FilterPriorityListComponent,
+    FilterCompanyDropdownComponent
   ],
   imports: [
     CommonModule,
@@ -38,6 +44,6 @@ import { SearchResultListComponent } from './search-result-list/search-result-li
     MapRoutingModule,
     SharedModule
   ],
-  providers: [MapService],
+  providers: [MapService, CompanyService, ParticipantService],
 })
 export class MapModule { }

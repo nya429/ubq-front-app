@@ -20,7 +20,7 @@ export class MapService {
     intiated = new EventEmitter<boolean>();
     onStarted = new EventEmitter<boolean>();
     onStopped = new EventEmitter<boolean>();
-
+    dropdownFolded = new EventEmitter<boolean>();
     // TODO restructure the selected Tracker
     selectedTrackerId: number;
     selectedTrackerIndex = new EventEmitter<number>();
@@ -138,5 +138,9 @@ export class MapService {
         // TODO replace this after having backend
         this.trackers[index].alias = form.alias;
         this.trackerChanges.next(this.trackers.slice());
+    }
+
+    onCompanyDropdownFolded(folded: boolean) {
+        this.dropdownFolded.emit(folded);
     }
 }

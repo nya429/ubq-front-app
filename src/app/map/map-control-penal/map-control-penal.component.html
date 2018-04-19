@@ -12,29 +12,75 @@
   <div #penal class="panel-body">
     <br>
     <div class="row">
+        <form #f="ngForm" >
         <div class="col-md-3">
-
+          <!-- <div class="search-grp">
+          <input class="inline search-grp-input" placeholder="search"  type="text">
+          <input class="inline search-grp-dropdown" placeholder="All" type="text">
+                  <span class="input-group-btn">  
+                  <button (click)='onSerachByTerm()'class="btn btn-info" type="submit">Search</button>  
+                </span>  
+         </div> -->
         </div>
         <div class="col-md-6 form-group"
             appClickOutside 
-            (clickOutside)="onFilterFold()">  
-            <div class="input-group">  
-                <input (click)='onFilterClick()' autocomplete="off" type="text" name="keyword" id="keyword" class="form-control" placeholder="Tracker Filter">  
+            (clickOutside)="onFilterFold()">
+            
+              <div class="input-group"> 
+
+                <span  (click)='onInputFocus()' 
+                        [ngClass]="{'border-focused': filterInputFocused}" 
+                        class="input-group-border">
+
+                  <div (click)='onDropdownClick($event)' 
+                        style="cursor:pointer;"
+                        class="input-group-prepend"> 
+                      <span  
+                        *ngIf="companyFilter['company_id']"
+                        (click)='onDropdownRemove($event)' 
+                         class="glyphicon glyphicon-remove vertical-middle-remove"></span> 
+                      <span  id="company-filter-text">{{ companyFilter['company_name'] }}</span>
+                      <span [ngClass]="{'dropdownFocus': !dropdownFolded}"
+                            class="caret vertical-middle-caret"></span>
+                  </div> 
+                  
+                  <input #term='ngModel' name="term" ngModel 
+                  (focus)='onFilterInputClick()' 
+                  autocomplete="off" 
+                  type="text" id="term" 
+                  class="form-control input-group-input" 
+                  placeholder="Tracker Filter">   
+                </span>
+
                 <span class="input-group-btn">  
-                    <button (click)='onSearch()'class="btn btn-info" type="submit">Search</button>  
+                  <button (click)='onSerachByTerm()'class="btn btn-info" type="submit">
+                      <span class="glyphicon glyphicon-search"></span>
+                  </button>  
                 </span>  
-            </div>  
-            <div 
-                *ngIf='!filterFolded' class="checkbox">
-                <label><input type="checkbox" value="">First Name </label>
-                <label><input type="checkbox" value="">Last Name</label>
-                <label><input type="checkbox" value="">WithCompany</label>
-              </div>
+
+                <span class="input-group-btn input-group-btn-filter">  
+                    <button (click)='onSerachByTerm()'class="btn btn-info" type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>  
+                </span>  
+
+              </div>  
+              <div 
+              *ngIf='!filterFolded' class="checkbox filter-zone">
+              <label><input type="checkbox" value="">First Name <span class="caret"></span></label>
+              <label><input type="checkbox" value="">Last Name</label>
+              <span 
+              (click)="onFilterFold()" 
+              style="cursor:pointer;"
+              title='close' 
+              class="pull-right" id='close-buttom'>&times;</span>
+            </div>
+
         </div>  
+      </form> 
         <div class="col-md-3" align="right">
             <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
             <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
         </div>
-       
     </div>
   </div>

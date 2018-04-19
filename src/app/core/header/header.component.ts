@@ -3,10 +3,12 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
 
 import { AuthService } from './../../auth/auth.service';
+import { navUnderScoreStateTrigger } from '../core.animation';
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.css']
+  styleUrls: ['./header.component.css'],
+  animations: [  ]
 })
 export class HeaderComponent implements OnInit {
   currentHref: string;

@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col-xs-12">
+  <div  [@listItemSlideState]='participants?.length' class="col-xs-12">
       <table class="table table-hover">
           <thead class="thead-inverse">
               <tr>
@@ -31,7 +31,7 @@
             </th>      
           </tr>
           <tbody *ngFor="let participant of participants; let i = index" id="table-content">
-            <tr *ngIf="[i] != detailedIndex" [ngClass]="{'stripped': i % 2 !== 0}" >
+            <tr *ngIf="[i] != detailedIndex"  [ngClass]="{'stripped': i % 2 !== 0}" >
               <td><a (click)='showDetail(i)'><span title='View detail' class="glyphicon glyphicon-info-sign"></span></a></td> 
               
               <td>{{participant.firstName}} {{participant.lastName}}</td>

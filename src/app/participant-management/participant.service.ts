@@ -13,6 +13,7 @@ export class ParticipantService {
   paginateChanged = new Subject<object>();
   termChanged = new Subject<string>();
   orderChanged = new Subject();
+  companySelected = new Subject<object>();
 
   private participant: Participant;
   private participants: Participant[];

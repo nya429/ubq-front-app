@@ -1,28 +1,17 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ParticipantService } from './../../../participant.service';
 import { CompanyService } from '../../../company.service';
 
 import { Company } from '../../../../shared/company.model';
+import { contentFoldedState } from './company-list-item.animations';
 
 @Component({
   selector: 'app-company-list-item',
   templateUrl: './company-list-item.component.html',
   styleUrls: ['./company-list-item.component.css'],
-  animations: [
-    trigger('contentFoldedState', [
-            state('folded',  style({
-                backgroundColor: '#999',
-                height: '0px',
-                display: 'none'
-             })),
-             state('unfolded',  style({
-                height: '100px',
-            })),
-            transition('folded <=> unfolded', animate(200))
-    ])]
+  animations: [ contentFoldedState ]
 })
 
 export class CompanyListItemComponent implements OnInit {

@@ -11,7 +11,13 @@
     <div class="row">
             <div class="col-md-12">
                 <app-map-control-penal></app-map-control-penal>
-                <app-search-result-list></app-search-result-list>
+                <app-filter-company-dropdown 
+                   *ngIf='!dropdownFolded'
+                   appClickOutside 
+                   (clickOutside)="onCompanyDropdownFold()"
+                   ></app-filter-company-dropdown>
+                <!-- <app-filter-priority-list></app-filter-priority-list> -->
+                <!-- <app-search-result-list></app-search-result-list> -->
             </div>
         </div>
         <div class="row">

@@ -3,11 +3,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { Company } from '../../../shared/company.model';
 import { CompanyService } from './../../company.service';
+import { listItemSlideStateTrigger } from '../../participant-list.animation';
 
 @Component({
   selector: 'app-company-list',
   templateUrl: './company-list.component.html',
-  styleUrls: ['./company-list.component.css']
+  styleUrls: ['./company-list.component.css'],
+  animations: [ listItemSlideStateTrigger ]
 })
 export class CompanyListComponent implements OnInit {
   companys: Company[];
