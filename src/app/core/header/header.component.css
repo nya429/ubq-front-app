@@ -7,12 +7,12 @@ li::after {
     background: #00a1d6;
     bottom: -1px;
     transform: scaleX(0);
-    transition: transform .4s;
+    transition: transform .3s;
 }
 
 .active::after {
     transform: scaleX(1);
-    transition: transform .4s;
+    transition: transform .3s;
 }
 
 .brand-logo {

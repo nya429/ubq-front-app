@@ -34,12 +34,13 @@
 
                   <div (click)='onDropdownClick($event)' 
                         style="cursor:pointer;"
+                        [ngClass]="{'dropdown-expand': !dropdownFolded}" 
                         class="input-group-prepend"> 
                       <span  
                         *ngIf="companyFilter['company_id']"
                         (click)='onDropdownRemove($event)' 
                          class="glyphicon glyphicon-remove vertical-middle-remove"></span> 
-                      <span  id="company-filter-text">{{ companyFilter['company_name'] }}</span>
+                      <span  class="company-filter-text">{{ companyFilter['company_name'] }}</span>
                       <span [ngClass]="{'dropdownFocus': !dropdownFolded}"
                             class="caret vertical-middle-caret"></span>
                   </div> 
@@ -49,14 +50,9 @@
                   autocomplete="off" 
                   type="text" id="term" 
                   class="form-control input-group-input" 
+                  [ngClass]="{'input-shrink': !dropdownFolded}" 
                   placeholder="Tracker Filter">   
                 </span>
-
-                <span class="input-group-btn">  
-                  <button (click)='onSerachByTerm()'class="btn btn-info" type="submit">
-                      <span class="glyphicon glyphicon-search"></span>
-                  </button>  
-                </span>  
 
                 <span class="input-group-btn input-group-btn-filter">  
                     <button (click)='onSerachByTerm()'class="btn btn-info" type="submit">
@@ -65,15 +61,33 @@
                 </span>  
 
               </div>  
-              <div 
-              *ngIf='!filterFolded' class="checkbox filter-zone">
-              <label><input type="checkbox" value="">First Name <span class="caret"></span></label>
-              <label><input type="checkbox" value="">Last Name</label>
-              <span 
-              (click)="onFilterFold()" 
-              style="cursor:pointer;"
-              title='close' 
-              class="pull-right" id='close-buttom'>&times;</span>
+              <div @hiddenItemState
+              *ngIf='!filterFolded' class="filter-zone">
+              <div class="row">
+                  <div class="col-sm-12">
+                      <label class='filter-text'>Filters: </label>
+                      <span class="select-wrapper">
+                          <select required id="priority-status"
+                          name="priority-status" [ngModel]='0'
+                          class="form-control filter-selection">
+                              <option value="0">All Priorities</option>
+                              <option value="2">Only Visitors</option>
+                              <option value="1">Only VIPs</option> 
+                          </select>
+                      </span>
+                    <span class="select-wrapper">
+                      <select required 
+                      class="form-control filter-selection">
+                          <option value="0">More filters</option> 
+                      </select>
+                    </span>
+                    <span 
+                    (click)="onFilterFold()" 
+                    style="cursor:pointer;"
+                    title='close' 
+                    class="pull-right" id='close-buttom'>&times;</span>
+                  </div>
+              </div>
             </div>
 
         </div>  
