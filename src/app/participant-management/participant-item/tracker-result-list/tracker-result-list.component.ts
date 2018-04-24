@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, OnChanges, SimpleChange, SimpleChanges, EventEmitter } from '@angular/core';
+import { listItemFadeSlideStateTrigger } from '../../../map/map.animation';
 
 @Component({
   selector: 'app-tracker-result-list',
   templateUrl: './tracker-result-list.component.html',
-  styleUrls: ['./tracker-result-list.component.css']
+  styleUrls: ['./tracker-result-list.component.css'] ,
+  animations: [ listItemFadeSlideStateTrigger ]
 })
 export class TrackerResultListComponent implements OnInit, OnChanges {
   @Input() trackers;

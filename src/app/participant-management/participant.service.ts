@@ -139,6 +139,38 @@ export class ParticipantService {
       );
   }
 
+  getParticipantListByFilters(filters: object, offset?: number, limit?: number) {
+    const urlSuffix = 'list/filter';
+    let options = new HttpParams();
+    if (offset) {
+      options = options.append('offset', offset.toString());
+    }
+    if (this.limit) {
+      options = options.append('ltd', this.limit.toString());
+    }
+    if (this.sortBy) {
+      options = options.append('sortBy', this.sortBy.toString()).append('orderBy', this.orderBy);
+    }
+    if (this.term) {
+      options = options.append('term', this.term);
+    }
+
+    return this.httpClient.post(`${this.httpOptions.participanUrl}/${urlSuffix}`, filters, {
+        observe: 'body',
+        responseType: 'json',
+        params: options
+      })
+      .subscribe(
+          (result) => {
+            const data = result['data'];
+            console.log(data);
+            this.setParticipants(data);
+          }, (err: HttpErrorResponse)  => {
+            console.error(err);
+          }
+      );
+  }
+
 
   getCompanyListByOpotions(offset?: number, limit?: number) {
     const urlSuffix = this.term ? '/lookup' : '/list';

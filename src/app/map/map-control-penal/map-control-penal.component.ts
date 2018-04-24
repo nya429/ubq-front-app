@@ -22,7 +22,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   private onCompanySelectedSubscription: Subscription;
   private dropdownSubscription: Subscription;
   @ViewChild('penal') private penal: ElementRef;
-  @ViewChild('f') termForm: NgForm;
+  @ViewChild('f') filterForm: NgForm;
   started: boolean;
   initiated: boolean;
   stopped: boolean;
@@ -36,6 +36,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
     'company_id': null,
     'company_name': 'All Company'
   };
+  priorityFilter = 0;
 
   constructor(private mapService: MapService,
               private render: Renderer2,
@@ -47,7 +48,11 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
     this.onStopSubscription = this.mapService.stopped.subscribe(stopped => this.stopped = stopped);
     this.onInitiatedSubscription = this.mapService.intiated.subscribe(initiated => this.initiated = initiated);
     this.onStoppingSubscription = this.mapService.stopping.subscribe(stopping => this.stopping = stopping);
-    this.onCompanySelectedSubscription = this.pmService.companySelected.subscribe(company => this.companyFilter = company);
+    this.onCompanySelectedSubscription = this.pmService.companySelected.subscribe(company => {
+       this.companyFilter = company;
+       if (this.filterFolded) {
+        this.onInputBlur();
+       } });
     this.dropdownSubscription = this.mapService.dropdownFolded.subscribe(folded => this.dropdownFolded = folded);
   }
 
@@ -79,11 +84,20 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
     this.onInputBlur();
   }
 
+  onPrioritySelect() {
+    this.priorityFilter = this.filterForm.value.priorityStatus;
+  }
+
   onSerachByTerm() {
-    const term = this.termForm.value.term;
-    console.log(term);
-    this.pmService.setTerm(term);
-    this.pmService.getParticipantListByOptions();
+    const term = this.filterForm.value.term;
+    const companyId = this.companyFilter['company_id'] ? this.companyFilter['company_id'] : 0;
+    const priority = this.filterForm.value.priorityStatus ? this.filterForm.value.priorityStatus : 0;
+    const filter = {
+      'term': '',
+      'companyId': companyId,
+      'priority': priority
+    };
+    this.pmService.getParticipantListByFilters(filter);
   }
 
   onInputFocus() {
@@ -96,6 +110,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
 
   onDropdownClick(event) {
     this.mapService.onCompanyDropdownFolded(!this.dropdownFolded);
+    this.onInputFocus();
     event.stopPropagation();
   }
 

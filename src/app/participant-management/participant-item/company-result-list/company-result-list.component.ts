@@ -1,9 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { listItemFadeSlideStateTrigger } from '../../../map/map.animation';
 
 @Component({
   selector: 'app-company-result-list',
   templateUrl: './company-result-list.component.html',
-  styleUrls: ['./company-result-list.component.css']
+  styleUrls: ['./company-result-list.component.css'],
+  animations: [ listItemFadeSlideStateTrigger ]
 })
 export class CompanyResultListComponent implements OnInit {
   @Input() companys;

@@ -69,7 +69,8 @@
                       <label class='filter-text'>Filters: </label>
                       <span class="select-wrapper">
                           <select required id="priority-status"
-                          name="priority-status" [ngModel]='0'
+                          name="priorityStatus" [ngModel]='priorityFilter'
+                          (change)='onPrioritySelect()'
                           class="form-control filter-selection">
                               <option value="0">All Priorities</option>
                               <option value="2">Only Visitors</option>

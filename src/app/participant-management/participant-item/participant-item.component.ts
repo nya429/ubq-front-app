@@ -133,7 +133,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
       result => {
         this.trackersLookingUp = false;
         this.trackers = result['data'];
-       }), 500);
+       }), 400);
 
   }
 
@@ -161,7 +161,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
       result => {
         this.companysLookingUp = false;
         this.companys = result['data'];
-       }), 500);
+       }), 400);
 
   }
 

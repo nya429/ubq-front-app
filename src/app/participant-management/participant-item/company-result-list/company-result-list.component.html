@@ -1,4 +1,4 @@
-<div  *ngIf='companys' class="dropdown-content list-group">
+<div  [@listItemFadeSlideState]='companys?.length' *ngIf='companys' class="dropdown-content list-group">
   <a   *ngFor="let company of companys;"
          style="cursor:pointer;"
          (click)="onSelect($event, company.company_id)"

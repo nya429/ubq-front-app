@@ -65,13 +65,13 @@ export const companyFilterSlideStateTrigger = trigger('companyFilterSlideState',
         style({
             transform: 'translateX(-14px)'
         }),
-        animate(150)
+        animate(200)
     ]),
     transition('removal => all', [
         style({
             transform: 'translateX(8px)',
         }),
-        animate('150ms ease-out', style({
+        animate('200ms ease-out', style({
             transform: 'translateX(0px)',
         }))
     ]),
