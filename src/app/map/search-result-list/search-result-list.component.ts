@@ -30,8 +30,8 @@ export class SearchResultListComponent implements OnInit, OnDestroy {
     this.pSubscription.unsubscribe();
   }
 
-  onClose() {
-
+  onClose(e: Event) {
+    e.stopPropagation();
   }
 
   onParticipantCheck(e, index: number) {
