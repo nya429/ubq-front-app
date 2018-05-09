@@ -1,3 +1,4 @@
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CompanyService } from './company.service';
 import { SharedModule } from './../shared/shared.module';
 import { CommonModule } from '@angular/common';
