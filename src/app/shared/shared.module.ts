@@ -3,11 +3,16 @@ import { CommonModule } from '@angular/common';
 import { LoadingComponent } from './loading/loading.component';
 import { LoaderSmallComponent } from './loader-small/loader-small.component';
 import { ClickOutsideDirective } from './click-outside.directive';
+import { AutoFocusDirective } from './autoFocus.directive';
+import { ScrollTriggerDirective } from './scroll-trigger.directive';
+
 @NgModule({
   declarations: [
     LoadingComponent,
     LoaderSmallComponent,
     ClickOutsideDirective,
+    AutoFocusDirective,
+    ScrollTriggerDirective
   ],
   imports: [
     CommonModule
@@ -15,7 +20,9 @@ import { ClickOutsideDirective } from './click-outside.directive';
   exports: [
     LoadingComponent,
     LoaderSmallComponent,
-    ClickOutsideDirective
+    ClickOutsideDirective,
+    AutoFocusDirective,
+
   ],
   providers: [
 

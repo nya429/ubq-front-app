@@ -3,6 +3,10 @@
     padding-top: 50px; 
 } */
 
+body {
+  font-family: 'Merriweather', 'Helvetica Neue', Arial, sans-serif;
+}
+
 #loading {
     position: absolute;
     top: 50%;

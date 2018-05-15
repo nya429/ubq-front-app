@@ -145,7 +145,7 @@ export class ParticipantService {
     if (offset) {
       options = options.append('offset', offset.toString());
     }
-    if (this.limit) {
+    if (limit) {
       options = options.append('ltd', this.limit.toString());
     }
     if (this.sortBy) {

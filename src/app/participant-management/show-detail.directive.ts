@@ -18,7 +18,6 @@ export class ShowDetailDirective implements OnInit {
   }
 
   @HostListener('mouseleave') mouseOut(e: Event) {
-    console.log();
     this.renderer.removeClass(this.elRef.nativeElement.firstElementChild.firstElementChild, 'glyphicon-chevron-up');
     this.renderer.addClass(this.elRef.nativeElement.firstElementChild.firstElementChild, 'glyphicon-chevron-down');
   }

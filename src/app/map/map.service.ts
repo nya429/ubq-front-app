@@ -1,11 +1,15 @@
-import { Subject } from 'rxjs/Subject';
 import { EventEmitter, Injectable } from '@angular/core';
+import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+
+import { Subject } from 'rxjs/Subject';
 
 import { Tracker } from '../shared/tracker.model';
+import { Http } from '@angular/http';
 
+@Injectable()
 export class MapService {
-    constructor() {}
-
+    constructor(private httpClient: HttpClient) {}
+    // TODO: change name to trackersCrdChanges
     trackerChanges = new Subject<Tracker[]>();
     serviceInterval: any;
 
@@ -21,12 +25,14 @@ export class MapService {
     onStarted = new EventEmitter<boolean>();
     onStopped = new EventEmitter<boolean>();
     dropdownFolded = new EventEmitter<boolean>();
+
     // TODO restructure the selected Tracker
     selectedTrackerId: number;
     selectedTrackerIndex = new EventEmitter<number>();
     hasSelectedTracker = new Subject<number>();
     hideTrackerIndex = new EventEmitter<number>();
 
+    // TODO those are participants
     private trackers: Tracker[] = [
         new Tracker(1, 1, 1),
         new Tracker(2, 1, 49),
@@ -42,6 +48,7 @@ export class MapService {
         new Tracker(12, 40, 45),
     ];
 
+    // dummy move
     private step = [
         [-1, -1], [0, -1], [1, -1],
         [-1, -0], [0, 0], [1, 0],
@@ -142,5 +149,35 @@ export class MapService {
 
     onCompanyDropdownFolded(folded: boolean) {
         this.dropdownFolded.emit(folded);
+    }
+
+
+    getParticipantListByFilters(filters: object, offset?: number, limit?: number) {
+        const participanUrl = 'http://localhost:3000/participant/list/filter';
+        const urlSuffix = 'list/filter';
+        let options = new HttpParams();
+        if (offset) {
+          options = options.append('offset', offset.toString());
+        }
+        // Check participant service if need more condition filter
+
+        return this.httpClient.post(`${participanUrl}`, filters, {
+            observe: 'body',
+            responseType: 'json',
+            params: options
+          })
+          .subscribe(
+              (result) => {
+                const data = result['data'];
+                this.stop();
+                this.changeTrackers(data);
+              }, (err: HttpErrorResponse)  => {
+                console.error(err);
+              }
+          );
+    }
+
+    changeTrackers(data) {
+        // this.stop();
     }
 }

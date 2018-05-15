@@ -1,3 +1,17 @@
+:host {
+  margin-top: -50px; 
+  display: block;
+}
+
+h1 {
+  font-size: 4rem;
+}
+
+p {
+  font-size: 2rem;
+}
+
+
 .home-nav-item a:hover::before, .home-nav-item .nav-item-selected a::before{
     content: "";
     position: absolute;
@@ -32,3 +46,62 @@
     position: absolute;
     width: 100%;  
   }
+
+  .side-nav {
+    position: absolute;
+    right: 50px;
+  }
+
+  .intro {
+    display: flex;
+    height: 100vh;
+    /* padding-top: 10rem; */
+    /* padding-bottom: calc(10rem - 56px); */
+    background-image: url("../../../assets/home-intro-background.png");
+    background-position: center center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /* filter: blur(3px);
+    -webkit-filter: blur(3px); */
+  }
+
+
+.white-text {
+  color: white;
+}
+
+.mg-auto {
+  margin:  auto!important;
+}
+
+#intro > hr {
+  max-width: 50px;
+  border-width: 5px;
+  border-color: #00a1d6;
+}
+
+.btn {
+  margin-top: 3rem!important;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 300px;
+  font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+}
+
+.btn-xl {
+  background-color: #00a1d6;
+  border-color: #00a1d6;
+  padding: 1rem 2rem;
+  font-size: 2rem;
+}
+
+a.btn {
+  background-color: rgba(0, 161, 214, .7);
+}
+
+a.btn:hover {
+  background-color: rgba(0, 161, 214, 1);
+}

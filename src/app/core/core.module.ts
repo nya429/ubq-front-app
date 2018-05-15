@@ -8,6 +8,7 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AppRoutingModule } from '../app-routing.module';
+import { LandpageService } from './landpage.service';
 
 @NgModule({
     declarations: [
@@ -15,7 +16,7 @@ import { AppRoutingModule } from '../app-routing.module';
         FooterComponent,
         HomeComponent,
         AboutComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
     ],
     imports: [
         CommonModule,
@@ -25,8 +26,8 @@ import { AppRoutingModule } from '../app-routing.module';
         AppRoutingModule,
         HeaderComponent,
         HomeComponent,
-        FooterComponent
+        FooterComponent,
     ],
-    providers: []
+    providers: [ LandpageService ]
 })
 export class CoreModule {}

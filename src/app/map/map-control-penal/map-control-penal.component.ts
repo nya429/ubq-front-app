@@ -93,11 +93,11 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
     const companyId = this.companyFilter['company_id'] ? this.companyFilter['company_id'] : 0;
     const priority = this.filterForm.value.priorityStatus ? this.filterForm.value.priorityStatus : 0;
     const filter = {
-      'term': '',
+      'term': term,
       'companyId': companyId,
       'priority': priority
     };
-    this.pmService.getParticipantListByFilters(filter);
+    this.mapService.getParticipantListByFilters(filter);
   }
 
   onInputFocus() {
