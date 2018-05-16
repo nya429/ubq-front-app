@@ -5,7 +5,7 @@ import { Injectable, EventEmitter, Output } from '@angular/core';
 @Injectable()
 export class AuthService {
   errorEmiiter = new EventEmitter<string> ();
-  token: string = 'true';
+  token: string = null;
   authFaded = false;
   errorMessage: string = null;
   signInScaled: boolean;
