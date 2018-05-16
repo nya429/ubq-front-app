@@ -2,47 +2,199 @@
   <div class="row">
     <!-- content -->
     <div class="col-lg-12 text-center">
+      
       <div class="row" >
-        <div  class="intro">
-            <div #intro id="intro" class="container  mg-auto">
+        <section  #intro class="intro">
+          
+            <div  id="intro" class="container  mg-auto">
               <h1  #scrollTrigger class='white-text'><strong>UBQ is innovati|_</strong></h1>
               <hr>
-              <p class='white-text'>Innovative IoT Platform tailored for Specialized Industries</p>
-              <a class="btn btn-xl  white-text" (click)='moveTo(services)'>get start</a>
+      
+              <div class="col-lg-8 col-lg-offset-2">
+                <p class='white-text'>Started in 2017, Boston, Massachusetts<br/> 
+                   <br /> 
+                  
+                <a class="btn btn-xl  white-text" (click)='moveTo(services)'>get start</a>
+              </div>
             </div>
-      </div>
-      <hr>
-      <section class="row" >
-        <div class="col-md-7">
-          <h1 #services id="services">Services</h1>
-          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+       </section>
+  
+      <section #services id='services' class="container text-center" >
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <h2 id="services"><strong>HOW IT WORKS</strong></h2>
+                <hr>
+                <p> We approach technology from industry experience and come up innovative ideas to help business create new development opportunities.</p>
+            </div>
         </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="500x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDUwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzUwMHg1MDAvYXV0bwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNi4wLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48IVtDREFUQVsjaG9sZGVyXzE2MTg3NTA3OTA3IHRleHQgeyBmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MjVwdCB9IF1dPjwvc3R5bGU+PC9kZWZzPjxnIGlkPSJob2xkZXJfMTYxODc1MDc5MDciPjxyZWN0IHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTg1LjEyNSIgeT0iMjYxLjEiPjUwMHg1MDA8L3RleHQ+PC9nPjwvZz48L3N2Zz4=" data-holder-rendered="true">
+     
+        <div class="row ">
+            <div class="col-sm-6">  
+              <img alt="overview" [ngClass]="{'scroll-reveal':serviceTriggered, 'img-hide':!serviceTriggered}"
+              src="../assets/home/service-overview.png"
+              class="img-responsive service-img mg-auto">
+            </div>
+            <div class="col-sm-6">  
+              <img alt="tracking" [ngClass]="{'scroll-reveal':serviceTriggered, 'img-hide':!serviceTriggered}"
+              src="../assets/home/service-tracking.png"
+              class="img-responsive service-img mg-auto">
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <div class="move-alt">
+            <span style="cursor: pointer;" (click)='moveTo(solutions)' class="move-alt glyphicon glyphicon-chevron-down glyphicon-xl"></span>
         </div>
       </section>
-      <hr>
-      <section class="row" >
-        <div class="col-md-7 col-md-push-5">
-          <h1 #functions id="functions"><strong>Functions</strong>strong></h1>
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+
+      <section #solutions id='solution' class="container-fluid text-center" >
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <h2 id="services"><strong>Solutions</strong></h2>
+            </div>
         </div>
-        <div class="col-md-5 col-md-pull-7">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="500x500" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNTAwIiBoZWlnaHQ9IjUwMCIgdmlld0JveD0iMCAwIDUwMCA1MDAiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPjwhLS0KU291cmNlIFVSTDogaG9sZGVyLmpzLzUwMHg1MDAvYXV0bwpDcmVhdGVkIHdpdGggSG9sZGVyLmpzIDIuNi4wLgpMZWFybiBtb3JlIGF0IGh0dHA6Ly9ob2xkZXJqcy5jb20KKGMpIDIwMTItMjAxNSBJdmFuIE1hbG9waW5za3kgLSBodHRwOi8vaW1za3kuY28KLS0+PGRlZnM+PHN0eWxlIHR5cGU9InRleHQvY3NzIj48IVtDREFUQVsjaG9sZGVyXzE2MTg3NTAxZTFkIHRleHQgeyBmaWxsOiNBQUFBQUE7Zm9udC13ZWlnaHQ6Ym9sZDtmb250LWZhbWlseTpBcmlhbCwgSGVsdmV0aWNhLCBPcGVuIFNhbnMsIHNhbnMtc2VyaWYsIG1vbm9zcGFjZTtmb250LXNpemU6MjVwdCB9IF1dPjwvc3R5bGU+PC9kZWZzPjxnIGlkPSJob2xkZXJfMTYxODc1MDFlMWQiPjxyZWN0IHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiBmaWxsPSIjRUVFRUVFIi8+PGc+PHRleHQgeD0iMTg1LjEyNSIgeT0iMjYxLjEiPjUwMHg1MDA8L3RleHQ+PC9nPjwvZz48L3N2Zz4=" data-holder-rendered="true">
-        </div> 
-      </section>
-      <hr>
-      <section class="row" >
-        <div class="jumbotron">
-          <h1 #contact id="contact">Contact</h1>
+       
+        <div class="row ">
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box" 
+              style='background: url(../../../assets/solution/1.jpg) no-repeat center;'>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box background-cover" 
+              style='background: url(../../../assets/solution/2.jpg) no-repeat center;'>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box background-cover" 
+              style='background: url(../../../assets/solution/3.jpg) no-repeat center;'>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box background-cover" 
+              style='background: url(../../../assets/solution/7.jpg) no-repeat center;'>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box background-cover" 
+              style='background: url(../../../assets/solution/8.jpg) no-repeat center;'>
+            </a>
+          </div>
+          <div class="col-lg-4 col-sm-6 no-gutter">
+            <a class="portfolio-box background-cover" 
+              style='background: url(../../../assets/solution/9.jpg) no-repeat center;'>
+            </a>
+          </div>
         </div>
       </section>
+      <section id='start'  class="container-fluid text-center" >
+          <div class="row">
+              <h2  class='white-text'><strong>It's Nice To Meet You</strong></h2>
+              <hr>
+              <div class="col-lg-8 col-lg-offset-2">
+                <a class="btn btn-xl  white-text" routerLink="/auth/signin">SIGN UP</a>
+              </div>
+          </div>
+      </section>
+      <section #team class="container text-center" >
+          <div class="row">
+              <div class="col-lg-8 col-lg-offset-2 text-center">
+                  <h2 id="team"><strong>Our Team</strong></h2>
+              </div>
+          </div>
+          <hr>
+          <div class="row ">
+              <div class="col-md-4">  
+                <div class="team-img mg-auto" >
+                    <img alt="Julian" 
+                    src="../assets/team/julian_zhu.jpg"
+                    class="img-responsive img-circle mg-auto">
+                    <h3>Julian Zhu</h3>
+                    <p>Business Management</p>
+                </div>
+ 
+              </div>
+              <div class="col-md-4">  
+                <div class="team-img mg-auto">
+                    <img alt="Gary" 
+                    src="../assets/team/gary_gao.jpg"
+                    class="img-responsive img-circle mg-auto">
+                    <h3>Gary Gao</h3>
+                    <p>Product Management</p>
+                </div>
+              </div>
+              <div class="col-md-4">  
+                <div class="team-img mg-auto">
+                  <img alt="Jiang" 
+                  src="../assets/team/jiang_wu.jpg"
+                  class="img-responsive img-circle mg-auto">
+                  <h3>Jiang Wu</h3>
+                  <p>Technology and Development</p>
+                </div>
+              </div>
+          </div>
+        </section>
+        <section id='contact'  class="container-fluid text-center" >
+            <div class="row">
+                <h2 class='white-text'><strong>Let's Get In Touch</strong></h2>
+            </div>
+            <hr style='padding-bottom: 3rem;'>
+          <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">
+                      <h4><strong>Address</strong></h4>
+                      <p>
+                          Hopkinton, MA<br/>
+                          USA
+                      </p>
+                      <h4><strong>Email</strong></h4>
+                      <p>
+                          info@ubqsys.com
+                      </p>
+                      <h4><strong>Phone</strong></h4>
+                      <p>
+                          1-617-910-0828
+                      </p>
+                    </div>
+                    <div class="col-md-9">
+                   
+                        <div class="row">
+                            <div class="col-sm-4 col-sm-offset-2">
+                              <div class="form-group">
+                                <input class="form-control" id="name" type="text" placeholder="Your Name *" >
+                              </div>
+                              <div class="form-group">
+                                  <input class="form-control" id="email" type="email" placeholder="Your Email *">          
+                              </div>
+                              <div class="form-group">
+                                  <input class="form-control" id="phone" type="phone" placeholder="Your Phone (Optional)">          
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <textarea class="form-control" 
+                                    id="message" placeholder="Your Message *" 
+                                    rows='7' ></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-center">
+                              <div id="success"></div>
+                              <a class="btn btn-xl" (click)='fakeSend()'>Send Message</a>
+                            </div>
+                          </div>
+                    </div>
+                  </div>
+            </div>
+          </div>
+
+    
+        </section>
       
     </div>
     <!-- nav -->
-    <div class="col-md-2 side-nav">
+    <!-- <div class="col-md-2 side-nav">
       <hr>
       <hr>
       <nav data-spy="affix" class="sidebar hidden-print hidden-sm hidden-xs nav-affix-top"> 
@@ -62,7 +214,7 @@
           </li> 
         </ul> 
       </nav>
-    </div>
+    </div> -->
   </div>  
 </div>
   

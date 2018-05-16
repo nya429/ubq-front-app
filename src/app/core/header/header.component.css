@@ -1,9 +1,3 @@
-nav {
-    background-color: #fff;
-    height: 50px;
-    transition: height .4s;
-    box-shadow: 0 2px 50px 0 rgba(0, 0, 0, .15);
-}
 
 a {
     font-weight: bold;
@@ -55,9 +49,17 @@ li::after {
     transition: height .3s;
 }
 
+nav {
+    background-color: #fff;
+    border-color: #fff;
+    height: 50px;
+    transition: height .4s;
+    box-shadow: 0 2px 50px 0 rgba(0, 0, 0, .15);
+}
+
 .container-expanded {
     height: 70px;
-    transition: height .4s, background-color .2s, border-color .1s;
+    transition: height .4s, background-color .3s, border-color .4s;
 }
 
 .navbar-expanded > li {
@@ -103,7 +105,7 @@ li::after {
 .container-transparent {
     background-color: transparent;
     border-color:transparent;
-    transition: background-color .4s;
+    transition: height .4s, background-color .3s, border-color .1s;
     box-shadow: none;
 }
 

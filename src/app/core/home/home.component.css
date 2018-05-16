@@ -3,6 +3,10 @@
   display: block;
 }
 
+section {
+  padding: 8rem 0;
+}
+
 h1 {
   font-size: 4rem;
 }
@@ -57,7 +61,7 @@ p {
     height: 100vh;
     /* padding-top: 10rem; */
     /* padding-bottom: calc(10rem - 56px); */
-    background-image: url("../../../assets/home-intro-background.png");
+    background-image: url("../../../assets/home/intro-background.png");
     background-position: center center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -73,10 +77,20 @@ p {
 }
 
 .mg-auto {
-  margin:  auto!important;
+  margin: auto !important;
 }
 
-#intro > hr {
+.mh-auto {
+  margin-left: auto !important;
+  margin-right: auto! important;
+}
+
+.text-center {
+  text-align: center!important;
+}
+
+hr {
+  padding-bottom:2rem;
   max-width: 50px;
   border-width: 5px;
   border-color: #00a1d6;
@@ -93,15 +107,145 @@ p {
 
 .btn-xl {
   background-color: #00a1d6;
-  border-color: #00a1d6;
   padding: 1rem 2rem;
   font-size: 2rem;
+  border: 2px solid transparent;
 }
 
-a.btn {
-  background-color: rgba(0, 161, 214, .7);
+.btn-xl:active {
+  background-color: rgba(0, 161, 214, .4);
+  border-color: rgba(0, 161, 214, .7);
+  transition: border-color .3;
+}
+
+#services {
+  padding-bottom: 2rem;
+}
+
+#services p {
+  margin-bottom: 5rem !important;
 }
 
 a.btn:hover {
   background-color: rgba(0, 161, 214, 1);
+}
+
+.service-img {
+  max-width: 80%;
+}
+
+.glyphicon-xl {
+  font-size: 4rem;
+  color:#00a1d6;
+}
+
+.move-alt {
+  animation: back-forth 2s infinite;
+}
+
+#solution {
+  padding-bottom: 0 !important;
+}
+
+#start {
+  background-color: #333;
+}
+
+#start h2 {
+  color: #fff;
+}
+
+#start hr, #contact hr {
+  border-color: #fff;
+}
+
+#start .btn {
+  background-color: #fff;
+  color: #00a1d6;
+}
+.solution-img {
+  max-width: 100%;
+  height: auto;
+}
+
+.team-img {
+  max-width: 225px;
+  width: 100%;
+  height: auto;
+}
+
+.team-img img {
+  border: 2px solid #fff;
+}
+
+.img-hide {
+  visibility: hidden;
+  transform: scale(0,0);
+}
+.scroll-reveal {
+  animation: scale-reveal .4s ease-out;
+}
+#contact {
+  background-color:  #00a1d6;
+}
+
+#start .btn, #contact .btn  {
+  background-color: #fff;
+}
+#contact h4 {
+  color: #fff;
+}
+
+#contact p {
+  color: rgba(255,255,255, .8);
+}
+
+#contact input {
+  height: 40px;
+  padding: 16px;
+}
+
+
+.no-gutter {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.portfolio-box {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 250px;
+  max-width: 650px;
+  max-height: 350px;
+  margin: 0 auto;
+}
+
+.background-cover {
+  background-size: cover;   
+  -webkit-background-size: cover;   
+  -moz-background-size: cover;   
+  -o-background-size: cover;
+}
+
+@keyframes scale-reveal {
+  0% {
+     opacity: 0;
+     transform: scale(0,0);
+ }
+
+  100% {
+      opacity: 1;
+      transform: scale(1,1);
+ }
+}
+
+@keyframes back-forth {
+  0% {
+    transfrom: translateY(0);
+  }
+
+  100% {
+    transfrom: translateY(2);
+ }
 }
