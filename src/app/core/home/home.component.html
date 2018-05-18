@@ -7,7 +7,7 @@
         <section  #intro class="intro">
           
             <div  id="intro" class="container  mg-auto">
-              <h1  #scrollTrigger class='white-text'><strong>UBQ is innovati|_</strong></h1>
+              <h1  #introTrigger class='white-text'><strong>UBQ is innovati|_</strong></h1>
               <hr>
       
               <div class="col-lg-8 col-lg-offset-2">
@@ -125,7 +125,7 @@
         </div>
       </section>
 
-      <section id='start'  class="container-fluid text-center" >
+      <section #start id='start'  class="container-fluid text-center" >
           <div class="row">
               <h2  class='white-text'><strong>It's Nice To Meet You</strong></h2>
               <hr>
@@ -174,7 +174,7 @@
           </div>
         </section>
         
-      <section id='contact'  class="container-fluid text-center" >
+      <section #contact id='contact'  class="container-fluid text-center" >
         <div class="row">
           <div class="container">
               <div class="row">
@@ -231,28 +231,23 @@
       </section>
       
     </div>
-    <!-- nav -->
-    <!-- <div class="col-md-2 side-nav">
-      <hr>
-      <hr>
-      <nav data-spy="affix" class="sidebar hidden-print hidden-sm hidden-xs nav-affix-top"> 
-        <ul class="nav sidenav"> 
-          <li class="home-nav-item">
-            <a (click)='moveTo(intro)'>Intro</a> 
-          </li> 
-          <li > 
-            <a  (click)='moveTo(intro)'>What's included</a> 
-            <ul class="nav"> 
-              <li class="home-nav-item"><a (click)='moveTo(services)' ng-href="#services">Services</a></li> 
-              <li class="home-nav-item"><a (click)='moveTo(functions)'ng-href="#functions" >Functions</a></li>
-            </ul> 
-          </li> 
-          <li class="home-nav-item"> 
-            <a (click)='moveTo(contact)' ng-href="#contact">Contact</a> 
-          </li> 
-        </ul> 
-      </nav>
-    </div> -->
-  </div>  
+   
+    </div>  
+    
+  </div>
+     <!-- nav -->
+     <div  [ngClass]="{'nav-unrevealed': !headerTriggered}" class="side-nav">
+        <nav class="sidebar hidden-print hidden-xl-down "> 
+         <ul class='no-bullet'>
+           <li (click)='moveTo(intro)'class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 0}" class='nav-circle'></span></li>
+           <li (click)='moveTo(services)' class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 1}" class='nav-circle'></span></li>
+           <li (click)='moveTo(solutions)'class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 2}" class='nav-circle'></span></li>
+           <li (click)='moveTo(start)' class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 3}" class='nav-circle'></span></li>
+           <li (click)='moveTo(team)' class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 4}" class='nav-circle'></span></li>
+           <li (click)='moveTo(contact)'class='cursor-pointer'><span [ngClass]="{'nav-circle-active': currentPos === 5}" class='nav-circle'></span></li>
+         </ul>
+        </nav>
+    </div>
 </div>
-  
+
+   

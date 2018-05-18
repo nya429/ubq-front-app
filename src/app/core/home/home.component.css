@@ -55,11 +55,6 @@ p {
     width: 100%;  
   }
 
-  .side-nav {
-    position: absolute;
-    right: 50px;
-  }
-
   .intro {
     display: flex;
     height: 100vh;
@@ -278,6 +273,66 @@ a.btn:hover {
   padding: 16px;
 }
 
+.side-nav {
+  top: 50%;
+  bottom: 50%;
+  margin: 0 auto;
+  position: fixed !important; 
+  right: 20px;
+  height: auto;
+}
+
+.sidebar {
+  visibility: hidden;
+  transform: translateY(-50%);
+}
+
+.no-bullet {
+  list-style-type: none;
+}
+
+.nav-circle {
+  visibility: visible;
+  display: block;
+  height: 1em;
+  width:1em;
+  background-color: #aaa;
+  opacity: .8;
+  border-radius: 50%;
+  margin: 2rem;
+  transition: background-color .3s;
+  z-index: 10;
+}
+
+.nav-unrevealed .nav-circle {
+  visibility: hidden;
+  opacity: 0;
+  transition: .6s;
+}
+
+.nav-unrevealed .nav-circle:hover {
+  visibility: hidden;
+  background-color: rgb(136, 159, 172);
+  opacity: 0;
+}
+
+.nav-circle-active:hover {
+  transition: background-color .3s;
+  background-color: #00a1d6;
+  /* height: 1.2em;
+  width:1.2em; */
+  opacity: 1;
+}
+
+.nav-circle-active {
+  transition: background-color .3s;
+  background-color: #00a1d6;
+  /* height: 1.2em;
+  width:1.2em; */
+  /* opacity: .8; */
+}
+
+
 @keyframes scale-reveal {
   0% {
      opacity: 0;
@@ -300,4 +355,10 @@ a.btn:hover {
   100% {
     transform: translateY(0);
  }
+}
+
+@media screen and (max-width: 1300px) {
+  .hidden-xl-down .nav-circle {
+    display: none !important;
+  }
 }

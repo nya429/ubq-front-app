@@ -110,7 +110,7 @@ nav {
 }
 
 .container-transparent .navbar-nav a {
-    color: rgba(255, 255, 255, .9);
+    color: rgba(255, 255, 255, .5);
 }
 
 .container-transparent .navbar-nav .active a {
@@ -143,7 +143,7 @@ nav {
  }
 
  .container-transparent  .navbar-collapse {
-    background-color: transparent;
+    background-color: #11171a;
  }
  .container-expanded, 
  .logo-expanded {
@@ -157,6 +157,9 @@ nav {
  .navbar-expanded > li > a {
      animation:none;
      padding: 10px 15px;
+ }
+ .navbar-expanded > li > img {
+     margin-top: 8px;
  }
  .container-transparent {
     background-color: transparent;
