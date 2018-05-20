@@ -7,6 +7,7 @@ export class LandpageService {
 
   scrollTriggered = new Subject<boolean>();
   sectionChanged = new Subject<number>();
+  navClicked = new Subject<number>();
 
   constructor() { }
 
@@ -30,5 +31,13 @@ export class LandpageService {
 
   isHeaderTranrsparent() {
     return this.headerTransparented;
+  }
+
+  onSectionChange(section:number) {
+    this.sectionChanged.next(section);
+  }
+
+  onNavClick(section: number) {
+    this.navClicked.next(section);
   }
 }

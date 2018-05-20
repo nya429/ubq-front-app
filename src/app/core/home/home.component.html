@@ -130,7 +130,7 @@
               <h2  class='white-text'><strong>It's Nice To Meet You</strong></h2>
               <hr>
               <div class="col-lg-8 col-lg-offset-2">
-                <a class="btn btn-xl  white-text" routerLink="/auth/signin">SIGN UP</a>
+                <a [ngClass]="{'scroll-reveal':startTriggered, 'img-hide':!startTriggered}" class="btn btn-xl  white-text" routerLink="/auth/signin">SIGN UP</a>
               </div>
           </div>
       </section>

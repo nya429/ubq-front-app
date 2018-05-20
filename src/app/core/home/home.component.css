@@ -297,11 +297,15 @@ a.btn:hover {
   height: 1em;
   width:1em;
   background-color: #aaa;
-  opacity: .8;
+  opacity: .5;
   border-radius: 50%;
   margin: 2rem;
-  transition: background-color .3s;
+  transition: .3s;
   z-index: 10;
+}
+
+.nav-circle:hover {
+  opacity: .9;
 }
 
 .nav-unrevealed .nav-circle {
@@ -312,12 +316,12 @@ a.btn:hover {
 
 .nav-unrevealed .nav-circle:hover {
   visibility: hidden;
-  background-color: rgb(136, 159, 172);
+  background-color: #aaa;
   opacity: 0;
 }
 
 .nav-circle-active:hover {
-  transition: background-color .3s;
+  transition:  .3s;
   background-color: #00a1d6;
   /* height: 1.2em;
   width:1.2em; */
@@ -325,13 +329,16 @@ a.btn:hover {
 }
 
 .nav-circle-active {
-  transition: background-color .3s;
+  transition:  .3s;
   background-color: #00a1d6;
-  /* height: 1.2em;
-  width:1.2em; */
-  /* opacity: .8; */
+  opacity: .9;
 }
 
+.nav-circle-active-w {
+  transition:  .3s;
+  background-color: #fff;
+  opacity:.8;
+}
 
 @keyframes scale-reveal {
   0% {

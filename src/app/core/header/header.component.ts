@@ -16,7 +16,10 @@ import { LandpageService } from './../landpage.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   logoExpanded: boolean;
   headerTransparent: boolean;
-  homepageSubscription: Subscription;
+  currentPos: number;
+
+  homepageTriggerSubscription: Subscription;
+  homepageSectioinSubscription: Subscription;
 
   constructor(private route: ActivatedRoute,
               private location: Location,
@@ -35,13 +38,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.logoExpanded = true;
     }
     this.headerTransparent = this.lpService.isHeaderTranrsparent();
-    this.homepageSubscription = this.lpService.scrollTriggered.subscribe((headerTransparented: boolean) => {
+    this.homepageTriggerSubscription = this.lpService.scrollTriggered.subscribe((headerTransparented: boolean) => {
       this.headerTransparent = headerTransparented;
+    });
+
+    this.homepageSectioinSubscription = this.lpService.sectionChanged.subscribe(section => {
+      this.currentPos = section;  
     });
   }
 
   ngOnDestroy() {
-    this.homepageSubscription.unsubscribe();
+    this.homepageTriggerSubscription.unsubscribe();
+    this.homepageSectioinSubscription.unsubscribe();
   }
 
   isAuth() {
@@ -52,5 +60,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (confirm('Do you want to Log out?')) {
       this.authService.logOut();
     }
+  }
+
+  onNavClick(section: number) {
+    this.lpService.onNavClick(section);
   }
 }

@@ -4,6 +4,10 @@ a {
     color: #777;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .active > a {
     transition: background-color .2s;
 }
@@ -25,12 +29,6 @@ li::after {
     transition: transform .3s;
 }
 
-.brand-logo {
-    color: #00a1d6;
-    font-size: larger;
-   
-}
-
 .avatar {
     margin-top: 8px;
     margin-left: 9px;
@@ -46,7 +44,7 @@ li::after {
     height:50px;
     margin-top:-15px;
     left:15px;
-    transition: height .3s;
+    transition: height .3s, filter .4s;
 }
 
 nav {
@@ -68,12 +66,7 @@ nav {
 
 .navbar-expanded > li.active::after {
     transform: scaleX(1);
-    transition: transform .3s .4s;
-}
-
-.navbar-expanded > li.active::after {
-    transform: scaleX(1);
-    transition: transform .3s .4s;
+    transition: transform .3s .2s;
 }
 
 .navbar-expanded > li > a {
@@ -109,11 +102,26 @@ nav {
     box-shadow: none;
 }
 
-.container-transparent .navbar-nav a {
-    color: rgba(255, 255, 255, .5);
+.container-transparent .brand-logo {
+    transition: filter .4s;
+    filter:  brightness(0) invert(1) opacity(.7);
 }
 
-.container-transparent .navbar-nav .active a {
+.container-transparent .brand-logo:hover {
+    transition: .4s;
+    filter:  brightness(0) invert(1) opacity(1);
+}
+
+.container-transparent .navbar-nav a {
+    color: rgba(255, 255, 255, .7);
+}
+
+.container-transparent .navbar-nav a:hover {
+    color: rgba(255, 255, 255, 1);
+}
+
+.container-transparent .navbar-nav .active a, 
+.container-expanded .navbar-nav .active a {
     color: #00a1d6;
     background-color: transparent;
 }
