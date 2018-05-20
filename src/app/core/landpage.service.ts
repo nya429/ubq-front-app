@@ -6,6 +6,7 @@ export class LandpageService {
   private headerTransparented = false;
 
   scrollTriggered = new Subject<boolean>();
+  sectionChanged = new Subject<number>();
 
   constructor() { }
 
