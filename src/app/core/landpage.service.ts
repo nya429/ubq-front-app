@@ -33,7 +33,7 @@ export class LandpageService {
     return this.headerTransparented;
   }
 
-  onSectionChange(section:number) {
+  onSectionChange(section: number) {
     this.sectionChanged.next(section);
   }
 

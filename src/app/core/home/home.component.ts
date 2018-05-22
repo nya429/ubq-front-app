@@ -31,10 +31,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.lpService.turnHeaderTransparent();
-    
+
     this.navClickedSubscription = this.lpService.navClicked.subscribe(section => {
         this.onNavClicked(section);
-    }); 
+    });
   }
 
   ngOnDestroy() {
@@ -42,8 +42,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.lpService.onSectionChange(null);
     this.navClickedSubscription.unsubscribe();
   }
-  
-  onNavClicked(section:number) {
+
+  onNavClicked(section: number) {
     console.log(section);
     switch (section) {
       case 0:
@@ -65,8 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.moveTo(this.contactEl.nativeElement);
         break;
       default:
-        break; 
-    } 
+        break;
+    }
   }
 
   moveTo(el) {
@@ -113,7 +113,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (!this.startTriggered && windowScrollPos > solutionsPos + 90) {
       this.startTriggered = true;
     }
-    
+
     if (windowScrollPos < servicePos - 70) {
       this.currentPos = 0;
       this.lpService.onSectionChange(0);
@@ -126,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else if (windowScrollPos >= startPos - 70 && windowScrollPos < teamPos - 70) {
       this.currentPos = 3;
       this.lpService.onSectionChange(3);
-    } else if (windowScrollPos >= teamPos - 70 && windowScrollPos < (teamPos + teamHeight + contactHeight -windowInnerHeight)) {
+    } else if (windowScrollPos >= teamPos - 70 && windowScrollPos < (teamPos + teamHeight + contactHeight - windowInnerHeight)) {
       this.currentPos = 4;
       this.lpService.onSectionChange(4);
     } else {

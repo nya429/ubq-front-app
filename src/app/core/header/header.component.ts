@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     });
 
     this.homepageSectioinSubscription = this.lpService.sectionChanged.subscribe(section => {
-      this.currentPos = section;  
+      this.currentPos = section;
     });
   }
 
