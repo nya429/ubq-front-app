@@ -17,4 +17,15 @@ export const  navUnderScoreStateTrigger =  trigger('navUnderScoreState', [
     ])
 ]);
 
+export const navItemEnterTrigger =  trigger('navItemEnterState', [
+    transition(':enter', [
+        query('li', [
+            style({
+                transform: 'translateY(-50%)',
+                opacity: 0
+            }),
+            animate(300)
+        ], {optional: true})
+    ])
+]);
 

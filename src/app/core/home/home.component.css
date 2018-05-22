@@ -254,7 +254,9 @@ a.btn:hover {
   animation: scale-reveal .4s ease-out;
 }
 #contact {
-  background-color:  #00a1d6;
+  background:  #00a1d6;
+  background:  radial-gradient(ellipse farthest-side at 57% 60% ,
+   #107BB8 20%,rgb(17, 109, 161) 30%, rgb(32, 88, 133) 50%, rgb(36, 64, 82) 95%);
 }
 
 #start .btn, #contact .btn  {

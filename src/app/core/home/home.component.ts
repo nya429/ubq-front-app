@@ -25,7 +25,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('contact') private contactEl: ElementRef;
 
   @ViewChild('introTrigger') private introTrigger: ElementRef;
-  private fragment: string;
 
   constructor(@Inject(DOCUMENT) private document: Document,
               private lpService: LandpageService) {}
@@ -111,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.serviceTriggered = true;
     }
 
-    if (!this.startTriggered && windowScrollPos > solutionsPos) {
+    if (!this.startTriggered && windowScrollPos > solutionsPos + 70) {
       this.startTriggered = true;
     }
     
