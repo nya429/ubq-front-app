@@ -110,7 +110,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.serviceTriggered = true;
     }
 
-    if (!this.startTriggered && windowScrollPos > solutionsPos + 70) {
+    if (!this.startTriggered && windowScrollPos > solutionsPos + 90) {
       this.startTriggered = true;
     }
     

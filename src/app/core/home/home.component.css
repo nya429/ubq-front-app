@@ -255,8 +255,8 @@ a.btn:hover {
 }
 #contact {
   background:  #00a1d6;
-  background:  radial-gradient(ellipse farthest-side at 57% 60% ,
-   #107BB8 20%,rgb(17, 109, 161) 30%, rgb(32, 88, 133) 50%, rgb(36, 64, 82) 95%);
+  background:  radial-gradient(ellipse farthest-corner at 57% 60% ,
+   rgb(36, 122, 172) 20%,rgb(29, 116, 167) 30%, rgb(45, 92, 131) 50%, rgb(53, 77, 95) 95%);
 }
 
 #start .btn, #contact .btn  {
