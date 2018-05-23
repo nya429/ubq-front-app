@@ -57,7 +57,7 @@ nav {
 
 .container-expanded {
     height: 70px;
-    transition: height .4s, background-color .3s, border-color .4s;
+    transition: height .4s, background-color .4s, border-color .5s;
 }
 
 .navbar-expanded > li {
@@ -98,7 +98,7 @@ nav {
 .container-transparent {
     background-color: transparent;
     border-color:transparent;
-    transition: height .4s, background-color .3s, border-color .1s;
+    transition: height .4s, background-color .4s, border-color .2s;
     box-shadow: none;
 }
 
