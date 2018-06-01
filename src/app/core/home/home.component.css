@@ -85,7 +85,7 @@ p {
 }
 
 .text-center {
-  text-align: center!important;
+  text-align: center;
 }
 
 hr {
@@ -105,7 +105,7 @@ hr {
 }
 
 .btn-xl {
-  transition:  .3;
+  transition:  .3s;
   background-color: #00a1d6;
   padding: 1rem 2rem;
   font-size: 2rem;
@@ -158,26 +158,6 @@ a.btn:hover {
   padding-bottom: 0 !important;
 }
 
-#start {
-  background-color: #333;
-}
-
-#start h2 {
-  color: #fff;
-}
-
-#start hr, #contact hr {
-  border-color: #fff;
-}
-
-#start .btn-xl:hover {
-  background-color: rgb(220, 224, 228);
-}
-
-#start .btn-xl {
-  background-color: #fff;
-  color: #00a1d6;
-}
 .solution-img {
   max-width: 80%;
   height: auto;
@@ -196,6 +176,13 @@ a.btn:hover {
   max-width: 650px;
   max-height: 350px;
   margin: 0 auto;
+  transition: min-height .5s;
+}
+
+.portfolio-box-shrink  {
+  min-height: 50px;
+  transition:  min-height .5s;
+  box-shadow: 0 2px 2px #777;
 }
 
 .background-cover {
@@ -218,7 +205,8 @@ a.btn:hover {
   background-color: #00a1d6;
 }
 
-.overlay:hover {
+.overlay:hover,
+.overlay-hovered {
   opacity: 0.8;
 }
 
@@ -230,10 +218,122 @@ a.btn:hover {
   opacity: 0;
 }
 
-.overlay:hover .overlay-caption {
+.overlay:hover .overlay-caption,
+.overlay-hovered .overlay-caption {
   opacity: 1;
   transform: translateY(-50%);
   transition: .3s ease-out;
+}
+
+#solution-content {
+  height: 0;
+  transition: height .5s;
+  overflow: scroll;
+}
+
+.solution-content-extended {
+  height: calc(100vh - 70px) !important;
+  transition: height .5s;
+}
+
+.solution-intro {
+  position: relative;
+  overflow: hidden;
+}
+
+.solution-intro-bk {
+  filter: blur(20px) contrast(80%) brightness(70%);
+}
+.solution-intro-content-hi {
+  visibility: hidden;
+  margin:3rem auto;
+}
+.solution-intro-overlay {
+  width: 100%;
+  position: absolute;
+  top: 3rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.solution-intro-overlay p,
+.solution-intro-content-hi p,
+.solution-features p {
+  font-size: 16px;
+  font-weight: 200;
+}
+
+.solution-intro-content {
+  text-align: left;
+}
+
+.solution-intro-content  p,
+.solution-intro-content  h2 {
+  color: #fff;
+}
+
+.solution-intro-content > a {
+  background-color: transparent;
+  font-size: 18px;
+}
+
+.solution-intro-content >.btn-xl {
+  border: 2px solid rgba(255,255,255,.8);
+}
+
+.solution-intro-content >.btn-xl:hover {
+  background-color: rgba(255,255,255,.3);
+}
+
+.solution-intro-content > .btn-xl:active, 
+.solution-intro-content > .btn-xl:focus{
+  border: 2px solid rgba(255,255,255, 1);
+  box-shadow: 0 0 0 .2rem rgba(255,255,255, .7);
+}
+
+.solution-media-container {
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#solution-media-preview {
+  padding: 2rem auto;
+  max-width: 100%; 
+  max-height: 100%; 
+}
+.solution-intro-overlay h1 {
+  font-weight: bolder;
+}
+
+.solution-feature img {
+  width: 30%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+#start {
+  background-color: #333;
+}
+
+#start h2 {
+  color: #fff;
+}
+
+#start hr, #contact hr {
+  border-color: #fff;
+}
+
+#start .btn-xl:hover {
+  background-color: rgb(220, 224, 228);
+}
+
+#start .btn-xl {
+  background-color: #fff;
+  color: #00a1d6;
 }
 
 .team-img {

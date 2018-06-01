@@ -1,10 +1,10 @@
 <div class="container-fluid">
   <div class="row">
     <!-- content -->
-    <div class="col-lg-12 text-center">
+    <div class="col-lg-12">
       
       <div class="row" >
-        <section  #intro class="intro">
+        <section  #intro class="intro text-center">
           
             <div  id="intro" class="container  mg-auto">
               <h1  #introTrigger class='white-text'><strong>UBQ is innovati|_</strong></h1>
@@ -51,15 +51,16 @@
       <section #solutions id='solution' class="container-fluid text-center" >
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h2 id="services"><strong>Solutions</strong></h2>
+                <h2 id="services"><strong>Industry Solutions</strong></h2>
             </div>
         </div>
        
-        <div class="row ">
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box cursor-pointer cursor-pointer" 
+        <div #solutionsBox class="row ">
+          <div class="col-xs-4 col-sm-4 no-gutter">
+            <a  [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box cursor-pointer cursor-pointer" 
               style='background: url(../../../assets/solution/1.jpg) no-repeat center;'>
-              <div class="overlay">
+              <div (click)="toggleSolution(solutionsBox)"  class="overlay"
+                    [ngClass]="{'overlay-hovered': solutionExtended}">
                   <div class="overlay-caption">
                       <h2>Retail Management</h2>
                       <p></p>
@@ -67,8 +68,8 @@
               </div>
             </a>
           </div>
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box background-cover cursor-pointer" 
+          <div class="col-xs-4 col-sm-4 no-gutter">
+            <a [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box background-cover cursor-pointer" 
               style='background: url(../../../assets/solution/2.jpg) no-repeat center;'>
               <div class="overlay">
                   <div class="overlay-caption">
@@ -78,9 +79,9 @@
               </div>
             </a>
           </div>
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/3.jpg) no-repeat center;'>
+          <div class="col-xs-4 col-sm-4 no-gutter">
+            <a [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box background-cover cursor-pointer" 
+              style='background: url(../../../assets/solution/3.jpg) no-repeat center; '>
               <div class="overlay">
                   <div class="overlay-caption">
                       <h2>Nursing Home</h2>
@@ -89,40 +90,84 @@
               </div>
             </a>
           </div>
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/7.jpg) no-repeat center;'>
-              <div class="overlay">
-                  <div class="overlay-caption">
-                      <h2>Mall</h2>
-                      <p></p>
+        </div>
+
+        <div id="solution-content" class="row"
+        [ngClass]="{'solution-content-extended': solutionExtended}">
+        
+          <div class="row solution-intro">
+            <div class="solution-intro-bk no-gutter"
+            style='background: url(../../../assets/solution/7.jpg) no-repeat center;
+                    background-size: cover;'>
+                    <div class="container solution-intro-content-hi">
+                        <div class="row">
+                          <div class="col-md-8 col-sm-6">
+                            <div class="solution-intro-content">
+                                <h2>Introducing the<br>Evenet Management Systmes</h2>
+                                <br>
+                                <p>Better understand your visitors interest and behavior and provide customized services</p>
+                                <p>Comprehensive and accurate report for post event follow up</p>
+                
+                                <a align="left" class="btn btn-xl  white-text">Learn more</a>
+                            </div>
+                          </div> 
+                          <div class="col-md-4 col-sm-6 solution-media-container">
+                            <div id="solution-media-preview">
+                              <img src='../assets/solution/7.jpg' alt='' class='img-responsive'>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="container-fluid solution-intro-overlay">
+              <div class="container">
+                  <div class="row">
+                    <div class="col-md-8 col-sm-6">
+                      <div class="solution-intro-content">
+                          <h2>Introducing the<br>Evenet Management Systmes</h2>
+                          <br>
+                          <p>Better understand your visitors interest and behavior and provide customized services</p>
+                          <p>Comprehensive and accurate report for post event follow up</p>
+          
+                          <a align="left" class="btn btn-xl  white-text" (click)='moveTo(services)'>Learn more</a>
+                      </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 solution-media-container">
+                      <div id="solution-media-preview"
+                      style='background: url(../../../assets/solution/7.jpg) no-repeat center;
+                      background-size: cover;'>
+                        <img src='../assets/solution/7.jpg' alt='' class='img-responsive'>
+                      </div>
+                    </div>
                   </div>
               </div>
-            </a>
+            </div>
           </div>
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/8.jpg) no-repeat center;'>
-              <div class="overlay">
-                  <div class="overlay-caption">
-                      <h2>Exibitor</h2>
-                      <p></p>
+
+          <div class="row solution-features">
+            <div class="container">
+              <div class="row">
+                  <div class="col-sm-12"><h2>Features</h2></div>
+                  <div class="col-sm-4 solution-feature">
+                    <img src="../assets/solution/map.svg" alt="map" class='img-responsive'>
+                    <p>Real time map allows event organizer to learn who’s visiting where</p>
+                  </div>
+                  <div class="col-sm-4 solution-feature">
+                    <img src="../assets/solution/objective.svg" alt="objective" class='img-responsive'>
+                    <p>Vendors can know who are the visitors at booth and provide targeted customized services</p>
+                  </div>
+                  <div class="col-sm-4 solution-feature">
+                      <img src="../assets/solution/analytics.svg" alt="analytics" class='img-responsive'>
+                      <p>Comprehensive analysis reports</p>
                   </div>
               </div>
-            </a>
-          </div>
-          <div class="col-md-4 col-sm-6 no-gutter">
-            <a class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/9.jpg) no-repeat center;'>
-              <div class="overlay">
-                  <div class="overlay-caption">
-                      <h2>Museum</h2>
-                      <p></p>
-                  </div>
-              </div>
-            </a>
+            </div>
           </div>
         </div>
+         
+      
+      
+          
       </section>
 
       <section #start id='start'  class="container-fluid text-center" >
@@ -172,7 +217,7 @@
                 </div>
               </div>
           </div>
-        </section>
+      </section>
         
       <section #contact id='contact'  class="container-fluid text-center" >
         <div class="row">
@@ -226,8 +271,6 @@
                 </div>
           </div>
         </div>
-
-  
       </section>
       
     </div>

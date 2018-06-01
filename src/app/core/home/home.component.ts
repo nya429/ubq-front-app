@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   startTriggered = false;
   currentPos: number;
   navClickedSubscription: Subscription;
+  solutionExtended = true;
 
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
@@ -71,15 +72,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   moveTo(el) {
     const targetPos = el.offsetTop;
-    setTimeout(() => {
-      window.scroll({top: (targetPos - 70),
-      left: 0,
-      behavior: 'smooth'});
-    }, 250);
+    setTimeout(() => this.moveToIns(targetPos), 150);
     // el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
   }
 
-
+  moveToIns(targetPos: number) {
+    window.scroll({top: (targetPos - 70),
+      left: 0,
+      behavior: 'smooth'});
+  }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -138,5 +139,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   fakeSend() {
     window.confirm('Thank you for your message, we\'ve heard you :)');
+  }
+
+  toggleSolution(el) {
+    // TODO: refresh when destory?
+    this.solutionExtended = !this.solutionExtended;
+    if (this.solutionExtended) {
+     this.moveToIns(el.offsetTop);
+    }
+    console.log(this.solutionExtended);
   }
 }
