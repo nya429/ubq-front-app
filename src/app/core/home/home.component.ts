@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentPos: number;
   navClickedSubscription: Subscription;
   solutionExtended = false;
+  solutionActived: number;
 
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
@@ -121,12 +122,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else if (windowScrollPos >= servicePos - 70 && windowScrollPos < solutionsPos - 70) {
       this.currentPos = 1;
       this.lpService.onSectionChange(1);
+      if ((windowScrollPos + windowInnerHeight) < solutionsPos) {
+        this.solutionExtended = false;
+        this.solutionActived = null;
+      }
     } else if (windowScrollPos >= solutionsPos - 70 && windowScrollPos < startPos - 70) {
       this.currentPos = 2;
       this.lpService.onSectionChange(2);
     } else if (windowScrollPos >= startPos - 70 && windowScrollPos < teamPos - 70) {
       this.currentPos = 3;
       this.lpService.onSectionChange(3);
+      this.solutionExtended = false;
+      this.solutionActived = null;
     } else if (windowScrollPos >= teamPos - 70 && windowScrollPos < (teamPos + teamHeight + contactHeight - windowInnerHeight)) {
       this.currentPos = 4;
       this.lpService.onSectionChange(4);
@@ -141,9 +148,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     window.confirm('Thank you for your message, we\'ve heard you :)');
   }
 
-  toggleSolution(el) {
+  toggleSolution(el, id: number) {
     // TODO: refresh when destory?
-    this.solutionExtended = !this.solutionExtended;
+    this.solutionActived = this.solutionActived === id ? null : id;
+    this.solutionExtended = this.solutionActived ? true : false;
     if (this.solutionExtended) {
      this.moveToIns(el.offsetTop);
     }

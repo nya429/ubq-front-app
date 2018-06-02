@@ -199,7 +199,7 @@ a.btn:hover {
   background: transparent;
 }
 
-.portfolio-box-shrink .overlay::after {
+.portifolio-box-active .overlay::after {
   display: block;
   content: "";
   position: absolute;
@@ -230,13 +230,44 @@ a.btn:hover {
   background-color: rgba(0, 161, 214, .2);
 }
 
-.overlay:hover,.overlay:active,
-.overlay-hovered {
+.overlay:hover,
+.overlay:active {
   height: 100%;
   background-color: rgba(0, 161, 214, .8);
 }
 
-.portfolio-box {
+.overlay h2 {
+  transition: .3s ease;
+}
+
+.portfolio-box-shrink  .overlay,
+.portfolio-box-shrink  .overlay:hover {
+  /* border-top: 1px solid #00a1d6; */
+  border-bottom: 1px solid #00a1d6;
+  background-color: #fff;
+}
+
+.portfolio-box-shrink  .overlay h2 {
+  transition: .3s ease;
+  font-size: 1.5rem;
+  color: rgba(0, 161, 214, .8);
+}
+
+.portfolio-box-shrink  .overlay h2:hover {
+  transition: .3s ease;
+  color: rgba(0, 161, 214, 1);
+}
+
+.portifolio-box-active .overlay,
+.portifolio-box-active .overlay:hover {
+
+  background-color: rgba(0, 161, 214, .8);
+}
+
+.portifolio-box-active .overlay h2,
+.portifolio-box-active .overlay h2:hover {
+  font-size: 2rem;
+  color: #fff;
 }
 
 .overlay-caption {

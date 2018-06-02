@@ -58,9 +58,9 @@
         <div #solutionsBox class="row ">
           <div class="col-xs-4 col-sm-4 no-gutter">
             <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-1"
-            [ngClass]="{'portfolio-box-shrink': solutionExtended}">
-              <div (click)="toggleSolution(solutionsBox)"  class="overlay"
-                    [ngClass]="{'overlay-shrinked': solutionExtended}">
+            [ngClass]="{'portfolio-box-shrink': solutionExtended, 
+                        'portifolio-box-active': solutionActived === 1}">
+              <div (click)="toggleSolution(solutionsBox, 1)"  class="overlay">
                   <div class="overlay-caption">
                       <h2 style='display: block;'>Retail Management</h2>
                       <p></p>
@@ -71,8 +71,9 @@
           <div class="col-xs-4 col-sm-4 no-gutter">
             <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-2"
             [ngClass]="{'portfolio-box-shrink': solutionExtended,
-             'solution-bk-2': !solutionExtended}">
-              <div class="overlay">
+             'solution-bk-2': !solutionExtended,
+             'portifolio-box-active': solutionActived === 2}">
+             <div (click)="toggleSolution(solutionsBox, 2)"  class="overlay">
                   <div class="overlay-caption">
                       <h2>Event Management</h2>
                       <p></p>
@@ -83,8 +84,9 @@
           <div class="col-xs-4 col-sm-4 no-gutter">
             <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-3"
             [ngClass]="{'portfolio-box-shrink': solutionExtended,
-             'solution-bk-3': !solutionExtended}">
-              <div class="overlay">
+             'solution-bk-3': !solutionExtended,
+             'portifolio-box-active': solutionActived === 3}">
+             <div (click)="toggleSolution(solutionsBox, 3)"  class="overlay">
                   <div class="overlay-caption">
                       <h2>Nursing Home</h2>
                       <p></p>
