@@ -57,20 +57,21 @@
        
         <div #solutionsBox class="row ">
           <div class="col-xs-4 col-sm-4 no-gutter">
-            <a  [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box cursor-pointer cursor-pointer" 
-              style='background: url(../../../assets/solution/1.jpg) no-repeat center;'>
+            <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-1"
+            [ngClass]="{'portfolio-box-shrink': solutionExtended}">
               <div (click)="toggleSolution(solutionsBox)"  class="overlay"
-                    [ngClass]="{'overlay-hovered': solutionExtended}">
+                    [ngClass]="{'overlay-shrinked': solutionExtended}">
                   <div class="overlay-caption">
-                      <h2>Retail Management</h2>
+                      <h2 style='display: block;'>Retail Management</h2>
                       <p></p>
                   </div>
               </div>
             </a>
           </div>
           <div class="col-xs-4 col-sm-4 no-gutter">
-            <a [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/2.jpg) no-repeat center;'>
+            <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-2"
+            [ngClass]="{'portfolio-box-shrink': solutionExtended,
+             'solution-bk-2': !solutionExtended}">
               <div class="overlay">
                   <div class="overlay-caption">
                       <h2>Event Management</h2>
@@ -80,8 +81,9 @@
             </a>
           </div>
           <div class="col-xs-4 col-sm-4 no-gutter">
-            <a [ngClass]="{'portfolio-box-shrink': solutionExtended}" class="portfolio-box background-cover cursor-pointer" 
-              style='background: url(../../../assets/solution/3.jpg) no-repeat center; '>
+            <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-3"
+            [ngClass]="{'portfolio-box-shrink': solutionExtended,
+             'solution-bk-3': !solutionExtended}">
               <div class="overlay">
                   <div class="overlay-caption">
                       <h2>Nursing Home</h2>

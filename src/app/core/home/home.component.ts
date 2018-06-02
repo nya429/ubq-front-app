@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   startTriggered = false;
   currentPos: number;
   navClickedSubscription: Subscription;
-  solutionExtended = true;
+  solutionExtended = false;
 
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
