@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Inject, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Inject, HostListener, OnDestroy, AfterViewChecked, Renderer2 } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DOCUMENT } from '@angular/platform-browser';
 
@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   headerTriggered = false;
   serviceTriggered = false;
   startTriggered = false;
@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
   @ViewChild('solutions') private solutionsEl: ElementRef;
+  @ViewChild('solutionsContent') private solConEl: ElementRef;
+  @ViewChild('solutionsContentWrapper') private solConWrapperEl: ElementRef;
   @ViewChild('start') private startEl: ElementRef;
   @ViewChild('team') private teamEl: ElementRef;
   @ViewChild('contact') private contactEl: ElementRef;
@@ -29,6 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('introTrigger') private introTrigger: ElementRef;
 
   constructor(@Inject(DOCUMENT) private document: Document,
+              private renderer: Renderer2,
               private lpService: LandpageService) {}
 
   ngOnInit() {
@@ -39,6 +42,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewChecked() {
+    if (this.solutionExtended) {
+      this.renderer.setStyle(this.solConWrapperEl.nativeElement, 'height', this.solConEl.nativeElement.clientHeight + 'px');
+    } else {
+      this.renderer.setStyle(this.solConWrapperEl.nativeElement, 'height', 0 + 'px');
+    }
+  }
   ngOnDestroy() {
     this.lpService.turnHeaderOpaque();
     this.lpService.onSectionChange(null);
@@ -149,12 +159,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   toggleSolution(el, id: number) {
-    // TODO: refresh when destory?
     this.solutionActived = this.solutionActived === id ? null : id;
     this.solutionExtended = this.solutionActived ? true : false;
     if (this.solutionExtended) {
      this.moveToIns(el.offsetTop);
     }
-    console.log(this.solutionExtended);
+  }
+
+  onFoldSolution() {
+    this.solutionExtended = false;
+    this.solutionActived = null;
   }
 }

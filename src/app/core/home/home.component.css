@@ -212,6 +212,14 @@ a.btn:hover {
   border-top: 10px solid rgba(0, 161, 214, .8);
 }
 
+.glyphicon-chevron-up {
+  color: rgba(51,51,51,.7);
+}
+.glyphicon-chevron-up:hover,
+.glyphicon-chevron-up:active {
+  color: #333;
+}
+
 .background-cover {
   background-size: cover;   
   -webkit-background-size: cover;   
@@ -243,7 +251,8 @@ a.btn:hover {
 .portfolio-box-shrink  .overlay,
 .portfolio-box-shrink  .overlay:hover {
   /* border-top: 1px solid #00a1d6; */
-  border-bottom: 1px solid #00a1d6;
+  border-bottom: 1px solid  rgba(0, 161, 214, .8);
+  border-top: 1px solid #ddd;
   background-color: #fff;
 }
 
@@ -251,6 +260,11 @@ a.btn:hover {
   transition: .3s ease;
   font-size: 1.5rem;
   color: rgba(0, 161, 214, .8);
+}
+
+.portfolio-box-shrink  .overlay p {
+  display: none;
+  opacity: 0;
 }
 
 .portfolio-box-shrink  .overlay h2:hover {
@@ -276,7 +290,7 @@ a.btn:hover {
   height: 100%;
   width: 100%;
   color: #fff;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   /* opacity: 0; */
@@ -284,7 +298,20 @@ a.btn:hover {
 
 .overlay-caption h2,
 .overlay-caption p {
+  display: block;
   margin: 0;
+}
+
+.overlay-caption p {
+  opacity: 0;
+  transform: scale(0);
+  transition: .2s ease;
+}
+
+.overlay:hover p {
+  opacity: 1;
+  transform: scale(1);
+  transition: .2s ease;
 }
 
 .overlay:hover .overlay-caption,
@@ -300,13 +327,11 @@ a.btn:hover {
   overflow: hidden;
 }
 
-
-
+/*   achieved by renderer2
 .solution-content-extended {
   height: calc(100vh - 70px) !important;
   transition: height .5s;
-}
-
+} */
 
 .solution-intro {
   position: relative;
@@ -324,8 +349,6 @@ a.btn:hover {
   width: 100%;
   position: absolute;
   top: 3rem;
-  margin-right: auto;
-  margin-left: auto;
 }
 
 .solution-intro-overlay p,
@@ -337,6 +360,7 @@ a.btn:hover {
 
 .solution-intro-content {
   text-align: left;
+  margin: 3rem auto;
 }
 
 .solution-intro-content  p,
@@ -364,7 +388,7 @@ a.btn:hover {
 }
 
 .solution-media-container {
-  height: 260px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -374,9 +398,25 @@ a.btn:hover {
   padding: 2rem auto;
   max-width: 100%; 
   max-height: 100%; 
+  transition: .2s ease-in;
+  overflow: hidden;
 }
+
+#solution-media-preview > img {
+  transition: .2s ease-in;
+}
+
+#solution-media-preview:hover > img{
+ transform: scale(1.05);
+ transition: .2s ease-in;
+}
+
 .solution-intro-overlay h1 {
   font-weight: bolder;
+}
+
+.solution-features {
+  margin: 3rem auto;
 }
 
 .solution-feature img {

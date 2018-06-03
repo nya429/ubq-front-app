@@ -55,7 +55,7 @@
             </div>
         </div>
        
-        <div #solutionsBox class="row ">
+        <div #solutionsBox class="row">
           <div class="col-xs-4 col-sm-4 no-gutter">
             <a   class="portfolio-box cursor-pointer cursor-pointer solution-bk-1"
             [ngClass]="{'portfolio-box-shrink': solutionExtended, 
@@ -63,7 +63,7 @@
               <div (click)="toggleSolution(solutionsBox, 1)"  class="overlay">
                   <div class="overlay-caption">
                       <h2 style='display: block;'>Retail Management</h2>
-                      <p></p>
+                      <p>see more</p>
                   </div>
               </div>
             </a>
@@ -76,7 +76,7 @@
              <div (click)="toggleSolution(solutionsBox, 2)"  class="overlay">
                   <div class="overlay-caption">
                       <h2>Event Management</h2>
-                      <p></p>
+                      <p>see more</p>
                   </div>
               </div>
             </a>
@@ -89,16 +89,15 @@
              <div (click)="toggleSolution(solutionsBox, 3)"  class="overlay">
                   <div class="overlay-caption">
                       <h2>Nursing Home</h2>
-                      <p></p>
+                      <p>see more</p>
                   </div>
               </div>
             </a>
           </div>
         </div>
 
-        <div id="solution-content" class="row"
-        [ngClass]="{'solution-content-extended': solutionExtended}">
-        
+        <div #solutionsContentWrapper id="solution-content" class="row">
+        <div #solutionsContent >
           <div class="row solution-intro">
             <div class="solution-intro-bk no-gutter"
             style='background: url(../../../assets/solution/7.jpg) no-repeat center;
@@ -137,10 +136,8 @@
                       </div>
                     </div>
                     <div class="col-md-4 col-sm-6 solution-media-container">
-                      <div id="solution-media-preview"
-                      style='background: url(../../../assets/solution/7.jpg) no-repeat center;
-                      background-size: cover;'>
-                        <img src='../assets/solution/7.jpg' alt='' class='img-responsive'>
+                      <div id="solution-media-preview">
+                        <img src='../assets/solution/7.jpg' alt='' class='img-responsive cursor-pointer'>
                       </div>
                     </div>
                   </div>
@@ -148,8 +145,8 @@
             </div>
           </div>
 
-          <div class="row solution-features">
-            <div class="container">
+          <div class="row">
+            <div class="container solution-features">
               <div class="row">
                   <div class="col-sm-12"><h2>Features</h2></div>
                   <div class="col-sm-4 solution-feature">
@@ -167,6 +164,16 @@
               </div>
             </div>
           </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <span  (click)='onFoldSolution()' class="cursor-pointer glyphicon glyphicon-chevron-up glyphicon-xl"></span>
+               </div>
+            <!-- <div class="col-md-12">
+                <span class="solution-fold-arrow"></span>
+            </div> -->
+          </div>
+        </div>
+ 
         </div>
          
       
