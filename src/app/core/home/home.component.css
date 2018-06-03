@@ -262,11 +262,6 @@ a.btn:hover {
   color: rgba(0, 161, 214, .8);
 }
 
-.portfolio-box-shrink  .overlay p {
-  display: none;
-  opacity: 0;
-}
-
 .portfolio-box-shrink  .overlay h2:hover {
   transition: .3s ease;
   color: rgba(0, 161, 214, 1);
@@ -302,16 +297,39 @@ a.btn:hover {
   margin: 0;
 }
 
+.solution-reveal-act {
+  position: relative;
+}
+
+.portfolio-box-shrink .solution-reveal-act {
+  display: none;
+  opacity: 0;
+}
+
 .overlay-caption p {
+  opacity: 1;
+  transform: scale(1);
+  transition: .2s .1s ease;
+}
+
+.overlay:hover p {
   opacity: 0;
   transform: scale(0);
   transition: .2s ease;
 }
 
-.overlay:hover p {
-  opacity: 1;
-  transform: scale(1);
+.solution-unfold-arrow {
+  position: absolute;
+  margin-left: -5px;
+  margin-top: 5px;
+  font-size: 2rem;
+  transform: rotate(180deg) scale(0);
   transition: .2s ease;
+}
+
+.overlay:hover .solution-unfold-arrow { 
+  transform: rotate(0) scale(1);
+  transition: .2s .1s ease;
 }
 
 .overlay:hover .overlay-caption,
@@ -555,6 +573,18 @@ a.btn:hover {
 }
 
 @keyframes scale-reveal {
+  0% {
+     opacity: 0;
+     transform: scale(0,0);
+ }
+
+  100% {
+      opacity: 1;
+      transform: scale(1,1);
+ }
+}
+
+@keyframes rotate-reveal {
   0% {
      opacity: 0;
      transform: scale(0,0);
