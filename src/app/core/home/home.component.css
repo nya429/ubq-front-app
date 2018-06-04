@@ -269,13 +269,12 @@ a.btn:hover {
 
 .portifolio-box-active .overlay,
 .portifolio-box-active .overlay:hover {
-
   background-color: rgba(0, 161, 214, .8);
 }
 
 .portifolio-box-active .overlay h2,
 .portifolio-box-active .overlay h2:hover {
-  font-size: 2rem;
+  transform: scale(1.1);
   color: #fff;
 }
 
@@ -611,5 +610,14 @@ a.btn:hover {
 @media screen and (max-width: 1300px) {
   .hidden-xl-down .nav-circle {
     display: none !important;
+  }
+  h2 {
+    font-size: 22px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .portfolio-box-shrink  .overlay h2  {
+    font-size: 14px;
   }
 }
