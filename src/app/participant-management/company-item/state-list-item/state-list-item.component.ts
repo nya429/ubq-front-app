@@ -22,7 +22,6 @@ export class StateListItemComponent implements OnInit {
   }
 
   onClose(event) {
-    console.log('ss');
     this.statesResultClosed.emit();
     event.stopPropagation();
   }

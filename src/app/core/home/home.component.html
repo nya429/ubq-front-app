@@ -106,26 +106,27 @@
         </div>
 
         <div #solutionsContentWrapper id="solution-content" class="row">
-        <div #solutionsContent >
+         <div *ngIf='solutionActived' #solutionsContent >
           <div class="row solution-intro">
             <div class="solution-intro-bk no-gutter"
-            style='background: url(../../../assets/solution/7.jpg) no-repeat center;
-                    background-size: cover;'>
+            [ngClass]="{'solution-bk-1': solutionActived === 1, 'solution-bk-2': solutionActived === 2,
+              'solution-bk-3': solutionActived === 3}"
+            style="background-size: cover;">
                     <div class="container solution-intro-content-hi">
                         <div class="row">
                           <div class="col-md-8 col-sm-6">
                             <div class="solution-intro-content">
-                                <h2>Introducing the<br>Evenet Management Systmes</h2>
+                                <h2>Introducing the<br>{{ solutionContent[solutionActived - 1]['name'] }}</h2>
                                 <br>
-                                <p>Better understand your visitors interest and behavior and provide customized services</p>
-                                <p>Comprehensive and accurate report for post event follow up</p>
-                
+                                
+                                <p *ngFor="let p of solutionContent[solutionActived - 1]['why'];">{{p}}</p>
+                  
                                 <a align="left" class="btn btn-xl  white-text">Learn more</a>
                             </div>
                           </div> 
                           <div class="col-md-4 col-sm-6 solution-media-container">
                             <div id="solution-media-preview">
-                              <img src='../assets/solution/7.jpg' alt='' class='img-responsive'>
+                              <img src="{{solutionContent[solutionActived - 1]['img']}}" alt='' class='img-responsive'>
                             </div>
                           </div>
                         </div>
@@ -136,17 +137,16 @@
                   <div class="row">
                     <div class="col-md-8 col-sm-6">
                       <div class="solution-intro-content">
-                          <h2>Introducing the<br>Evenet Management Systmes</h2>
+                          <h2>Introducing the<br>{{ solutionContent[solutionActived - 1]['name'] }}</h2>
                           <br>
-                          <p>Better understand your visitors interest and behavior and provide customized services</p>
-                          <p>Comprehensive and accurate report for post event follow up</p>
+                          <p *ngFor="let p of solutionContent[solutionActived - 1]['why'];">{{p}}</p>
           
                           <a align="left" class="btn btn-xl  white-text" (click)='moveTo(services)'>Learn more</a>
                       </div>
                     </div>
                     <div class="col-md-4 col-sm-6 solution-media-container">
                       <div id="solution-media-preview">
-                        <img src='../assets/solution/7.jpg' alt='' class='img-responsive cursor-pointer'>
+                        <img src="{{solutionContent[solutionActived - 1]['img']}}" alt='' class='img-responsive cursor-pointer'>
                       </div>
                     </div>
                   </div>
@@ -158,7 +158,12 @@
             <div class="container solution-features">
               <div class="row">
                   <div class="col-sm-12"><h2>Features</h2></div>
-                  <div class="col-sm-4 solution-feature">
+                  <div *ngFor="let feature of solutionContent[solutionActived - 1]['features'];"
+                  class='solution-feature col-sm-4'>
+                    <img src="{{feature['img-url']}}" alt="map" class='img-responsive'>
+                    <p>{{feature['content']}}</p>
+                  </div>
+                  <!-- <div class="col-sm-4 solution-feature">
                     <img src="../assets/solution/map.svg" alt="map" class='img-responsive'>
                     <p>Real time map allows event organizer to learn who’s visiting where</p>
                   </div>
@@ -169,7 +174,7 @@
                   <div class="col-sm-4 solution-feature">
                       <img src="../assets/solution/analytics.svg" alt="analytics" class='img-responsive'>
                       <p>Comprehensive analysis reports</p>
-                  </div>
+                  </div> -->
               </div>
             </div>
           </div>
@@ -181,7 +186,7 @@
                 <span class="solution-fold-arrow"></span>
             </div> -->
           </div>
-        </div>
+         </div>
  
         </div>
          

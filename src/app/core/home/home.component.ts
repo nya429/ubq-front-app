@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 
 import { LandpageService } from './../landpage.service';
 import { Subscription } from 'rxjs/Subscription';
+import { SOLUTION } from '../../../assets/home/home-content';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +19,7 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   navClickedSubscription: Subscription;
   solutionExtended = false;
   solutionActived: number;
+  solutionContent = SOLUTION;
 
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
@@ -35,6 +37,7 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
               private lpService: LandpageService) {}
 
   ngOnInit() {
+    console.log(this.solutionContent[2]['name']);
     this.lpService.turnHeaderTransparent();
 
     this.navClickedSubscription = this.lpService.navClicked.subscribe(section => {
@@ -84,7 +87,6 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   moveTo(el) {
     const targetPos = el.offsetTop;
     setTimeout(() => this.moveToIns(targetPos), 150);
-    // el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'start' });
   }
 
   moveToIns(targetPos: number) {
@@ -109,7 +111,6 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
     const serviceHeight = this.servicesEl.nativeElement.clientHeight;
     const teamHeight = this.teamEl.nativeElement.clientHeight;
     const contactHeight = this.contactEl.nativeElement.clientHeight;
-    // console.log(introPos, introHeight);
     if (windowScrollPos > (introPos - introHeight / 4)) {
       this.lpService.toggleHeaderOpacity(false);
       this.headerTriggered = true;
@@ -117,7 +118,6 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
       this.lpService.toggleHeaderOpacity(true);
       this.headerTriggered = false;
     }
-    // console.log(windowScrollPos, servicePos, serviceHeight);
     if (!this.serviceTriggered && windowScrollPos > (serviceHeight / 2)) {
       this.serviceTriggered = true;
     }
