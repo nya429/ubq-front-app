@@ -4,7 +4,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 
 import { LandpageService } from './../landpage.service';
 import { Subscription } from 'rxjs/Subscription';
-import { SOLUTION } from '../../../assets/home/home-content';
+import { SOLUTION, INTRO } from '../../../assets/home/home-content';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +12,8 @@ import { SOLUTION } from '../../../assets/home/home-content';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
+  private introTimer;
+
   headerTriggered = false;
   serviceTriggered = false;
   startTriggered = false;
@@ -20,6 +22,7 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   solutionExtended = false;
   solutionActived: number;
   solutionContent = SOLUTION;
+  introContent = INTRO;
 
   @ViewChild('intro') private introEl: ElementRef;
   @ViewChild('services') private servicesEl: ElementRef;
@@ -29,6 +32,7 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('start') private startEl: ElementRef;
   @ViewChild('team') private teamEl: ElementRef;
   @ViewChild('contact') private contactEl: ElementRef;
+  @ViewChild('introString') private introStringEl: ElementRef;
 
   @ViewChild('introTrigger') private introTrigger: ElementRef;
 
@@ -43,6 +47,8 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.navClickedSubscription = this.lpService.navClicked.subscribe(section => {
         this.onNavClicked(section);
     });
+
+    this.introInterval(0, 0);
   }
 
   ngAfterViewChecked() {
@@ -56,6 +62,7 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.lpService.turnHeaderOpaque();
     this.lpService.onSectionChange(null);
     this.navClickedSubscription.unsubscribe();
+    clearInterval(this.introTimer);
   }
 
   onNavClicked(section: number) {
@@ -169,5 +176,35 @@ export class HomeComponent implements OnInit, AfterViewChecked, OnDestroy {
   onFoldSolution() {
     this.solutionExtended = false;
     this.solutionActived = null;
+  }
+
+  introInterval(end, index) {
+    const len = this.introContent[index].length;
+    this.introTimer = setInterval(() => {
+      if (end <= len) {
+        this.introStringEl.nativeElement.textContent = this.introContent[index].slice(0, end);
+         end++;
+      } else {
+        clearInterval(this.introTimer);
+        setTimeout(() => {
+          this.introIntervalReverse(end, index);
+        }, 1500);
+      }
+    }, 80);
+  }
+
+  introIntervalReverse(end, index) {
+    this.introTimer = setInterval(() => {
+      if (end >= 0) {
+        this.introStringEl.nativeElement.textContent = this.introContent[index].slice(0, end);
+        end = end - 2;
+      } else {
+        this.introStringEl.nativeElement.textContent = this.introContent[index].slice(0, 0);
+        clearInterval(this.introTimer);
+        index = index === (this.introContent.length - 1) ? 0 : index + 1;
+        end = 0;
+        this.introInterval(end, index);
+      }
+    }, 30);
   }
 }

@@ -50,4 +50,6 @@ const SOLUTION = [
     },
 ];
 
-export { SOLUTION };
+const INTRO = ['Innovative', 'your Partner', 'Everwhere'];
+
+export { SOLUTION, INTRO };
