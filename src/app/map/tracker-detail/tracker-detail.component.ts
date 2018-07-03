@@ -1,3 +1,4 @@
+import { Participant } from './../../shared/participant.model';
 import { Tracker } from './../../shared/tracker.model';
 import { Subscription } from 'rxjs/Subscription';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -16,12 +17,17 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   editMode = false;
   editedTrackerIndex: number;
   tracker: Tracker;
-  id: number;
-  name: string;
+  tagId: string;
+  fullName: string;
+  time: number;
   status: number;
   note: string;
+  participant: Participant;
+
   private selectedTrackerSubscription: Subscription;
   private hasSelectedTrackerSubscription: Subscription;
+  private trackerLocChangeSubscription: Subscription;
+  private trackerListChangeSubscription: Subscription;
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
@@ -30,33 +36,26 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
     this.selectedTrackerSubscription = this.mapService.selectedTrackerIndex.subscribe(
       (index: number) => {
         this.editMode = false;
-        this.editedTrackerIndex = index - 1;
-        this.tracker = this.mapService.getTracker(index - 1);
-        this.id = this.tracker.id;
-        this.name = this.tracker.alias ? this.tracker.alias : 'tracker';
-        this.note = this.tracker.note ? this.tracker.note : 'N/A';
+        this.setTrackerDetail(index);
       }
     );
     this.hasSelectedTrackerSubscription = this.mapService.hasSelectedTracker.subscribe(
       (index: number) => {
         this.editMode = false;
-        if  (index == null) {
-          this.tracker = null;
-          this.id = null;
-          this.name = null;
-          this.note = null;
-          return;
-        }
-        this.editedTrackerIndex = index - 1;
-        this.tracker = this.mapService.getTracker(index - 1);
-        this.id = this.tracker.id;
-        this.name = this.tracker.alias ? this.tracker.alias : 'tracker';
-        this.note = this.tracker.note ? this.tracker.note : 'N/A';
-      }
-    );
+        this.setTrackerDetail(index);
+      });
+    this.trackerListChangeSubscription = this.mapService.trackerListChanges.subscribe(() => {
+      this.setTrackerDetail(null);
+    });
+    this.trackerLocChangeSubscription = this.mapService.trackerLocChanges.subscribe(data => {
+        const time = this.editedTrackerIndex ? this.mapService.getTrackerTime(this.editedTrackerIndex) : 0;
+        this.time = time;
+    });
   }
 
   ngOnDestroy() {
+    this.trackerListChangeSubscription.unsubscribe();
+    this.trackerLocChangeSubscription.unsubscribe();
     this.selectedTrackerSubscription.unsubscribe();
     this.hasSelectedTrackerSubscription.unsubscribe();
   }
@@ -70,7 +69,7 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   onUpdate(form: NgForm) {
     const value = form.value;
     this.mapService.updateTrackerInfo(this.editedTrackerIndex, value);
-    this.name = value.alias;
+    // this.alia = value.alias;
     this.editMode = false;
   }
 
@@ -78,4 +77,21 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
     this.editMode = false;
   }
 
+  setTrackerDetail(index: number) {
+    if  (index == null) {
+      this.tracker = null;
+      this.tagId = null;
+      this.fullName = null;
+      this.note = null;
+      return;
+    } else {
+      this.editedTrackerIndex = index - 1;
+      this.tracker = this.mapService.getTracker(this.editedTrackerIndex);
+      this.tagId = this.tracker.tagId;
+      this.participant = this.tracker.participant ? this.tracker.participant : null;
+      this.fullName = this.tracker.participant ? `${this.participant.firstName} ${this.participant.lastName}` : this.tracker.alias;
+      this.note = this.tracker.note ? this.tracker.note : 'N/A';
+      this.time = this.tracker.time ? this.tracker.time : null;
+    }
+  }
 }

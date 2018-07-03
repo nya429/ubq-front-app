@@ -1,3 +1,4 @@
+import { Participant } from './../shared/participant.model';
 import { EventEmitter, Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
 
@@ -5,12 +6,14 @@ import { Subject } from 'rxjs/Subject';
 
 import { Tracker } from '../shared/tracker.model';
 import { Http } from '@angular/http';
+import { Subscription } from 'rxjs/Subscription';
 
 @Injectable()
 export class MapService {
     constructor(private httpClient: HttpClient) {}
     // TODO: change name to trackersCrdChanges
-    trackerChanges = new Subject<Tracker[]>();
+    trackerLocChanges = new Subject<Tracker[]>();
+    trackerListChanges = new Subject<Tracker[]>();
     serviceInterval: any;
 
     mapInitiated = false;
@@ -26,26 +29,35 @@ export class MapService {
     onStopped = new EventEmitter<boolean>();
     dropdownFolded = new EventEmitter<boolean>();
 
+    pageBlur = new Subject<boolean>();
+    pageBlurHinted = false;
+
     // TODO restructure the selected Tracker
     selectedTrackerId: number;
     selectedTrackerIndex = new EventEmitter<number>();
     hasSelectedTracker = new Subject<number>();
     hideTrackerIndex = new EventEmitter<number>();
 
+    // tracker history local
+    trackerLocsReady = new Subject<any> ();
+    trackerLocsListener: Subscription;
+    trackerLocsSet = [];
+    onTest = new EventEmitter<boolean>();
+
     // TODO those are participants
     private trackers: Tracker[] = [
-        new Tracker(1, 1, 1),
-        new Tracker(2, 1, 49),
-        new Tracker(3, 99, 1),
-        new Tracker(4, 99, 49),
-        new Tracker(5, 10, 10),
-        new Tracker(6, 50, 20),
-        new Tracker(7, 30, 30),
-        new Tracker(8, 80, 40),
-        new Tracker(9, 10, 10),
-        new Tracker(10, 42, 34),
-        new Tracker(11, 20, 37),
-        new Tracker(12, 40, 45),
+        new Tracker(1, '', 1, 1, null),
+        new Tracker(2, '', 1, 49, null),
+        new Tracker(3, '', 99, 1, null),
+        new Tracker(4, '', 99, 49, null),
+        new Tracker(5, '', 10, 10, null),
+        new Tracker(6, '', 50, 20, null),
+        new Tracker(7, '', 30, 30, null),
+        new Tracker(8, '', 80, 40, null),
+        new Tracker(9, '', 10, 10, null),
+        new Tracker(10, '', 42, 34, null),
+        new Tracker(11, '', 20, 37, null),
+        new Tracker(12, '', 40, 45, null),
     ];
 
     // dummy move
@@ -60,18 +72,22 @@ export class MapService {
     }
 
     stop() {
+        if (this.trackerLocsListener) {
+            this.trackerLocsListener.unsubscribe();
+        }
+
         this.onStopped.emit(this.mapStopped);
     }
 
     resetServiceState() {
         this.mapStopping = true;
-        this.stopping.emit(true);
+        this.stopping.emit(this.mapStopping);
         this.mapStarted = false;
-        this.started.emit(false);
+        this.started.emit(this.mapStarted);
         this.mapStopped = true;
-        this.stopped.emit(true);
+        this.stopped.emit(this.mapStopped);
         this.mapInitiated = false;
-        this.intiated.emit(false);
+        this.intiated.emit(this.mapInitiated);
     }
 
     stopService() {
@@ -87,12 +103,19 @@ export class MapService {
         return this.trackers.slice()[index];
     }
 
+    getTrackerTime(index: number) {
+        if (this.trackers.slice()[index].time) {
+            return this.trackers.slice()[index].time;
+        }
+        return null;
+    }
+
     move() {
         this.serviceInterval = setInterval(() => {
             this.trackers.map(tracker => {
                 this.dummyMove(tracker);
             });
-            this.trackerChanges.next(this.trackers.slice());
+            this.trackerLocChanges.next(this.trackers.slice());
         }, 800);
     }
 
@@ -136,7 +159,7 @@ export class MapService {
             }
         );
         this.trackers = newTrackers;
-        this.trackerChanges.next(this.trackers.slice());
+        this.trackerLocChanges.next(this.trackers.slice());
         this.hideTrackerIndex.emit(id);
     }
 
@@ -144,7 +167,7 @@ export class MapService {
 
         // TODO replace this after having backend
         this.trackers[index].alias = form.alias;
-        this.trackerChanges.next(this.trackers.slice());
+        this.trackerLocChanges.next(this.trackers.slice());
     }
 
     onCompanyDropdownFolded(folded: boolean) {
@@ -168,16 +191,138 @@ export class MapService {
           })
           .subscribe(
               (result) => {
-                const data = result['data'];
+                // should be some where else
                 this.stop();
-                this.changeTrackers(data);
+                const participants = result['data']['participants'];
+                // console.log(participants);
+                if (participants && participants.length > 0) {
+                    this.changeTrackers(participants);
+                } else {
+                    return false;
+                }
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
               }
           );
     }
 
-    changeTrackers(data) {
-        // this.stop();
+    changeTrackers(participants) {
+        const trackers = [];
+        participants.forEach((participant, i) => {
+          const tracker = new Tracker(i + 1, participant['tag_id'], null, null, new Participant(participant));
+          trackers.push(tracker);
+          if (i === participants.length - 1) {
+            this.trackers = trackers.slice();
+            // console.log(this.trackers);
+            this.trackerListChanges.next();
+          }
+        });
+    }
+
+    getParticipantLocalsByTime(id: string, begin?: number, end?: number) {
+        const trackerLocsUrl = 'http://localhost:3000/event/tracker/locs';
+        const con = {'begin': begin, 'end': end, 'id': id};
+        return this.httpClient.post(`${trackerLocsUrl}`, con, {
+            observe: 'body',
+            responseType: 'json',
+          })
+          .subscribe(
+              (result) => {
+                const data = result['data'];
+                this.trackerLocsReady.next(data);
+              }, (err: HttpErrorResponse)  => {
+                console.error(err);
+              }
+          );
+    }
+
+    getLastActiveTrackers() {
+        const trackerUrl = 'http://localhost:3000/event/tracker/lastActive';
+        const limit = 15;
+        return this.httpClient.get(`${trackerUrl}`, {
+            observe: 'body',
+            responseType: 'json',
+          })
+          .subscribe(
+              (result) => {
+                const participants = result['data']['trackers'];
+                if (participants && participants.length > 0) {
+                    this.stop();
+                    this.changeTrackers(participants);
+                }
+              }, (err: HttpErrorResponse)  => {
+                console.error(err);
+              }
+          );
+    }
+
+    testLocal() {
+        // map particiapnt id, pass the id
+        this.getLastActiveTrackers();
+        const listChangeSub = this.trackerListChanges.subscribe(() => {
+            listChangeSub.unsubscribe();
+            const customer_ids =  this.trackers.map(tracker => tracker.tagId);
+            customer_ids.map(id => {
+                this.getParticipantLocalsByTime(id);
+            });
+            let customer_ids_index = 1;
+            this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
+                console.log('customer_ids_index', customer_ids_index);
+                this.trackers.forEach(trac => {
+                    if (trac.tagId === data[0].customer_id) {
+                        trac.setCrd(data[0].loc_x/20*95, data[0].loc_y/17*45);
+                        trac.setLocs(data, 0);
+                        if (customer_ids_index === customer_ids.length) {
+                            this.trackerLocsListener.unsubscribe();
+                            this.trackerListChanges.next();
+                            this.onTest.emit(this.mapStarted);
+                         } else {
+                           customer_ids_index++;
+                         }
+                    }
+                });
+                // const tracker = new Tracker(customer_ids_index, data[0].customer_id, data[0].loc_x/20*95, data[0].loc_y/17*45)
+                // tracker.setLocs(data, 0);
+                // tracker.setCrd(tracker.locs[0].loc_x / 20 * 95, tracker.locs[0].loc_y / 17 * 45);
+                // this.trackers.push(tracker);
+                // if (customer_ids_index === customer_ids.length) {
+                //    this.trackerListChanges.next();
+                //    this.onTest.emit(this.mapStarted);
+                // } else {
+                //   customer_ids_index++;
+                // }
+            });
+        });
+    }
+
+    testMove() {
+        clearInterval(this.serviceInterval);
+        this.serviceInterval = setInterval(() => {
+            this.trackers.map(tracker => {
+                this.testMoveHis(tracker);
+            });
+            this.trackerLocChanges.next(this.trackers.slice());
+        }, 800);
+    }
+
+    testMoveHis(tracker: Tracker) {
+        const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
+        const nextLoc = tracker.locs[nextLocIndex];
+        tracker.currentLoc = nextLocIndex;
+        tracker.setCrd(nextLoc.loc_x / 20 * 95, nextLoc.loc_y / 17 * 45);
+        tracker.setTime(nextLoc.time * 1000);
+        // this.trackerLocChanges.next(this.trackers.slice());
+    }
+
+    onChangeTrackerColor(id: number, color: string) {
+        this.trackers[id - 1].setColor(color);
+        this.trackerLocChanges.next(this.trackers.slice());
+    }
+
+    onLeavePage() {
+        if (!this.pageBlurHinted) {
+            this.pageBlur.next();
+            this.pageBlurHinted = true;
+        }
     }
 }

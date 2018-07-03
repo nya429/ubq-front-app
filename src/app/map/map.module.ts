@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { CommonModule } from '@angular/common';
 
+import { PriorityPipe } from './priorityStatus.pipe';
 import { MapService } from './map.service';
 import { MapComponent } from './map.component';
 import { MapMenuComponent } from './map-menu/map-menu.component';
@@ -20,10 +21,12 @@ import { TrackerDetailEditComponent } from './tracker-detail/tracker-detail-edit
 import { SearchResultListComponent } from './search-result-list/search-result-list.component';
 import { FilterPriorityListComponent } from './filter-priority-list/filter-priority-list.component';
 import { FilterCompanyDropdownComponent } from './filter-company-dropdown/filter-company-dropdown.component';
+import { MapTooltipComponent } from './map-tooltip/map-tooltip.component';
 
 
 @NgModule({
   declarations: [
+    PriorityPipe,
     MapComponent,
     MapMenuComponent,
     MapDemoComponent,
@@ -35,7 +38,8 @@ import { FilterCompanyDropdownComponent } from './filter-company-dropdown/filter
     TrackerDetailEditComponent,
     SearchResultListComponent,
     FilterPriorityListComponent,
-    FilterCompanyDropdownComponent
+    FilterCompanyDropdownComponent,
+    MapTooltipComponent
   ],
   imports: [
     CommonModule,

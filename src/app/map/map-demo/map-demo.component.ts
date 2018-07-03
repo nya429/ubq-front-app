@@ -55,15 +55,14 @@ export class MapDemoComponent implements OnInit {
 
     // svg.append('g').call(axis)
     //       .attr('transform', 'translate(20,200)');
-    svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(" + padding.left + "," + (element.offsetHeight - padding.bottom) + ")")
-    .call(xAxis); 
-          
+    svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + (element.offsetHeight - padding.bottom) + ')')
+    .call(xAxis);
 
-  svg.append("g")
-    .attr("class","axis")
-    .attr("transform","translate(" + padding.left + "," + padding.top + ")")
+  svg.append('g')
+    .attr('class', 'axis')
+    .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
     .call(yAxis);
 
     let rectBar = svg.selectAll('rect')
@@ -82,53 +81,51 @@ export class MapDemoComponent implements OnInit {
           })
           .attr('fill', 'skyblue')
           .transition()
-          .delay(function(d,i){
+          .delay(function(d, i) {
             return i * 50;
           })
           .duration(800)
           .ease(d3.easeQuadOut)
-          .attr("y",function(d){
+          .attr('y', function(d) {
             return yScale(d) + padding.top;
           })
-          .attr("height", function(d){
+          .attr('height', function(d) {
             return element.offsetHeight - padding.top - padding.bottom - yScale(d);
           });
-      
 
-    
-    let texts = svg.selectAll(".BarText")
+    let texts = svg.selectAll('.BarText')
         .data(dataset)
         .enter()
-        .append("text")
-        .attr("class","BarText")
-        .attr("transform","translate(" + padding.left + "," + padding.top + ")")
-        .attr("x", function(d,i){
-            return xScale(i) + rectPadding/2;
+        .append('text')
+        .attr('class', 'BarText')
+        .attr('transform', 'translate(' + padding.left + ',' + padding.top + ')')
+        .attr('x', function(d, i) {
+            return xScale(i) + rectPadding / 2;
         } )
-        .attr("y",function(d){
+        .attr('y', function(d) {
             return yScale(0) + padding.top;
         })
-        .attr("dx",function(){
-            return (xScale.bandwidth() - rectPadding)/2;
+        .attr('dx', function() {
+            return (xScale.bandwidth() - rectPadding) / 2;
         })
-        .attr("dy",function(d){
+        .attr('dy', function(d) {
             return 0;
         })
-        .text(function(d){
+        .text(function(d) {
             return d;
         })
         .attr('fill', 'skyblue')
         .transition()
         .attr('fill', 'white')
-        .delay(function(d,i){
+        .delay(function(d, i) {
           return i * 50;
         })
         .duration(800)
         .ease(d3.easeQuadOut)
-        .attr("y",function(d){
+        .attr('y', function(d) {
           return yScale(d) + padding.top;
         })
-        .attr("height", function(d){
+        .attr('height', function(d) {
           return element.offsetHeight - padding.top - padding.bottom - yScale(d);
         });
       }

@@ -1,5 +1,6 @@
+import { NgForm } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, ViewChild, Renderer2, ElementRef, AfterViewChecked } from '@angular/core';
 
 import { Tracker } from './../../../shared/tracker.model';
 import { MapService } from '../../map.service';
@@ -9,7 +10,10 @@ import { MapService } from '../../map.service';
   templateUrl: './tracker-list-item.component.html',
   styleUrls: ['./tracker-list-item.component.css']
 })
-export class TrackerListItemComponent implements OnInit, OnDestroy {
+export class TrackerListItemComponent implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('color') private colorBox: ElementRef;
+  @ViewChild('colordot') private colorDot: ElementRef;
+  @ViewChild('f') trackerForm: NgForm;
   @Input() tracker: Tracker;
   @Input() index: number;
   private id;
@@ -17,11 +21,16 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
   editMode = false;
   isSelected = false;
   selectSubscription: Subscription;
+  color: string;
+  alias: string;
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService,
+    private render: Renderer2) { }
 
   ngOnInit() {
     this.id = this.tracker.id;
+    this.color = this.tracker.color;
+    this.alias = this.tracker.alias;
     this.selectSubscription = this.mapService.hasSelectedTracker.subscribe(
       (id: number) => {
         this.isSelected = this.id === id ? true : false;
@@ -31,6 +40,10 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.selectSubscription.unsubscribe();
+  }
+
+  ngAfterViewChecked() {
+    this.render.setStyle(this.colorBox.nativeElement, 'background-color', this.color);
   }
 
   onSelect() {
@@ -45,7 +58,13 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
 
   onEdit(event) {
     this.editMode = true;
+    this.render.setStyle(this.colorDot.nativeElement, 'background-color', this.color);
+    this.trackerForm.setValue({color: this.color, alias: this.alias });
     event.stopPropagation();
+  }
+
+  onColorSelect(form: NgForm) {
+    this.render.setStyle(this.colorDot.nativeElement, 'background-color', form.value.color);
   }
 
   onCancle(event) {
@@ -53,8 +72,13 @@ export class TrackerListItemComponent implements OnInit, OnDestroy {
     event.stopPropagation();
   }
 
-  onSubmit(event) {
+  onSubmit(form: NgForm) {
     this.editMode = false;
+    this.alias = form.value.alias;
+    if ( this.color !==  form.value.color) {
+      this.color = form.value.color;
+      this.mapService.onChangeTrackerColor(this.id, this.color);
+    }
     event.stopPropagation();
   }
 }

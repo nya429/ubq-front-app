@@ -37,3 +37,8 @@
 .form-control {
 
 }
+
+.detail-name {
+    width: 100%;
+    white-space: nowrap;
+}

@@ -1,8 +1,14 @@
 .panel-body {
     transition: height .3s ease-out;
     overflow: hidden;
-    height: 90px;
-  
+}
+
+.penal-body-unfolded {
+    height: 115px; 
+}
+
+.penal-body-folded {
+    height: 90px; 
 }
 
 .panel-title {
@@ -124,3 +130,14 @@
     border-color: #66afe9;
     box-shadow: 0 15px 10px -15px rgba(102,175,233,.6);
 }
+
+@media screen and (max-width: 767px) {
+    .penal-body-unfolded {
+        height: 155px; 
+    }
+    
+    .penal-body-folded {
+        height: 130px; 
+    }
+  }
+  

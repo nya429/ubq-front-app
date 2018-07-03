@@ -21,7 +21,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   private onStoppingSubscription: Subscription;
   private onCompanySelectedSubscription: Subscription;
   private dropdownSubscription: Subscription;
-  @ViewChild('penal') private penal: ElementRef;
+  // @ViewChild('penal') private penal: ElementRef;
   @ViewChild('f') filterForm: NgForm;
   started: boolean;
   initiated: boolean;
@@ -74,12 +74,12 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   }
 
   onFilterInputClick() {
-    this.render.setStyle(this.penal.nativeElement, 'height', '115px');
+    // this.render.setStyle(this.penal.nativeElement, 'height', '115px');
     this.filterFolded = false;
   }
 
   onFilterFold() {
-    this.render.setStyle(this.penal.nativeElement, 'height', '90px');
+    //  this.render.setStyle(this.penal.nativeElement, 'height', '90px');
     this.filterFolded = true;
     this.onInputBlur();
   }
@@ -117,5 +117,9 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   onDropdownRemove(event) {
     this.companyFilter = this.companyFilterNull;
     event.stopPropagation();
+  }
+
+  getHistory() {
+    this.mapService.testLocal();
   }
 }

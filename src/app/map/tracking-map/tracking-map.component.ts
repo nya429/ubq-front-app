@@ -13,11 +13,12 @@ import { Tracker } from './../../shared/tracker.model';
 export class TrackingMapComponent implements OnInit, OnDestroy {
   @ViewChild('trackingMap') private chartContainer: ElementRef;
   private trackers: Tracker[];
-  private trackersSubscription: Subscription;
+  private trackersChangeSubscription: Subscription;
   private onSelectedSubscription: Subscription;
   private onHidedSubscription: Subscription;
   private onStartSubscription: Subscription;
   private onStopSubscription: Subscription;
+  private onTestSubscription: Subscription;
 
   private base = {width: 100, height: 50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -34,7 +35,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private colors: any;
   private xAxis: any;
   private yAxis: any;
-  private trackerInfoWidth = 100;
+  private trackerInfoWidth = 150;
   private trackerInfoHeight = 30;
 
   private selectedPoint;
@@ -45,18 +46,20 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.createBase();
     this.onStartSubscription = this.mapService.onStarted.subscribe(() => this.onStart());
     this.onStopSubscription = this.mapService.onStopped.subscribe(() => this.onStop());
+    this.onTestSubscription = this.mapService.onTest.subscribe(() => this.onTest());
   }
 
   ngOnDestroy() {
     this.onStop();
     this.onStartSubscription.unsubscribe();
     this.onStopSubscription.unsubscribe();
+    this.onTestSubscription.unsubscribe();
   }
 
   onStop() {
     this.mapService.stopService();
-    if (this.trackersSubscription) {
-      this.trackersSubscription.unsubscribe();
+    if (this.trackersChangeSubscription) {
+      this.trackersChangeSubscription.unsubscribe();
     }
     if (this.onSelectedSubscription) {
       this.onSelectedSubscription.unsubscribe();
@@ -83,11 +86,45 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (this.mapService.mapStarted) {
       this.mapService.mapStarted = false;
       this.mapService.started.emit(false);
-      this.trackersSubscription.unsubscribe();
+      this.trackersChangeSubscription.unsubscribe();
     } else {
       this.mapService.mapStarted = true;
       this.mapService.started.emit(true);
-      this.trackersSubscription = this.mapService.trackerChanges.subscribe(
+      this.trackersChangeSubscription = this.mapService.trackerLocChanges.subscribe(
+        (trackers: Tracker[]) => {
+          console.log(this.trackers[0].xCrd);
+          this.trackers = trackers;
+          this.refreshTrackers();       // FIXME solove muttable copy issue;
+          this.movePoint(this.trackers);
+        }
+      );
+    }
+    this.onSelectedSubscription = this.mapService.selectedTrackerIndex.subscribe(
+      id => this.onPointSelected(id)
+    );
+    this.onHidedSubscription = this.mapService.hideTrackerIndex.subscribe(
+    id => this.onPointHided(id)
+  );
+  }
+
+  onTest() {
+    this.mapService.mapStopped = false;
+    this.mapService.stopped.emit(false);
+    if (!this.mapService.mapInitiated) {
+      this.mapService.mapInitiated = true;
+      this.mapService.intiated.emit(true);
+      this.trackers = this.mapService.getTrackers();
+      this.initiateTrackPoint(this.trackers);
+      this.mapService.testMove();
+    }
+    if (this.mapService.mapStarted) {
+      this.mapService.mapStarted = false;
+      this.mapService.started.emit(false);
+      this.trackersChangeSubscription.unsubscribe();
+    } else {
+      this.mapService.mapStarted = true;
+      this.mapService.started.emit(true);
+      this.trackersChangeSubscription = this.mapService.trackerLocChanges.subscribe(
         (trackers: Tracker[]) => {
           this.trackers = trackers;
           this.refreshTrackers();       // FIXME solove muttable copy issue;
@@ -103,13 +140,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   );
   }
 
+
   createBase() {
     const element = this.chartContainer.nativeElement;
     this.width = element.offsetWidth - this.margin.left - this.margin.right;
     this.height = element.offsetHeight - this.margin.top - this.margin.bottom;
     this.xScale = d3.scaleLinear()
+              // .domain([0, this.base.width])
               .domain([0, this.base.width])
-              .range([0, element.offsetWidth - this.padding.left - this.padding.right]);
+              .range([0, element.offsetWidth  - 280 - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
               .domain([0, this.base.height])
               .range([0, element.offsetHeight - this.padding.top - this.padding.bottom]);
@@ -126,8 +165,21 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .attr('fill', 'white')
               .transition()
               .duration(1000)
-              .delay(500)
               .attr('fill', 'darkslategray');
+
+      const imgs = this.svg.selectAll('svg').data([0]);
+      imgs.enter()
+      .append('svg:image')
+      .attr('xlink:href', '../../../assets/store_floorplan.svg')
+      .attr('x', -1270)
+      .attr('y', -310)
+      .attr('width', element.offsetWidth * 4)
+      .attr('height', element.offsetHeight * 2)
+      .attr('opacity', 0)
+      .transition()
+      .duration(1000)
+      .delay(500)
+      .attr('opacity', .6);
 
     this.svg.on('click', () => this.diselecPoint());
   }
@@ -178,9 +230,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .transition()
       .duration(700)
       .ease(d3.easeQuadOut)
-      .attr('r', d => d.isActivated() ? 7 : 0)
+      .attr('r', d => d.isActivated() ? 5 : 0)
       .style('fill-opacity', 0.7)
-      .style('fill', 'deepskyblue')
+      .style('fill', d => d.color)
       .style('stroke', 'white')
       .style('stroke-opacity', 0.5)
       .style('stroke-width', 2);
@@ -191,13 +243,14 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition()
     .duration(1000)
     .ease(d3.easeLinear)
+    .style('fill', d => d.color)
     .attr('cx', d => this.xScale(d.xCrd)  + this.padding.left)
     .attr('cy', d => this.yScale(d.yCrd) + this.padding.top);
 
-    if (this.trackerInfoG && this.selectedPoint) {
+    if (this.mapService.mapStarted && this.trackerInfoG && this.selectedPoint ) {
       const x = this.selectedPoint.datum().xCrd;
       const y = this.selectedPoint.datum().yCrd;
-      this.trackerInfoG.select('.trackerInfoText').text(d => `ID: ${d.id} (${x}, ${y})`);
+      this.trackerInfoG.select('.trackerInfoText').text(d => `${d.alias} (${Math.floor(x)}, ${Math.floor(y)})`);
       this.trackerInfoG
       // .datum(this.selectedPoint.datum())
        .transition()
@@ -225,7 +278,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition(500)
     .ease(d3.easeQuadIn)
     .style('fill-opacity', 1)
-    .attr('r', 12)
+    .attr('r', 10)
     .style('stroke-opacity', 1)
     .style('stroke-width', 5);
    }
@@ -235,13 +288,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .style('fill-opacity', 0.7)
     .transition(1000)
     .ease(d3.easeQuadIn)
-    .attr('r', 7)
+    .attr('r', 5)
     .style('stroke-opacity', 0.5)
     .style('stroke-width', 2);
    }
 
    onMouseClick() {
-    console.log(this.selectedPoint.datum());
      this.selectedPoint.datum().selected = true;
      this.mapService.onTrackerHasSelected(this.selectedPoint.datum().id);
      this.onMouseOver(this.selectedPoint);
@@ -291,7 +343,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (this.trackerInfoG) {
       return false;
     }
-
+    console.log(this.selectedPoint.datum());
     const that = this;
     this.trackerInfoG = this.svg.insert('g')
         .attr('class', 'trackerInfo')
@@ -309,7 +361,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         .attr('ry', 5);
     this.trackerInfoG.insert('text')
         .attr('class', 'trackerInfoText')
-        .text(d => `ID: ${d.id} (${d.xCrd}, ${d.yCrd})`)
+        .text(d => `ID: ${d.alias} (${d.xCrd}, ${d.yCrd})`)
         .style('text-anchor', 'middle')
         .attr('fill', 'white')
         .attr('font-weight', 'bolder')

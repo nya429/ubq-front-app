@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -11,6 +11,8 @@ import { MapService } from './map.service';
 export class MapComponent implements OnInit, OnDestroy {
   dropdownFolded: boolean;
   dropdownSubscription: Subscription;
+
+  private leave: boolean;
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
@@ -28,5 +30,21 @@ export class MapComponent implements OnInit, OnDestroy {
       return;
     }
     this.mapService.onCompanyDropdownFolded(true);
+  }
+
+  @HostListener('window:blur')
+  onLeave() {
+    if (this.mapService.started) {
+      this.leave = true;
+    }
+    this.mapService.stop();
+  }
+
+  @HostListener('window:focus')
+  onFocus() {
+    if (this.leave) {
+      this.mapService.onLeavePage();
+      this.leave = false;
+    }
   }
 }

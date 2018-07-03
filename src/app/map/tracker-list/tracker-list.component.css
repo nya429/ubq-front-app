@@ -2,6 +2,27 @@
     float: right;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+#panel-btn-refresh span{
+    opacity: .7;
+    transition: .3s;
+    transform: rotate(0);
+}
+
+#panel-btn-refresh:hover span  {
+    opacity: 1;
+    transition: .3s;
+    transform: rotate(180deg);
+}
+
+#panel-btn-refresh:active span {
+    opacity: .5;
+    transition: .3s;
+}
+
 #trackers-list {
     overflow-y: scroll;
     height: 463px;    
@@ -40,3 +61,4 @@
     border-radius: 10px;
     background-color: #bce8f1;
 }
+

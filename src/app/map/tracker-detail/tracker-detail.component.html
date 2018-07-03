@@ -26,25 +26,35 @@
          </div>
           <div class=" col-md-9 col-lg-9 "> 
             <table class="table" *ngIf="!editMode">
+              <thead>
+                  <tr>
+                      <h4 class="detail-name">{{ fullName }}</h4> 
+                      <span> {{ participant?.priorityStatus | priorityStatus}}</span>
+                  </tr>
+ 
+                <div >
+                   
+                </div>
+              </thead>
               <tbody>
                 <br>
                 <tr>
                   <td class='td-title'>Tracker-ID :</td>
-                  <td class='td-value'>#{{ id }}</td>
+                  <td class='td-value'>#{{ tagId }}</td>
                   <td class='td-title'>Name :</td>
-                  <td class='td-value'>{{ name }}</td>
+                  <td class='td-value'>{{ fullName }}</td>
                 </tr>
                 <tr>
                     <td class='td-title'>Status :</td>
                     <td class='td-value'>Stable</td>
-                    <td class='td-title'>Gender :</td>
-                    <td class='td-value'>N/A</td>
+                    <td class='td-title'>Company :</td>
+                    <td class='td-value'>{{ participant?.companyName }}</td>
                 </tr>
                 <tr>
                     <td class='td-title'>Online time :</td>
-                    <td class='td-value'>02h:13m</td>
-                    <td class='td-title'>Departmnet :</td>
-                    <td class='td-value'>N/A</td>
+                    <td class='td-value'>{{ time | date:'MM/d/y HH:mm:ss'}}</td>
+                    <td class='td-title'>Job title :</td>
+                    <td class='td-value'>{{ participant?.jobTitle }}</td>
                 </tr>
                
               </tbody>
@@ -55,14 +65,14 @@
                   <br>
                   <tr>
                     <td class='td-title'>Tracker-ID :</td>
-                    <td class='td-value'>#{{ id }}</td>
+                    <td class='td-value'>#{{ tagId }}</td>
                     <td class='td-title'>Name :</td>
                     <td class='td-value'>
                         <input 
                         type="text" 
                         id="tracker-alias" 
                         class="form-control"
-                        [ngModel]="name"
+                        [ngModel]='name'
                         name="alias"
                         maxlength="20"
                        >
