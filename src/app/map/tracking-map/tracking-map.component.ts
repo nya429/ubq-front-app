@@ -19,6 +19,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private onStartSubscription: Subscription;
   private onStopSubscription: Subscription;
   private onTestSubscription: Subscription;
+  private popupSubscription: Subscription;
+  private loadingStatusSubscription: Subscription;
 
   private base = {width: 100, height: 50};
   private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
@@ -28,6 +30,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private svg: any;
   private trackerPoints: any;
   private trackerInfoG: any;
+  private mapPopup: any;
   private width: number;
   private height: number;
   private xScale: any;
@@ -37,6 +40,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private yAxis: any;
   private trackerInfoWidth = 150;
   private trackerInfoHeight = 30;
+  private popupWidth = 250;
+  private popupHeight = 150;
 
   private selectedPoint;
 
@@ -47,6 +52,18 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.onStartSubscription = this.mapService.onStarted.subscribe(() => this.onStart());
     this.onStopSubscription = this.mapService.onStopped.subscribe(() => this.onStop());
     this.onTestSubscription = this.mapService.onTest.subscribe(() => this.onTest());
+    this.popupSubscription = this.mapService.onLoading.subscribe(() => {
+      this.onPopup('Loading...');
+    });
+    // TODO Check rxjs
+    this.loadingStatusSubscription = this.mapService.onLoaded.subscribe(status => {
+      if (status) {
+        this.onPopupFade(false);
+      } else {
+        this.onPopup('Loading Failed');
+        this.onPopupFade(true);
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -54,9 +71,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.onStartSubscription.unsubscribe();
     this.onStopSubscription.unsubscribe();
     this.onTestSubscription.unsubscribe();
+    this.popupSubscription.unsubscribe();
+    this.loadingStatusSubscription.unsubscribe();
   }
 
   onStop() {
+    if (this.mapService.mapStarted) {
+      this.onPopup('Map Stopped');
+      this.onPopupFade(true);
+    }
     this.mapService.stopService();
     if (this.trackersChangeSubscription) {
       this.trackersChangeSubscription.unsubscribe();
@@ -74,25 +97,26 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   onStart() {
     this.mapService.mapStopped = false;
-    this.mapService.stopped.emit(false);
+    this.mapService.stopped.next(false);
     if (!this.mapService.mapInitiated) {
       this.mapService.mapInitiated = true;
-      this.mapService.intiated.emit(true);
+      this.mapService.intiated.next(true);
       this.trackers = this.mapService.getTrackers();
+      console.log(this.trackers);
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
     }
 
     if (this.mapService.mapStarted) {
       this.mapService.mapStarted = false;
-      this.mapService.started.emit(false);
+      this.mapService.started.next(false);
       this.trackersChangeSubscription.unsubscribe();
     } else {
       this.mapService.mapStarted = true;
-      this.mapService.started.emit(true);
+      this.mapService.started.next(true);
       this.trackersChangeSubscription = this.mapService.trackerLocChanges.subscribe(
         (trackers: Tracker[]) => {
-          console.log(this.trackers[0].xCrd);
+          // console.log(this.trackers[0].xCrd);
           this.trackers = trackers;
           this.refreshTrackers();       // FIXME solove muttable copy issue;
           this.movePoint(this.trackers);
@@ -109,21 +133,21 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   onTest() {
     this.mapService.mapStopped = false;
-    this.mapService.stopped.emit(false);
+    this.mapService.stopped.next(false);
     if (!this.mapService.mapInitiated) {
       this.mapService.mapInitiated = true;
-      this.mapService.intiated.emit(true);
+      this.mapService.intiated.next(true);
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
       this.mapService.testMove();
     }
     if (this.mapService.mapStarted) {
       this.mapService.mapStarted = false;
-      this.mapService.started.emit(false);
+      this.mapService.started.next(false);
       this.trackersChangeSubscription.unsubscribe();
     } else {
       this.mapService.mapStarted = true;
-      this.mapService.started.emit(true);
+      this.mapService.started.next(true);
       this.trackersChangeSubscription = this.mapService.trackerLocChanges.subscribe(
         (trackers: Tracker[]) => {
           this.trackers = trackers;
@@ -154,21 +178,22 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
               .range([0, element.offsetHeight - this.padding.top - this.padding.bottom]);
     d3.select(element).append('svg');
     this.svg = d3.select('svg');
-    this.svg.attr('width', element.offsetWidth)
-              .attr('height', element.offsetHeight)
-              .append('rect')
-              .attr('class', 'trackerMapBase')
-              .attr('width', element.offsetWidth)
-              .attr('height', element.offsetHeight)
-              // .style('stroke', 'cadetblue')
-              // .style('stroke-width', 5)
-              .attr('fill', 'white')
-              .transition()
-              .duration(1000)
-              .attr('fill', 'darkslategray');
+    this.svg
+      .attr('width', element.offsetWidth)
+      .attr('height', element.offsetHeight)
+      .append('rect')
+      .attr('class', 'trackerMapBase')
+      .attr('width', element.offsetWidth)
+      .attr('height', element.offsetHeight)
+      // .style('stroke', 'cadetblue')
+      // .style('stroke-width', 5)
+      .attr('fill', 'white')
+      .transition()
+      .duration(1000)
+      .attr('fill', 'darkslategray');
 
-      const imgs = this.svg.selectAll('svg').data([0]);
-      imgs.enter()
+    const imgs = this.svg.selectAll('svg').data([0]);
+    imgs.enter()
       .append('svg:image')
       .attr('xlink:href', '../../../assets/store_floorplan.svg')
       .attr('x', -1270)
@@ -182,13 +207,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('opacity', .6);
 
     this.svg.on('click', () => this.diselecPoint());
+    this.attachPopup(element.offsetWidth, element.offsetHeight);
   }
 
   initiateTrackPoint(trackers: Tracker[]) {
     const that = this;
 
-    this.trackerPoints = this.svg.selectAll('g')
-      .data(trackers)
+    this.trackerPoints = this.svg.insert('g')
+      .selectAll('g')
+      .data(() => that.trackers)
       .enter().append('circle');
 
     this.trackerPoints.on('mouseover', function(d, i) {
@@ -269,7 +296,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       trackerPoints.remove();
       this.mapService.mapStopping = false;
-      this.mapService.stopping.emit(false);
+      this.mapService.stopping.next(false);
     }, 800);
   }
 
@@ -361,7 +388,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         .attr('ry', 5);
     this.trackerInfoG.insert('text')
         .attr('class', 'trackerInfoText')
-        .text(d => `ID: ${d.alias} (${d.xCrd}, ${d.yCrd})`)
+        .text(d => `ID: ${d.alias} (${Math.floor(d.xCrd)}, ${Math.floor(d.yCrd)})`)
         .style('text-anchor', 'middle')
         .attr('fill', 'white')
         .attr('font-weight', 'bolder')
@@ -415,6 +442,68 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   refreshTrackers() {
      this.trackerPoints.data(this.trackers);
-     // TODO add change color function
   }
+
+  attachPopup(width: number, height: number) {
+    if (this.mapPopup) {
+      return false;
+    }
+
+    const that = this;
+    this.mapPopup = this.svg.insert('g')
+      .attr('class', 'mapPopup')
+      .style('opacity', 0);
+
+    this.mapPopup.insert('rect')
+      .attr('class', 'popupBackground')
+      .style('fill', 'black')
+      .style('fill-opacity', .4)
+      .attr('width', this.popupWidth)
+      .attr('height', this.popupHeight)
+      .attr('x', width / 2 - this.popupWidth / 2)
+      .attr('y', height / 2 - this.popupHeight / 2 )
+      .attr('rx', 5)
+      .attr('ry', 5);
+    this.mapPopup.insert('text')
+      .attr('class', 'popupText')
+      .style('opacity', .8)
+      .style('text-anchor', 'middle')
+      .attr('fill', 'white')
+      .attr('font-weight', 'bolder')
+      .attr('font-size', '24px')
+      .attr('x', width / 2 )
+      .attr('y', height / 2 + 10 );
+  }
+
+  onPopup(text: string) {
+    if (!this.mapPopup) {
+      return false;
+    }
+      this.onPopupChange(text);
+
+      this.mapPopup
+      .transition(100)
+      .ease(d3.easeLinear)
+      .style('opacity', 1);
+  }
+
+  onPopupChange(text: string) {
+    if (!this.mapPopup) {
+      return false;
+      }
+    this.mapPopup.select('.popupText')
+    .text(text);
+  }
+
+  onPopupFade(delay: boolean) {
+    if (!this.mapPopup) {
+      return false;
+      }
+    this.mapPopup
+    .transition(500)
+    .ease(d3.easeLinear)
+    .delay(d => delay ? 800 : 0)
+    .style('opacity', 0);
+  }
+
 }

@@ -42,3 +42,9 @@
     width: 100%;
     white-space: nowrap;
 }
+
+.detail-time {
+    white-space: nowrap;
+    color: #337ab7;
+    font-size: 16px;
+}

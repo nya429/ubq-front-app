@@ -21,22 +21,24 @@ export class MapService {
     mapStopping = false;
     mapStopped = true;
 
-    started = new EventEmitter<boolean>();
-    stopped = new EventEmitter<boolean>();
-    stopping = new EventEmitter<boolean>();
-    intiated = new EventEmitter<boolean>();
-    onStarted = new EventEmitter<boolean>();
-    onStopped = new EventEmitter<boolean>();
-    dropdownFolded = new EventEmitter<boolean>();
+    started = new Subject<boolean>();
+    stopped = new Subject<boolean>();
+    stopping = new Subject<boolean>();
+    intiated = new Subject<boolean>();
+    onStarted = new Subject<boolean>();
+    onStopped = new Subject<boolean>();
+    onLoading = new Subject<boolean>();
+    onLoaded = new Subject<boolean>();
+    dropdownFolded = new Subject<boolean>();
 
     pageBlur = new Subject<boolean>();
     pageBlurHinted = false;
 
     // TODO restructure the selected Tracker
     selectedTrackerId: number;
-    selectedTrackerIndex = new EventEmitter<number>();
+    selectedTrackerIndex = new Subject<number>();
     hasSelectedTracker = new Subject<number>();
-    hideTrackerIndex = new EventEmitter<number>();
+    hideTrackerIndex = new Subject<number>();
 
     // tracker history local
     trackerLocsReady = new Subject<any> ();
@@ -68,7 +70,7 @@ export class MapService {
     ];
 
     start() {
-        this.onStarted.emit(this.mapStarted);
+        this.onStarted.next(this.mapStarted);
     }
 
     stop() {
@@ -76,18 +78,18 @@ export class MapService {
             this.trackerLocsListener.unsubscribe();
         }
 
-        this.onStopped.emit(this.mapStopped);
+        this.onStopped.next(this.mapStopped);
     }
 
     resetServiceState() {
         this.mapStopping = true;
-        this.stopping.emit(this.mapStopping);
+        this.stopping.next(this.mapStopping);
         this.mapStarted = false;
-        this.started.emit(this.mapStarted);
+        this.started.next(this.mapStarted);
         this.mapStopped = true;
-        this.stopped.emit(this.mapStopped);
+        this.stopped.next(this.mapStopped);
         this.mapInitiated = false;
-        this.intiated.emit(this.mapInitiated);
+        this.intiated.next(this.mapInitiated);
     }
 
     stopService() {
@@ -140,7 +142,7 @@ export class MapService {
     }
 
 　　onSelectedTracker(id: number) {
-        this.selectedTrackerIndex.emit(id);
+        this.selectedTrackerIndex.next(id);
     }
 
     onTrackerHasSelected(id: number) {
@@ -160,7 +162,7 @@ export class MapService {
         );
         this.trackers = newTrackers;
         this.trackerLocChanges.next(this.trackers.slice());
-        this.hideTrackerIndex.emit(id);
+        this.hideTrackerIndex.next(id);
     }
 
     updateTrackerInfo(index: number, form: any) {
@@ -171,7 +173,7 @@ export class MapService {
     }
 
     onCompanyDropdownFolded(folded: boolean) {
-        this.dropdownFolded.emit(folded);
+        this.dropdownFolded.next(folded);
     }
 
 
@@ -249,6 +251,8 @@ export class MapService {
                 if (participants && participants.length > 0) {
                     this.stop();
                     this.changeTrackers(participants);
+                } else {
+                    this.onLoaded.next(false);
                 }
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
@@ -259,6 +263,7 @@ export class MapService {
     testLocal() {
         // map particiapnt id, pass the id
         this.getLastActiveTrackers();
+        this.onLoading.next(true);
         const listChangeSub = this.trackerListChanges.subscribe(() => {
             listChangeSub.unsubscribe();
             const customer_ids =  this.trackers.map(tracker => tracker.tagId);
@@ -267,7 +272,6 @@ export class MapService {
             });
             let customer_ids_index = 1;
             this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
-                console.log('customer_ids_index', customer_ids_index);
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
                         trac.setCrd(data[0].loc_x/20*95, data[0].loc_y/17*45);
@@ -275,7 +279,8 @@ export class MapService {
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
                             this.trackerListChanges.next();
-                            this.onTest.emit(this.mapStarted);
+                            this.onLoaded.next(true);
+                            this.onTest.next(this.mapStarted);
                          } else {
                            customer_ids_index++;
                          }
@@ -287,7 +292,7 @@ export class MapService {
                 // this.trackers.push(tracker);
                 // if (customer_ids_index === customer_ids.length) {
                 //    this.trackerListChanges.next();
-                //    this.onTest.emit(this.mapStarted);
+                //    this.onTest.next(this.mapStarted);
                 // } else {
                 //   customer_ids_index++;
                 // }

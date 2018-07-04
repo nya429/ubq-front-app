@@ -95,9 +95,41 @@
         </div>  
       </form> 
         <div class="col-sm-3" align="right">
-            <button class="btn btn-danger"  (click)='getHistory()'>test</button>
-            <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
-            <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button>
+          
+          <!-- <button class="btn btn-danger"  (click)='getHistory()'>test</button>
+          <button class="btn btn-success" [disabled]="stopping" (click)='onStart()'>{{ started ? 'Pause' : 'Start'}}</button>
+          <button class="btn btn-danger" [disabled]="!initiated" (click)='onStop()'>Stop</button> -->
+          
+          <div class="playmode"  [ngClass]="{'realtime': !playBackMode, 
+          'playback': playBackMode}" >
+              <div class="playmode-icon">
+                  <i class="fa fa-history" style="font-size:28px"></i>
+              </div>
+              <i class="penal-toggle fa fa-toggle-on cursor-pointer" (click)='onToggle()'
+              [ngClass]="{'cursor-notallow': !stopped }" 
+              style="font-size:36px"></i>
+              <div class="playmode-icon">
+                  <i class="fa fa-mail-forward" style="font-size:28px"></i>
+              </div>
+              
+          </div>
+          
+          <span (click)='onStart()' 
+          [ngClass]="{
+          'action-start-busy': stopping,
+          'glyphicon-play':  (initiated && !started) || stopped,
+          'glyphicon-pause':  started,
+          'action-start-off': (initiated && !started),
+          'action-start-on': started }" 
+          class="penal-action glyphicon glyphicon-play"></span>
+
+          <span (click)='onStop()' 
+          [ngClass]="{'action-stop-disable': !initiated && !started,
+          'action-stop-busy': stopping,
+          'action-stop-on': started || (initiated && !started) }" 
+          class="penal-action glyphicon glyphicon-off"></span>
+      
+          
         </div>
     </div>
   </div>

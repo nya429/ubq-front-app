@@ -27,6 +27,9 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   initiated: boolean;
   stopped: boolean;
   stopping: boolean;
+
+  playBackMode = false;
+
   filterInputFocused = false;
   filterFolded = true;
   dropdownFolded = true;
@@ -44,6 +47,7 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.companyFilter = this.companyFilterNull;
+    this.setStatus();
     this.onStartSubscription = this.mapService.started.subscribe(started => this.started = started);
     this.onStopSubscription = this.mapService.stopped.subscribe(stopped => this.stopped = stopped);
     this.onInitiatedSubscription = this.mapService.intiated.subscribe(initiated => this.initiated = initiated);
@@ -66,11 +70,20 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   }
 
   onStart() {
-    this.mapService.start();
+    if (this.stopping) {
+      return false;
+    }
+    if (this.playBackMode) {
+      this.getHistory();
+    } else {
+     this.mapService.start();
+    }
   }
 
   onStop() {
-    this.mapService.stop();
+    if (this.initiated) {
+      this.mapService.stop();
+    }
   }
 
   onFilterInputClick() {
@@ -121,5 +134,18 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
 
   getHistory() {
     this.mapService.testLocal();
+  }
+
+  setStatus() {
+    this.initiated = this.mapService.mapInitiated;
+    this.started = this.mapService.mapStarted;
+    this.stopped = this.mapService.mapStopped;
+    this.stopping = this.mapService.mapStopping;
+  }
+
+  onToggle() {
+    if (this.stopped) {
+      this.playBackMode = !this.playBackMode;
+    }
   }
 }

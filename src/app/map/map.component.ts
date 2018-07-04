@@ -34,7 +34,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   @HostListener('window:blur')
   onLeave() {
-    if (this.mapService.started) {
+    if (this.mapService.mapStarted) {
       this.leave = true;
     }
     this.mapService.stop();

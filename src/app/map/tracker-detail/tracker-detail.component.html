@@ -28,10 +28,13 @@
             <table class="table" *ngIf="!editMode">
               <thead>
                   <tr>
-                      <h4 class="detail-name">{{ fullName }}</h4> 
-                      <span> {{ participant?.priorityStatus | priorityStatus}}</span>
+                  
+                        <h4 class="detail-name">{{ fullName }}</h4> 
+                        <span> {{ participant?.priorityStatus | priorityStatus}}</span>
+                    
+                  
+                    <td class='detail-time'>{{ time | date:'MM/d/y HH:mm:ss'}}</td>
                   </tr>
- 
                 <div >
                    
                 </div>
@@ -52,7 +55,7 @@
                 </tr>
                 <tr>
                     <td class='td-title'>Online time :</td>
-                    <td class='td-value'>{{ time | date:'MM/d/y HH:mm:ss'}}</td>
+                    <td class='td-value'>{{ toHHMMSS(timeCurrent) }} / {{ toHHMMSS(timeTotal) }}</td>
                     <td class='td-title'>Job title :</td>
                     <td class='td-value'>{{ participant?.jobTitle }}</td>
                 </tr>

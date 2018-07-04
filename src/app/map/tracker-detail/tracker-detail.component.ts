@@ -19,7 +19,9 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   tracker: Tracker;
   tagId: string;
   fullName: string;
-  time: number;
+  time = null;
+  timeTotal = 0;
+  timeCurrent = 0;
   status: number;
   note: string;
   participant: Participant;
@@ -28,6 +30,7 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
   private hasSelectedTrackerSubscription: Subscription;
   private trackerLocChangeSubscription: Subscription;
   private trackerListChangeSubscription: Subscription;
+  private mapStopSub: Subscription;
   constructor(private mapService: MapService) { }
 
   ngOnInit() {
@@ -48,8 +51,13 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
       this.setTrackerDetail(null);
     });
     this.trackerLocChangeSubscription = this.mapService.trackerLocChanges.subscribe(data => {
-        const time = this.editedTrackerIndex ? this.mapService.getTrackerTime(this.editedTrackerIndex) : 0;
+        const time = this.editedTrackerIndex ? this.mapService.getTrackerTime(this.editedTrackerIndex) : null;
         this.time = time;
+        this.timeCurrent = this.tracker && this.tracker.locs && this.tracker.locs.length > 0 ?
+        this.tracker.locs[this.tracker.currentLoc].time - this.tracker.locs[0].time : 0;
+    });
+    this.mapStopSub = this.mapService.onStopped.subscribe(() => {
+      this.time = null;
     });
   }
 
@@ -58,6 +66,7 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
     this.trackerLocChangeSubscription.unsubscribe();
     this.selectedTrackerSubscription.unsubscribe();
     this.hasSelectedTrackerSubscription.unsubscribe();
+    this.mapStopSub.unsubscribe();
   }
 
   onEdit() {
@@ -79,10 +88,14 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
 
   setTrackerDetail(index: number) {
     if  (index == null) {
+      this.editedTrackerIndex = null;
       this.tracker = null;
       this.tagId = null;
       this.fullName = null;
       this.note = null;
+      this.time = null;
+      this.timeTotal = 0;
+      this.timeCurrent = 0;
       return;
     } else {
       this.editedTrackerIndex = index - 1;
@@ -92,6 +105,21 @@ export class TrackerDetailComponent implements OnInit, OnDestroy {
       this.fullName = this.tracker.participant ? `${this.participant.firstName} ${this.participant.lastName}` : this.tracker.alias;
       this.note = this.tracker.note ? this.tracker.note : 'N/A';
       this.time = this.tracker.time ? this.tracker.time : null;
+      this.timeTotal = this.tracker.locs && this.tracker.locs.length > 0 ?
+       this.tracker.locs[this.tracker.locs.length - 1].time - this.tracker.locs[0].time : 0;
+      this.timeCurrent = this.tracker.locs && this.tracker.locs.length > 0 ?
+       this.tracker.locs[this.tracker.currentLoc].time - this.tracker.locs[0].time : 0;
     }
+  }
+
+  toHHMMSS  (sec_num: number) {
+    const hours   = Math.floor(sec_num / 3600);
+    const minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    const seconds = sec_num - (hours * 3600) - (minutes * 60);
+    const hourStr = hours < 10 ? '0' + hours : '' + hours;
+    const minuteStr = minutes < 10 ? '0' + minutes : '' + minutes;
+    const secondStr = seconds < 10 ? '0' + seconds : '' + seconds;
+
+    return `${hourStr}:${minuteStr}:${secondStr}`;
   }
 }
