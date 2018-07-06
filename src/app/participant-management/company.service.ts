@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { Company } from './../shared/company.model';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
+import { SubDomains } from '../shared/httpCfg';
 
 @Injectable()
 export class CompanyService {
@@ -24,12 +25,13 @@ export class CompanyService {
     private term: string;
     private resultCode: number;
 
+    private subDomains = SubDomains;
     private httpOptions = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
           'Authorization': 'my-auth-token'
         }),
-        companyUrl: 'http://localhost:3000/company'
+         companyUrl: this.subDomains['company'],
       };
 
     constructor(private httpClient: HttpClient) { }

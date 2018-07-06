@@ -7,11 +7,23 @@ import { Subject } from 'rxjs/Subject';
 import { Tracker } from '../shared/tracker.model';
 import { Http } from '@angular/http';
 import { Subscription } from 'rxjs/Subscription';
+import { SubDomains } from '../shared/httpCfg';
 
 @Injectable()
 export class MapService {
     constructor(private httpClient: HttpClient) {}
-    // TODO: change name to trackersCrdChanges
+
+    private subDomains = SubDomains;
+    private httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'my-auth-token'
+      }),
+      participantUrl: this.subDomains['participant'],
+      eventUrl: this.subDomains['event'],
+      // url: 'http://192.168.0.108:3000/participant'
+    };
+
     trackerLocChanges = new Subject<Tracker[]>();
     trackerListChanges = new Subject<Tracker[]>();
     serviceInterval: any;
@@ -178,7 +190,6 @@ export class MapService {
 
 
     getParticipantListByFilters(filters: object, offset?: number, limit?: number) {
-        const participanUrl = 'http://localhost:3000/participant/list/filter';
         const urlSuffix = 'list/filter';
         let options = new HttpParams();
         if (offset) {
@@ -186,7 +197,7 @@ export class MapService {
         }
         // Check participant service if need more condition filter
 
-        return this.httpClient.post(`${participanUrl}`, filters, {
+        return this.httpClient.post(`${this.httpOptions.participantUrl}/${urlSuffix}`, filters, {
             observe: 'body',
             responseType: 'json',
             params: options
@@ -222,9 +233,10 @@ export class MapService {
     }
 
     getParticipantLocalsByTime(id: string, begin?: number, end?: number) {
-        const trackerLocsUrl = 'http://localhost:3000/event/tracker/locs';
+        const urlSuffix = 'tracker/locs';
+        // const trackerLocsUrl = 'http://localhost:3000/event/tracker/locs';
         const con = {'begin': begin, 'end': end, 'id': id};
-        return this.httpClient.post(`${trackerLocsUrl}`, con, {
+        return this.httpClient.post(`${this.httpOptions.eventUrl}/${urlSuffix}`, con, {
             observe: 'body',
             responseType: 'json',
           })
@@ -239,9 +251,10 @@ export class MapService {
     }
 
     getLastActiveTrackers() {
-        const trackerUrl = 'http://localhost:3000/event/tracker/lastActive';
+        const urlSuffix = 'tracker/lastActive';
+        // const trackerUrl = 'http://localhost:3000/event/tracker/lastActive';
         const limit = 15;
-        return this.httpClient.get(`${trackerUrl}`, {
+        return this.httpClient.get(`${this.httpOptions.eventUrl}/${urlSuffix}`, {
             observe: 'body',
             responseType: 'json',
           })

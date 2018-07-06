@@ -24,7 +24,7 @@ export class TrackerListItemComponent implements OnInit, OnDestroy, AfterViewChe
   color: string;
   alias: string;
 
-  constructor(private mapService: MapService,
+  constructor(public mapService: MapService,
     private render: Renderer2) { }
 
   ngOnInit() {
