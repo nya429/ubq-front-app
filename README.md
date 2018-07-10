@@ -14,7 +14,7 @@ In terminal/console window, run `node -v` and `npm -v` to check your installed v
 
 Set up the Development Environment by install the **Angular CLI** globally.
 ```
-npm install -g @angular/clil
+npm install -g @angular/cli
 ```
 
 ### Installing
@@ -31,7 +31,11 @@ npm install
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run 
+```
+ng serve
+``` 
+for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
