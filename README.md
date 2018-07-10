@@ -6,22 +6,28 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-###Prerequisites
+### Prerequisites
 Install **Node.js®** and npm if they are not already on your machine.
 
 >Make sure you have installed at least **Node.js _8.x_** or **_greater_** and **npm _version 5.x_** or **_greter_**.
 In terminal/console window, run `node -v` and `npm -v` to check your installed version.
 
 Set up the Development Environment by install the **Angular CLI** globally.
-```npm install -g @angular/clil```
+```
+npm install -g @angular/clil
+```
 
-###Installing
+### Installing
 
 Clone project into local environment.
-```git clone https://github.com/nya429/ubq-front-app.git```
+```
+git clone https://github.com/nya429/ubq-front-app.git
+```
 
 Install project by run: 
-```npm install```
+```
+npm install
+```
 
 ## Development server
 
