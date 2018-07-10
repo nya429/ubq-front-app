@@ -31,11 +31,17 @@ npm install
 
 ## Development server
 
-Run 
+For a dev server run:
 ```
 ng serve
 ``` 
-for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+
+
+### HTTP Client Configuration
+
+To switch between your local api server and the api server hosted on Amazon EC2, set **option** in **src/app/shared/httpCfg.ts**.
+
 
 ## Code scaffolding
 
