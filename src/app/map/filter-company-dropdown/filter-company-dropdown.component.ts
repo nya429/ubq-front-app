@@ -1,3 +1,4 @@
+import { CompanyService } from './../../participant-management/company.service';
 import { NgForm } from '@angular/forms';
 import { Component, OnInit, EventEmitter, ViewChild } from '@angular/core';
 
@@ -20,10 +21,11 @@ export class FilterCompanyDropdownComponent implements OnInit {
   inputFocus: boolean;
 
   constructor(private pmService: ParticipantService,
+              private companySerivce: CompanyService,
              private mapService: MapService) { }
 
   ngOnInit() {
-    this.pmService.getCompanys(' ').subscribe(
+    this.companySerivce.getCompanys(' ').subscribe(
       result => {
         this.companys = result['data'];
       });
@@ -50,7 +52,7 @@ export class FilterCompanyDropdownComponent implements OnInit {
     }
      this.companyFocused = true;
      this.companysLookingUp = true;
-     this.serchTimer = setTimeout(() => this.pmService.getCompanys(term).subscribe(
+     this.serchTimer = setTimeout(() => this.companySerivce.getCompanys(term).subscribe(
       result => {
         this.companysLookingUp = false;
         this.companys = result['data'];

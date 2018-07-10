@@ -145,4 +145,17 @@ export class CompanyService {
           responseType: 'json'
         });
       }
+
+      getCompanys(term: string) {
+        if (!term) {
+          return;
+        }
+        let options = new HttpParams();
+        options = options.append('name', term.trim());
+        return this.httpClient.get(`${this.httpOptions.companyUrl}/lookup`, {
+          observe: 'body',
+          responseType: 'json',
+          params: options
+        });
+     }
 }

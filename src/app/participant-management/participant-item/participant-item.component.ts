@@ -1,3 +1,4 @@
+import { CompanyService } from './../company.service';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -38,7 +39,8 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private pmService: ParticipantService) { }
+              private pmService: ParticipantService,
+              private compnyService: CompanyService) { }
 
  ngOnDestroy() {
    this.participantChangedSubscription.unsubscribe();
@@ -157,7 +159,7 @@ export class ParticipantItemComponent implements OnInit, OnDestroy {
     }
      this.companyFocused = true;
      this.companysLookingUp = true;
-     this.serchTimer = setTimeout(() => this.pmService.getCompanys(this.participantForm.value.companyName).subscribe(
+     this.serchTimer = setTimeout(() => this.compnyService.getCompanys(this.participantForm.value.companyName).subscribe(
       result => {
         this.companysLookingUp = false;
         this.companys = result['data'];

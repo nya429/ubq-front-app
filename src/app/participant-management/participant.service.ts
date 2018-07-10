@@ -32,6 +32,7 @@ export class ParticipantService {
       'Authorization': 'my-auth-token'
     }),
     participantUrl: this.subDomains['participant'],
+    eventUrl: this.subDomains['event'],
     // url: 'http://192.168.0.108:3000/participant'
   };
 
@@ -255,30 +256,30 @@ export class ParticipantService {
     }
     let options = new HttpParams();
     options = options.append('key', term.trim());
-    return this.httpClient.get(`http://localhost:3000/event/tracker/lookup`, {
+    return this.httpClient.get(`${this.httpOptions.eventUrl}/tracker/lookup`, {
       observe: 'body',
       responseType: 'json',
       params: options
     });
   }
 
-  getCompanys(term: string) {
-    if (!term) {
-      return;
-    }
-    let options = new HttpParams();
-    options = options.append('name', term.trim());
-    return this.httpClient.get(`http://localhost:3000/company/lookup`, {
-      observe: 'body',
-      responseType: 'json',
-      params: options
-    });
-  }
+  // getCompanys(term: string) {
+  //   if (!term) {
+  //     return;
+  //   }
+  //   let options = new HttpParams();
+  //   options = options.append('name', term.trim());
+  //   return this.httpClient.get(`http://localhost:3000/company/lookup`, {
+  //     observe: 'body',
+  //     responseType: 'json',
+  //     params: options
+  //   });
+  // }
 
   isTrackerValid(tracker_id: string) {
     let options = new HttpParams();
     options = options.append('id', tracker_id.trim());
-    return this.httpClient.get(`http://localhost:3000/event/tracker/valid`, {
+    return this.httpClient.get(`${this.httpOptions.eventUrl}/tracker/valid`, {
       observe: 'body',
       responseType: 'json',
       params: options
