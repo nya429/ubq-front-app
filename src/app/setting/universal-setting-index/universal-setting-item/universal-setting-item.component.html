@@ -1,29 +1,30 @@
-<div class="col-md-6">
-  <div *ngIf='!editMode' class="div">
-      <div class="col-md-2" align=right>
-          <h4>{{ key }}<span> - </span></h4>
-      </div>
-      <div class="col-md-2">
-        <h4>{{ value }}</h4>
-      </div>
-  </div>
-  <form *ngIf='editMode' [formGroup]="settingForm" (ngSubmit)="onUpdate()">
-      <div class="col-md-2 form-group">
-          <input type="text" class="form-control" id="key" formControlName="key">
+<div class="row setting-row">
+    <div *ngIf='!editMode'>
+        <div class="col-xs-5 margin form-padding">
+            <span>{{ key }}</span>
         </div>
-        <div class="col-md-2 form-group">
-          <input type="text" class="form-control" id="value" formControlName="value">
+        <div class="col-xs-5 margin form-padding">
+            <span>{{ value }}</span>
         </div>
-  </form>
-  <div class="col-md-2">
-    <span *ngIf='!editMode'>
-        <a (click)='onEdit()'  style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-pencil"></span></a>
-        <a (click)='onRemove()' style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
-    </span>
-    <span *ngIf='editMode'>
-        <a (click)='onUpdate()'  style="cursor:pointer;"><span title='Edit' class="glyphicon glyphicon-ok"></span></a>
-        <a (click)='onCancle()' style="cursor:pointer;"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
-    </span>
-  </div>
+    </div>
+    <form *ngIf='editMode' [formGroup]="settingForm" (ngSubmit)="onUpdate()">
+        <div class="col-xs-5 form-group no-padding no-margin">
+            <input (keydown.enter)='onUpdate()' (keydown.esc)='onCancle()'  type="text" class="form-control" id="key" formControlName="key">
+        </div>
+        <div class="col-xs-5 form-group no-padding no-margin">
+            <input (keydown.enter)='onUpdate()' (keydown.esc)='onUpdate()' type="text" class="form-control" id="value" formControlName="value">
+        </div>
+    </form>
+    <div class="col-xs-2 margin form-padding align-box " align=right>
+        <span *ngIf='!editMode' class="inline" >
+            <a (click)='onEdit()'  class="edit-icon pointer"><span title='Edit' class="glyphicon glyphicon-pencil edit-icon-hidden"></span> Edit</a>
+            <a (click)='onRemove()' class="edit-icon pointer"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
+        </span>
+        <span *ngIf='editMode' class="inline" >
+            <a (click)='onUpdate()'  class="edit-icon pointer"><span title='Edit' class="glyphicon glyphicon-ok"></span></a>
+            <a (click)='onCancle()'  class="edit-icon pointer"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
+        </span>
+    </div>
 </div>
 
+    

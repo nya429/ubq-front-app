@@ -37,7 +37,6 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   }
 
   initForm() {
-    console.log('here');
     this.settingForm = new FormGroup({
       'settingId': new FormControl(this.settingId),
       'key': new FormControl(this.key, [Validators.required, Validators.max(50)]),

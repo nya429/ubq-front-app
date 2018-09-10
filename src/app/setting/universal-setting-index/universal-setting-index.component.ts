@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 
 import { SettingService } from './../setting.service';
 import { Setting } from '../../shared/setting.model';
+import { listItemSlideStateTrigger } from '../setting.animation';
 
 @Component({
   selector: 'app-universal-setting-index',
   templateUrl: './universal-setting-index.component.html',
-  styleUrls: ['./universal-setting-index.component.css']
+  styleUrls: ['./universal-setting-index.component.css'],
+  animations: [ listItemSlideStateTrigger ]
 })
 export class UniversalSettingIndexComponent implements OnInit {
   settings: Setting[];
@@ -14,11 +16,12 @@ export class UniversalSettingIndexComponent implements OnInit {
   constructor(private settingService: SettingService) { }
 
   ngOnInit() {
-    this.settings = this.settingService.getSettings();
+    this.getSettings();
   }
 
   getSettings() {
-    this.settingService.getSettings();
+    setTimeout(() => this.settings = this.settingService.getSettings(), 1000);
+    ;
   }
 
 }

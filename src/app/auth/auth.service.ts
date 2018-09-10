@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   authedNav() {
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['/setting']);
   }
 
   logOut() {

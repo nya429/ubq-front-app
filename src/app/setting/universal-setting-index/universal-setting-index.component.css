@@ -1,0 +1,12 @@
+.bold {
+    font-weight: bolder;
+}
+
+.setting-row {
+    padding-bottom: 15px;
+    border-bottom: 2px solid grey;
+}
+
+app-universal-setting-item {
+    display: block;
+}

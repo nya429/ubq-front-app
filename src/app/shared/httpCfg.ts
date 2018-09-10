@@ -10,6 +10,7 @@ const SubDomains = {
     participant: `${HOST}participant`,
     company    : `${HOST}company`,
     event      : `${HOST}event`,
+    setting    : `${HOST}setting`,
 
 };
 
