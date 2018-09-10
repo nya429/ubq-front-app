@@ -15,6 +15,10 @@
     padding: 6px 12px;
 }
 
+.edit-padding {
+    padding: 6px 0px;
+}
+
 .setting-row {
     border-bottom: 2px solid lightgrey;
     display: block;
@@ -42,8 +46,6 @@
     border: 1px solid black;
 }
 
-.inline, 
-.inline>span {
-    display: inline;
-    text-overflow: hidden;
+.edit-indent {
+    padding-left: 28px;
 }

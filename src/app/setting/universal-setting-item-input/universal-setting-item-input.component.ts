@@ -33,11 +33,13 @@ export class UniversalSettingItemInputComponent implements OnInit {
   }
 
   onAdd() {
-    this.settingService.addSetting();
+    this.editMode = true;
+    // this.settingService.addSetting();
   }
 
   onCancle() {
-    this.initForm();
+    this.editMode = false;
+    // this.initForm();
   }
 
 }

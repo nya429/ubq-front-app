@@ -8,6 +8,8 @@ import { Setting } from '../shared/setting.model';
 
 @Injectable()
 export class SettingService {
+    defaultSettings: Setting[] = [];
+
     settings: Setting[] = [
         new Setting({key: 'key1', value: 1, id: 1}),
         new Setting({key: 'key2', value: 2, id: 2}),

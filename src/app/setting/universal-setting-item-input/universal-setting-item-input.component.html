@@ -1,16 +1,16 @@
 <div class="row">
-  <form [formGroup]="settingForm" (ngSubmit)="onUpdate()">
+  <form [formGroup]="settingForm" (ngSubmit)="onAdd()">
     <div class="row padding-line">
         <label class='col-xs-6 ' for="key"><h4>Add new Key pair</h4></label>
         <div class=" col-xs-6" align=right>
-            <span *ngIf='!editMode' >
-                <a class="btn btn-primary">Add</a>
-                <a class="btn btn-danger">Cancle</a>
+            <span>
+                <button class="btn btn-primary">Add</button>
+                <button *ngIf='editMode' class="btn btn-danger" disabled='!editMode'>Cancle</button>
             </span>
         </div>
     </div>
     <br>
-    <div class="form-group ">
+    <div *ngIf='editMode' class="form-group">
       <div class="col-xs-2">
           <label for="key">Key:</label>
       </div>
@@ -19,7 +19,7 @@
       </div>
     </div>
     <br>
-    <div class="form-group">
+    <div *ngIf='editMode'class="form-group">
         <div class="col-xs-2">
             <label for="value">Value: </label>
         </div>
