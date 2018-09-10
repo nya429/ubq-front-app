@@ -29,6 +29,7 @@
           <li  *ngIf="isAuth()" routerLinkActive="active"><a routerLink="/visitor"><span class="
             glyphicon glyphicon-user"></span> Visitors</a></li>
 
+
             <li *ngIf="!isAuth()" class="cursor-pointer" (click)='onNavClick(1)' [ngClass]="{'active': currentPos === 1}"><a routerLink="/home">Service</a></li>
             <li *ngIf="!isAuth()" class="cursor-pointer" (click)='onNavClick(2)' [ngClass]="{'active': currentPos === 2}"><a routerLink="/home">Solutions</a></li>
             <li *ngIf="!isAuth()" class="cursor-pointer" (click)='onNavClick(3)' [ngClass]="{'active': currentPos === 3}"><a routerLink="/home">Start</a></li>
@@ -47,6 +48,8 @@
             </ul>
           </li> -->
           <li *ngIf="!isAuth()" routerLinkActive="active"><a routerLink="/auth"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+          <li  *ngIf="isAuth()" routerLinkActive="active"><a routerLink="/setting"><span class="
+            glyphicon glyphicon-cog"></span> Config</a></li>
           <li *ngIf="isAuth()" style='display:block; width:50px;'>
                   <img alt="user Img" 
                   src="../assets/user.svg"
@@ -54,7 +57,8 @@
                  
           </li>
           <li *ngIf="isAuth()" style="cursor: pointer;" (click)='logOut()'><a><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
-          <li routerLinkActive="active"><a routerLink="/about">Manual</a></li>
+
+          <!-- <li routerLinkActive="active"><a routerLink="/about">Manual</a></li> -->
       </ul>
     </div><!-- /.navbar-collapse -->
   </div>

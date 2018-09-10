@@ -12,6 +12,7 @@ import { MapModule } from './map/map.module';
 import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { ParticipantManagementModule } from './participant-management/participant-management.module';
+import { SettingModule } from './setting/setting.module';
 import { SharedModule } from './shared/shared.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from './auth/auth.service';
@@ -31,7 +32,8 @@ import { AuthService } from './auth/auth.service';
     SharedModule,
     MapModule,
     DashboardModule,
-    ParticipantManagementModule
+    ParticipantManagementModule,
+    SettingModule
   ],
   providers: [AuthGuard, AuthService],
   bootstrap: [AppComponent]

@@ -17,6 +17,7 @@ const appRoutes: Routes = [
     {path: 'map', loadChildren: './map/map.module#MapModule', canActivate: [AuthGuard ]},
     {path: 'visitor', loadChildren: './participant-management/participant-management.module#ParticipantManagementModule',
            canActivate: [AuthGuard ]},
+    {path: 'setting', loadChildren: './setting/setting.module#SettingModule', canActivate: [AuthGuard]},
     { path: 'not-found',
         component: PageNotFoundComponent,
         data: {message: 'Page not Found'} },

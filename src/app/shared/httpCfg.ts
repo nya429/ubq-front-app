@@ -1,5 +1,5 @@
 // Set httpClinet HOST address here;
-const option = 'aws';
+const option = 'localhost';
 
 const hostOptions = {
     'localhost': 'http://localhost:3000/',
