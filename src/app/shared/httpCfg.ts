@@ -1,17 +1,24 @@
-// Set httpClinet HOST address here;
-const option = 'localhost';
-
+// Set httpClinet HOST address here; 
 const hostOptions = {
     'localhost': 'http://localhost:3000/',
     'aws'      : 'http://18.218.72.63:80/api/'
 };
-const HOST = hostOptions[option];
+
+let option = 'aws';
+let host = hostOptions[option];
+
 const SubDomains = {
-    participant: `${HOST}participant`,
-    company    : `${HOST}company`,
-    event      : `${HOST}event`,
-    setting    : `${HOST}setting`,
+    participant: `${host}participant`,
+    company    : `${host}company`,
+    event      : `${host}event`,
+    setting    : `${host}setting`,
 
 };
 
-export { SubDomains };
+function setHost(host: string) {
+    option = host;
+    host = hostOptions[option];
+    console.log(host);
+ }
+
+export { SubDomains, setHost };

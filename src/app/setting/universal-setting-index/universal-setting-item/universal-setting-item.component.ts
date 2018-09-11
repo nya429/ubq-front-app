@@ -14,7 +14,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   @Input() index: number;
   settingForm: FormGroup;
   key: string;
-  value: number;
+  value: string;
   settingId: number;
   editMode = false;
 
@@ -38,7 +38,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
 
   initForm() {
     this.settingForm = new FormGroup({
-      'settingId': new FormControl(this.settingId),
+      'id': new FormControl(this.settingId),
       'key': new FormControl(this.key, [Validators.required, Validators.max(50)]),
       'value': new FormControl(this.value, [Validators.required, Validators.max(50)]),
     });
@@ -46,7 +46,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
 
   onUpdate() {
     this.editMode = false;
-    this.settingSerivce.updateSetting();
+    this.settingSerivce.updateSetting(this.settingForm.value);
   }
 
   onRemove() {

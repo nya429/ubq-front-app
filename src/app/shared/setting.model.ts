@@ -1,7 +1,7 @@
 export class Setting {
     private _settingId: number;
     private _key: string;
-    private _value: number;
+    private _value: string;
 
     constructor(setting) {
         this._key = setting.key;
@@ -9,7 +9,7 @@ export class Setting {
         this._settingId = setting.id;
     }
 
-    setValue(value: number) {
+    setValue(value: string) {
         this._value = value;
     }
 
