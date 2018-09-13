@@ -5,24 +5,25 @@ import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular
 import { Subject } from 'rxjs/Subject';
 
 import { Tracker } from '../shared/tracker.model';
-import { Http } from '@angular/http';
+import { SettingService } from './../setting/setting.service';
 import { Subscription } from 'rxjs/Subscription';
-import { SubDomains } from '../shared/httpCfg';
 
 @Injectable()
 export class MapService {
-    constructor(private httpClient: HttpClient) {}
+    private httpOptions;
 
-    private subDomains = SubDomains;
-    private httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'my-auth-token'
-      }),
-      participantUrl: this.subDomains['participant'],
-      eventUrl: this.subDomains['event'],
-      // url: 'http://192.168.0.108:3000/participant'
-    };
+    constructor(private httpClient: HttpClient,
+        private settingService: SettingService) {
+            this.httpOptions = {
+               headers: new HttpHeaders({
+                 'Content-Type':  'application/json',
+                 'Authorization': 'my-auth-token'
+               }),
+               participantUrl: () =>  this.settingService.getApis('participant'),
+               eventUrl: () => this.settingService.getApis('event'),
+             };
+     }
+
 
     trackerLocChanges = new Subject<Tracker[]>();
     trackerListChanges = new Subject<Tracker[]>();
@@ -197,7 +198,7 @@ export class MapService {
         }
         // Check participant service if need more condition filter
 
-        return this.httpClient.post(`${this.httpOptions.participantUrl}/${urlSuffix}`, filters, {
+        return this.httpClient.post(`${this.httpOptions.participantUrl()}/${urlSuffix}`, filters, {
             observe: 'body',
             responseType: 'json',
             params: options
@@ -236,7 +237,7 @@ export class MapService {
         const urlSuffix = 'tracker/locs';
         // const trackerLocsUrl = 'http://localhost:3000/event/tracker/locs';
         const con = {'begin': begin, 'end': end, 'id': id};
-        return this.httpClient.post(`${this.httpOptions.eventUrl}/${urlSuffix}`, con, {
+        return this.httpClient.post(`${this.httpOptions.eventUrl()}/${urlSuffix}`, con, {
             observe: 'body',
             responseType: 'json',
           })
@@ -254,7 +255,7 @@ export class MapService {
         const urlSuffix = 'tracker/lastActive';
         // const trackerUrl = 'http://localhost:3000/event/tracker/lastActive';
         const limit = 15;
-        return this.httpClient.get(`${this.httpOptions.eventUrl}/${urlSuffix}`, {
+        return this.httpClient.get(`${this.httpOptions.eventUrl()}/${urlSuffix}`, {
             observe: 'body',
             responseType: 'json',
           })

@@ -4,8 +4,8 @@ import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular
 import { Subject } from 'rxjs/Subject';
 
 import { Participant } from './../shared/participant.model';
+import { SettingService } from './../setting/setting.service';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { SubDomains } from '../shared/httpCfg';
 
 @Injectable()
 export class ParticipantService {
@@ -25,18 +25,21 @@ export class ParticipantService {
   private term: string;
   private resultCode: number;
 
-  private subDomains = SubDomains;
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type':  'application/json',
-      'Authorization': 'my-auth-token'
-    }),
-    participantUrl: this.subDomains['participant'],
-    eventUrl: this.subDomains['event'],
-    // url: 'http://192.168.0.108:3000/participant'
-  };
+  private httpOptions;
 
-  constructor(private httpClient: HttpClient) {}
+
+  constructor(private httpClient: HttpClient,
+              private settingService: SettingService) {
+               this.httpOptions = {
+                  headers: new HttpHeaders({
+                    'Content-Type':  'application/json',
+                    'Authorization': 'my-auth-token'
+                  }),
+                  participantUrl: () =>  this.settingService.getApis('participant'),
+                  eventUrl: () => this.settingService.getApis('event'),
+                  // url: 'http://192.168.0.108:3000/participant'
+                };
+              }
 
   reset() {
     this.limit = null;
@@ -86,7 +89,7 @@ export class ParticipantService {
 
   addParticipant(participant: Participant) {
     const urlSuffix = '/new';
-    return this.httpClient.post(`${this.httpOptions.participantUrl}${urlSuffix}`, participant, {
+    return this.httpClient.post(`${this.httpOptions.participantUrl()}${urlSuffix}`, participant, {
       observe: 'body',
       responseType: 'json'
     });
@@ -97,7 +100,7 @@ export class ParticipantService {
       this.participant = this.participants.filter(item => item.participantId === participantId)[0];
       this.participantChanged.next(this.participant);
     } else {
-      return this.httpClient.get(`${this.httpOptions.participantUrl}/${participantId}`, {
+      return this.httpClient.get(`${this.httpOptions.participantUrl()}/${participantId}`, {
         observe: 'body',
         responseType: 'json',
       }).subscribe(
@@ -125,7 +128,7 @@ export class ParticipantService {
       options = options.append('term', this.term);
     }
 
-    return this.httpClient.get(`${this.httpOptions.participantUrl}${urlSuffix}`, {
+    return this.httpClient.get(`${this.httpOptions.participantUrl()}${urlSuffix}`, {
         observe: 'body',
         responseType: 'json',
         params: options
@@ -156,7 +159,7 @@ export class ParticipantService {
       options = options.append('term', this.term);
     }
 
-    return this.httpClient.post(`${this.httpOptions.participantUrl}/${urlSuffix}`, filters, {
+    return this.httpClient.post(`${this.httpOptions.participantUrl()}/${urlSuffix}`, filters, {
         observe: 'body',
         responseType: 'json',
         params: options
@@ -189,7 +192,7 @@ export class ParticipantService {
       options = options.append('term', this.term);
     }
 
-    return this.httpClient.get(`${this.httpOptions.participantUrl}${urlSuffix}`, {
+    return this.httpClient.get(`${this.httpOptions.participantUrl()}${urlSuffix}`, {
         observe: 'body',
         responseType: 'json',
         params: options
@@ -225,7 +228,7 @@ export class ParticipantService {
       return;
     }
 
-    return this.httpClient.delete(`${this.httpOptions.participantUrl}/${participantId}`, {
+    return this.httpClient.delete(`${this.httpOptions.participantUrl()}/${participantId}`, {
       observe: 'body',
       responseType: 'json'
     }).subscribe(
@@ -256,7 +259,7 @@ export class ParticipantService {
     }
     let options = new HttpParams();
     options = options.append('key', term.trim());
-    return this.httpClient.get(`${this.httpOptions.eventUrl}/tracker/lookup`, {
+    return this.httpClient.get(`${this.httpOptions.eventUrl()}/tracker/lookup`, {
       observe: 'body',
       responseType: 'json',
       params: options
@@ -279,7 +282,7 @@ export class ParticipantService {
   isTrackerValid(tracker_id: string) {
     let options = new HttpParams();
     options = options.append('id', tracker_id.trim());
-    return this.httpClient.get(`${this.httpOptions.eventUrl}/tracker/valid`, {
+    return this.httpClient.get(`${this.httpOptions.eventUrl()}/tracker/valid`, {
       observe: 'body',
       responseType: 'json',
       params: options

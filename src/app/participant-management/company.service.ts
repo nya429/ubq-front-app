@@ -6,7 +6,7 @@ import { Subject } from 'rxjs/Subject';
 
 import { Company } from './../shared/company.model';
 import { ErrorObservable } from 'rxjs/observable/ErrorObservable';
-import { SubDomains } from '../shared/httpCfg';
+import { SettingService } from './../setting/setting.service';
 
 @Injectable()
 export class CompanyService {
@@ -24,17 +24,19 @@ export class CompanyService {
     private limit: number;
     private term: string;
     private resultCode: number;
+    private httpOptions;
 
-    private subDomains = SubDomains;
-    private httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'Authorization': 'my-auth-token'
-        }),
-         companyUrl: this.subDomains['company'],
-      };
-
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient,
+      private settingService: SettingService) {
+        this.httpOptions = {
+           headers: new HttpHeaders({
+             'Content-Type':  'application/json',
+             'Authorization': 'my-auth-token'
+           }),
+           companyUrl: () => this.settingService.getApis('company'),
+           // url: 'http://192.168.0.108:3000/participant'
+         };
+       }
 
     getCompanyListByOptions(offset?: number, limit?: number) {
     const urlSuffix = this.term ? '/search' : '/list';
@@ -52,7 +54,7 @@ export class CompanyService {
         options = options.append('term', this.term);
     }
 
-    return this.httpClient.get(`${this.httpOptions.companyUrl}${urlSuffix}`, {
+    return this.httpClient.get(`${this.httpOptions.companyUrl()}${urlSuffix}`, {
         observe: 'body',
         responseType: 'json',
         params: options
@@ -94,7 +96,7 @@ export class CompanyService {
           this.company = this.companys.filter(item => item.companyId === companyId)[0];
           this.companyChanged.next(this.company);
         } else {
-          return this.httpClient.get(`${this.httpOptions.companyUrl}/${companyId}`, {
+          return this.httpClient.get(`${this.httpOptions.companyUrl()}/${companyId}`, {
             observe: 'body',
             responseType: 'json',
           }).subscribe(
@@ -123,7 +125,7 @@ export class CompanyService {
 
       addCompany(companyForm: FormGroup) {
         const urlSuffix = '/new';
-        return this.httpClient.post(`${this.httpOptions.companyUrl}${urlSuffix}`, companyForm, {
+        return this.httpClient.post(`${this.httpOptions.companyUrl()}${urlSuffix}`, companyForm, {
           observe: 'body',
           responseType: 'json'
         });
@@ -133,14 +135,14 @@ export class CompanyService {
         if (!companyId) {
           return;
         }
-        return this.httpClient.patch(`${this.httpOptions.companyUrl}/${companyId}`, patch, {
+        return this.httpClient.patch(`${this.httpOptions.companyUrl()}/${companyId}`, patch, {
           observe: 'body',
           responseType: 'json'
         });
       }
 
       deleteCompanyById(companyId: number) {
-        return this.httpClient.delete(`${this.httpOptions.companyUrl}/${companyId}`, {
+        return this.httpClient.delete(`${this.httpOptions.companyUrl()}/${companyId}`, {
           observe: 'body',
           responseType: 'json'
         });
@@ -152,7 +154,7 @@ export class CompanyService {
         }
         let options = new HttpParams();
         options = options.append('name', term.trim());
-        return this.httpClient.get(`${this.httpOptions.companyUrl}/lookup`, {
+        return this.httpClient.get(`${this.httpOptions.companyUrl()}/lookup`, {
           observe: 'body',
           responseType: 'json',
           params: options

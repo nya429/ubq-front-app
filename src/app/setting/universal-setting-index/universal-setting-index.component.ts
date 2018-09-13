@@ -12,6 +12,7 @@ import { listItemSlideStateTrigger } from '../setting.animation';
 })
 export class UniversalSettingIndexComponent implements OnInit {
   settings: Setting[];
+  subDomain: object;
 
   constructor(private settingService: SettingService) { }
 
@@ -21,7 +22,10 @@ export class UniversalSettingIndexComponent implements OnInit {
 
   getSettings() {
     setTimeout(() => this.settings = this.settingService.getSettings(), 1000);
-    ;
+  }
+
+  getHost() {
+    // this.subDomain = SubDomains;
   }
 
 }

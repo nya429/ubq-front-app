@@ -28,8 +28,6 @@ import { UniversalSettingItemInputComponent } from './universal-setting-item-inp
     UniversalSettingIndexComponent,
     UniversalSettingItemComponent,
     UniversalSettingItemInputComponent],
-  providers: [
-    SettingService
-  ]
+  providers: []
 })
 export class SettingModule { }

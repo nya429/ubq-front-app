@@ -3,12 +3,15 @@ import { HttpHeaders, HttpClient, HttpParams, HttpErrorResponse } from '@angular
 
 import { Subject } from 'rxjs/Subject';
 
-import { SubDomains, setHost } from '../shared/httpCfg';
+import { API } from '../shared/host.model';
 import { Setting } from '../shared/setting.model';
 
 @Injectable()
 export class SettingService {
     defaultSettings: Setting[] = [];
+    private api;
+    private subDomains;
+    private httpOptions;
 
     settings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 1}),
@@ -17,16 +20,16 @@ export class SettingService {
         new Setting({key: 'key4', value: 4, id: 4}),
         new Setting({key: 'key4', value: 5, id: 5}) ];
 
-    private subDomains = SubDomains;
-    private httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'Authorization': 'my-auth-token'
-        }),
-        participantUrl: this.subDomains['participant'],
-        eventUrl: this.subDomains['event'],
-        // url: 'http://192.168.0.108:3000/participant'
-      };
+    constructor() {
+        this.api = new API('localhost');
+        this.httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type':  'application/json',
+              'Authorization': 'my-auth-token'
+            }),
+            settingUrl: () => this.getApis('setting'),
+          };
+    }
 
     getSettings() {
         return this.settings;
@@ -42,13 +45,27 @@ export class SettingService {
 
     updateSetting(form: Setting) {
         const setting = new Setting(form);
-        if (setting.settingId() === 1) {
-            console.log('AWS')
-            setHost(setting.value());
+        switch (setting.settingId()) {
+            case 1:
+                this.setHost(setting.value());
+                break;
+            default:
+                break;
         }
     }
 
     getMapSettings() {
 
+    }
+
+    setHost(option: string) {
+        this.api.setHost(option);
+    }
+
+    getApis(subDomain?: string) {
+        if (!subDomain) {
+            return this.api.getSubdomains();
+        }
+        return this.api.getSubdomains()[subDomain];
     }
 }

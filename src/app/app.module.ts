@@ -1,3 +1,4 @@
+import { SettingService } from './setting/setting.service';
 import { AuthGuard } from './auth/auth-guard.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -35,7 +36,7 @@ import { AuthService } from './auth/auth.service';
     ParticipantManagementModule,
     SettingModule
   ],
-  providers: [AuthGuard, AuthService],
+  providers: [AuthGuard, AuthService, SettingService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
