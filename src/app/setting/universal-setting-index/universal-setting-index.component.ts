@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Subscription } from 'rxjs/Subscription';
+
+import { listItemSlideStateTrigger } from '../setting.animation';
 import { SettingService } from './../setting.service';
 import { Setting } from '../../shared/setting.model';
-import { listItemSlideStateTrigger } from '../setting.animation';
 
 @Component({
   selector: 'app-universal-setting-index',
@@ -11,6 +13,8 @@ import { listItemSlideStateTrigger } from '../setting.animation';
   animations: [ listItemSlideStateTrigger ]
 })
 export class UniversalSettingIndexComponent implements OnInit {
+  private settingSubscription: Subscription;
+  
   settings: Setting[];
   subDomain: object;
 
@@ -18,10 +22,15 @@ export class UniversalSettingIndexComponent implements OnInit {
 
   ngOnInit() {
     this.getSettings();
+
+    this.settingSubscription = this.settingService.settingsChanged.subscribe(
+      () => {
+        this.getSettings();
+    })
   }
 
   getSettings() {
-    setTimeout(() => this.settings = this.settingService.getSettings(), 1000);
+     this.settings = this.settingService.getSettings();
   }
 
   getHost() {

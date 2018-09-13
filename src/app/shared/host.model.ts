@@ -26,18 +26,20 @@ class API {
 
     setHost(hostOption: string) {
         // console.log('set host', hostOption);
+        let option: string = hostOption;
         if (!this.hosts[hostOption]) {
             console.log('set host invalid', hostOption);
-            hostOption = 'localhost';
+            option = 'localhost';
         }
 
-        const host = this.hosts[hostOption];
+        const host = this.hosts[option];
         // console.log(host);
         this.participant = `${host}participant`;
         this.company    = `${host}company`;
         this.event     = `${host}event`;
         this.setting = `${host}setting`;
-        // console.log(this.getSubdomains());
+
+        return option;
     }
 
 }

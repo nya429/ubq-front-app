@@ -1,7 +1,9 @@
-import { SettingService } from './../../setting.service';
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterContentChecked } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import { Subscription } from 'rxjs/Subscription';
+
+import { SettingService } from './../../setting.service';
 import { Setting } from '../../../shared/setting.model';
 
 @Component({
@@ -9,7 +11,7 @@ import { Setting } from '../../../shared/setting.model';
   templateUrl: './universal-setting-item.component.html',
   styleUrls: ['./universal-setting-item.component.css']
 })
-export class UniversalSettingItemComponent implements OnInit, OnDestroy {
+export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterContentChecked {
   @Input() setting: Setting;
   @Input() index: number;
   settingForm: FormGroup;
@@ -17,22 +19,42 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   value: string;
   settingId: number;
   editMode = false;
-
+  removable: boolean;
+  
+  updateSubscription: Subscription;
 
   constructor(private settingSerivce: SettingService) { }
 
   ngOnInit() {
-    this.key = this.setting.key();
-    this.value = this.setting.value();
-    this.settingId = this.setting.settingId();
+    this.setValue();
     this.initForm();
+    this.removable = this.settingSerivce.isRemovable(this.settingId);
+    console.log(this.settingId, this.removable);
+    this.updateSubscription = this.settingSerivce.settingUpdated.subscribe(
+      (id: number) => {
+        if(this.settingId === id) {
+          this.pathForm();
+        }
+      }
+    )
   }
 
   ngOnDestroy() {
+    this.updateSubscription.unsubscribe();
+  }
 
+  ngAfterContentChecked() {
+    this.setValue();
+  }
+
+  setValue() {
+    this.key = this.setting.key();
+    this.value = this.setting.value();
+    this.settingId = this.setting.settingId();
   }
 
   onEdit() {
+    console.log('DEBUTedit', this.settingForm.value)
     this.editMode = true;
   }
 
@@ -44,7 +66,15 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
     });
   }
 
+  pathForm() {
+    this.settingForm.patchValue({
+      'value':this.value,
+      'key': this.key,
+    })
+  }
+
   onUpdate() {
+    console.log('update', this.settingForm.value)
     this.editMode = false;
     this.settingSerivce.updateSetting(this.settingForm.value);
   }
