@@ -1,4 +1,4 @@
-<div class="row setting-row">
+<div class="row setting-row"  [@scale]="scaleState">
     <div *ngIf='!editMode'>
         <div class="col-xs-5 margin form-padding">
             <span>{{ setting.key() }}</span>

@@ -5,11 +5,13 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { SettingService } from './../../setting.service';
 import { Setting } from '../../../shared/setting.model';
+import { failScaleTrigger } from '../../setting.animation';
 
 @Component({
   selector: 'app-universal-setting-item',
   templateUrl: './universal-setting-item.component.html',
-  styleUrls: ['./universal-setting-item.component.css']
+  styleUrls: ['./universal-setting-item.component.css'],
+  animations: [ failScaleTrigger ]
 })
 export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterContentChecked {
   @Input() setting: Setting;
@@ -20,7 +22,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
   settingId: number;
   editMode = false;
   removable: boolean;
-  
+  scaleState: string;
   updateSubscription: Subscription;
 
   constructor(private settingSerivce: SettingService) { }
@@ -29,7 +31,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
     this.setValue();
     this.initForm();
     this.removable = this.settingSerivce.isRemovable(this.settingId);
-    console.log(this.settingId, this.removable);
+    this.scaleState = 'default';
     this.updateSubscription = this.settingSerivce.settingUpdated.subscribe(
       (id: number) => {
         if(this.settingId === id) {
@@ -81,6 +83,10 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
 
   onRemove() {
     this.settingSerivce.removeSetting();
+    this.scaleState = 'fail';
+    setTimeout(() => {
+      this.scaleState = 'default';
+    }, 100);
   }
 
   onCancle() {

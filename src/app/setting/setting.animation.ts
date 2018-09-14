@@ -2,7 +2,7 @@ import { trigger, state, style, transition, animate, group, query, stagger, keyf
 
 
 
-export const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
+const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
     transition('* => *', [
         query(':enter', [
             style({
@@ -33,3 +33,26 @@ export const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
         ], {optional: true})
     ])
 ]);
+
+const failScaleTrigger =  trigger('scale', [
+    state('fail',  style({  })),
+    state('default',  style({ })),
+    state('removal',  style({transform: 'translateX(0)'})),
+    transition('fail => default', animate('500ms',
+        keyframes([
+            style({transform: 'translateX(0)'}),
+            style({transform: 'translateX(-2%)'}),
+            style({transform: 'translateX(4%)'}),
+            style({transform: 'translateX(-3%)'}),
+            style({transform: 'translateX(1%)'}),
+            style({transform: 'translateX(0)'}),
+        ]) 
+    )),
+    transition('default => authed', animate('400ms 100ms ease-out', keyframes([
+        style({transform: 'translateX(1.1)', offset: 0.7}),
+        style({transform: 'translateX(0)', offset: 1}),
+    ])))
+]);
+
+
+export {listItemSlideStateTrigger, failScaleTrigger}
