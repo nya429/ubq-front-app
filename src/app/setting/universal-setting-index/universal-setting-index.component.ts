@@ -22,19 +22,11 @@ export class UniversalSettingIndexComponent implements OnInit {
 
   ngOnInit() {
     this.getSettings();
-
-    this.settingSubscription = this.settingService.settingsChanged.subscribe(
-      () => {
-        this.getSettings();
-    })
+    this.settingSubscription = this.settingService.settingsChanged.subscribe(() => 
+    this.getSettings())
   }
 
   getSettings() {
      this.settings = this.settingService.getSettings();
   }
-
-  getHost() {
-    // this.subDomain = SubDomains;
-  }
-
 }

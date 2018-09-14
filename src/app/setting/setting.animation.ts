@@ -30,7 +30,24 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
             ),  animate('100ms ease-out', style({ opacity: 1}))]
 
         )
-        ], {optional: true})
+        ], {optional: true}),
+        query(':leave', [
+            style({
+                opacity: 1,
+                transform: 'translateX(0)'
+            }),
+            animate('350ms ease-out',
+                keyframes([
+                     style({
+                        opacity: 1,
+                        transform: 'translateX(-2%)',
+                        offset: .3}),
+                     style({
+                        opacity: 0,
+                        transform: 'translateX(20%)',
+                        offset: 1})
+                ]))
+        ], { optional: true })
     ])
 ]);
 
@@ -54,5 +71,27 @@ const failScaleTrigger =  trigger('scale', [
     ])))
 ]);
 
+const slideInTrigger =  trigger('slideInState', [
+    transition(':enter', [
+        style({
+            opacity: 0,
+            transform: 'translateY(-2%)'
+        }),
+        animate(200, style({
+            opacity: 1,
+            transform: 'translateX(0)'
+        }))
+    ]),
+    transition(':leave', [
+        style({
+            opacity: 1,
+            transform: 'translateY(0)'
+        }),
+        animate(200, style({
+            opacity: 0,
+            transform: 'translateY(-5%)'
+        }))
+    ]),
+]);
 
-export {listItemSlideStateTrigger, failScaleTrigger}
+export {listItemSlideStateTrigger, failScaleTrigger, slideInTrigger}

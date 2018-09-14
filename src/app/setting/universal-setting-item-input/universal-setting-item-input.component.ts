@@ -1,40 +1,46 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SettingService } from '../setting.service';
+import { slideInTrigger, failScaleTrigger } from '../setting.animation';
 
 @Component({
   selector: 'app-universal-setting-item-input',
   templateUrl: './universal-setting-item-input.component.html',
-  styleUrls: ['./universal-setting-item-input.component.css']
+  styleUrls: ['./universal-setting-item-input.component.css'],
+  animations: [ slideInTrigger, failScaleTrigger ]
 })
 export class UniversalSettingItemInputComponent implements OnInit {
   settingForm: FormGroup;
   key: string;
-  value: number;
+  value: string;
   settingId: number;
   editMode = false;
-
 
   constructor(private settingService: SettingService) { }
 
   ngOnInit() {
     this.key = '';
-    this.value = null;
+    this.value = '';
     this.settingId = null;
     this.initForm();
   }
 
   initForm() {
     this.settingForm = new FormGroup({
-      'settingId': new FormControl( this.key ),
-      'key': new FormControl(this.value, [Validators.required, Validators.max(50)]),
-      'value': new FormControl(this.settingId , [Validators.required, Validators.max(50)]),
+      'id': new FormControl(this.settingId),
+      'value': new FormControl(this.value, [Validators.required, Validators.max(50)]),
+      'key': new FormControl(this.key , [Validators.required, Validators.max(50)]),
     });
   }
 
-  onAdd() {
+  onNew() {
+    this.initForm();
     this.editMode = true;
-    // this.settingService.addSetting();
+  }
+
+  onAdd() {
+    this.editMode = false;
+    this.settingService.addSetting(this.settingForm.value);
   }
 
   onCancle() {

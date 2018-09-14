@@ -17,6 +17,10 @@ export class Setting {
         this._key = key;
     }
 
+    setId(id:number) {
+        this._settingId = id;
+    }
+
     key() {
         return this._key;
     }

@@ -6,6 +6,7 @@ import { Subject } from 'rxjs/Subject';
 import { API } from '../shared/host.model';
 import { Setting } from '../shared/setting.model';
 import { SettingState } from '../shared/setting-state.model';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 export class SettingService {
@@ -40,18 +41,29 @@ export class SettingService {
     }
 
     getSettings() {
-        return this.settings;
+        return this.settings.slice();
     }
 
-    addSetting() {
-
+    addSetting(form: object) {
+        
+        form['settingId'] = this.settings.length + 1;
+        let setting = new Setting(form);
+        console.log(form);
+        this.settings.push(setting);
+        this.settingsChanged.next(this.settings.slice());
     }
 
     removeSetting(settingId: number) {
         if(!this.isRemovable(settingId)) {
             this.settingUpdated.next(new SettingState(
                 settingId, 0, false));
+            return;
         }
+        const removal = this.settings.find(setting => 
+            setting.settingId() === settingId);
+        const index = this.settings.indexOf(removal);
+        this.settings.splice(index, 1);
+        this.settingsChanged.next(this.settings.slice());
     }
 
     updateSetting(form: Setting) {
@@ -85,7 +97,7 @@ export class SettingService {
             }   
         })
  
-        this.settingsChanged.next(this.settings);
+        this.settingsChanged.next(this.settings.slice());
         this.settingUpdated.next(new SettingState(
                 newSetting.settingId(), 1, true));
         

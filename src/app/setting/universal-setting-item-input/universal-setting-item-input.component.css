@@ -1,4 +1,15 @@
-.padding-line {
-    padding-bottom: 15px;
+.bottom-line {
     border-bottom: 1px solid lightgray;
+}
+
+.padding-bottom {
+    padding-bottom: 15px;
+}
+
+.block {
+    display: block;
+}
+
+.transition {
+    transition: .3s ease-in;   
 }

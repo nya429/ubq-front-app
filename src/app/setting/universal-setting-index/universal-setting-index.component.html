@@ -7,6 +7,9 @@
   <div class="panel-body">
       <div class="row">
         <div class="col-md-6 col-md-offset-3">
+            <app-universal-setting-item-input></app-universal-setting-item-input>
+            <br>
+            <br>
             <div class="row bold setting-row">
                 <div class="col-xs-5 margin form-padding">
                     <span> KEY </span>
@@ -20,15 +23,12 @@
             </div>
             <div [@listItemSlideState]="settings?.length" class="settings-container">
                 <app-loading *ngIf="!settings"></app-loading>
-                <app-universal-setting-item 
+                <app-universal-setting-item
                 *ngFor='let setting of settings; let i = index'
                 [setting]="setting"
                 [index] = "i">
               </app-universal-setting-item>     
           </div>
-          <br>
-          <br>
-          <app-universal-setting-item-input></app-universal-setting-item-input>
         </div>
       </div>
   </div>
