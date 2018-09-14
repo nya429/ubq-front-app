@@ -7,18 +7,18 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
         query(':enter', [
             style({
                 opacity: 0,
-                transform: 'translateX(-4%)'
+                transform: 'translateX(-20%)'
             }),
             stagger(40,
-                [animate('400ms ease-out', keyframes([
+                [animate('500ms ease-out', keyframes([
                     style({
                         opacity: 0,
-                        transform: 'translateX(-5%)',
+                        transform: 'translateX(-20%)',
                         offset: 0
                     }),
                     style({
-                        opacity: .2,
-                        transform: 'translateX(1%)',
+                        opacity: .8,
+                        transform: 'translateX(3%)',
                         offset: .5
                     }),
                     style({
@@ -47,7 +47,7 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
                         transform: 'translateX(20%)',
                         offset: 1})
                 ]))
-        ], { optional: true })
+        ], { optional: true }),
     ])
 ]);
 
