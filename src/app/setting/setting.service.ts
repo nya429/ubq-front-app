@@ -5,19 +5,13 @@ import { Subject } from 'rxjs/Subject';
 
 import { API } from '../shared/host.model';
 import { Setting } from '../shared/setting.model';
+import { SettingState } from '../shared/setting-state.model';
 
 @Injectable()
 export class SettingService {
     defaultSettings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 1}),
-        new Setting({key: 'key2', value: 2, id: 2}),
-    ];
-    private api;
-    private subDomains;
-    private httpOptions;
-
-    settingsChanged = new Subject<Setting[]>();
-    settingUpdated = new Subject<number>();
+        new Setting({key: 'key2', value: 2, id: 2}) ];
 
     settings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 1}),
@@ -25,6 +19,14 @@ export class SettingService {
         new Setting({key: 'key3', value: 3, id: 3}),
         new Setting({key: 'key4', value: 4, id: 4}),
         new Setting({key: 'key4', value: 5, id: 5}) ];
+
+    private api;
+    private subDomains;
+    private httpOptions;
+
+    settingsChanged = new Subject<Setting[]>();
+    settingUpdated = new Subject<SettingState>();
+
 
     constructor() {
         this.api = new API('localhost');
@@ -45,19 +47,25 @@ export class SettingService {
 
     }
 
-    removeSetting() {
-
+    removeSetting(settingId: number) {
+        if(!this.isRemovable(settingId)) {
+            this.settingUpdated.next(new SettingState(
+                settingId, 0, false));
+        }
     }
 
     updateSetting(form: Setting) {
         let setting = new Setting(form);
         let update = false;
+        let fail = false;
 
         switch (setting.settingId()) {
-            case 1:
+            case 1: // host setting
                 let hostOption = this.setHost(setting.value());
                 setting.setValue(hostOption);
                 update = true;
+                fail = hostOption === setting.value() ? true : false;
+                console.log(fail)
                 break;
             default:
                 break;
@@ -65,24 +73,22 @@ export class SettingService {
        
         if(update) {
             this.onSettingUpdated(setting);
-            this.settingUpdated.next(setting.settingId());
         }
     }
     
     onSettingUpdated(newSetting: Setting) {
-        let updated = false;
         this.settings.map(setting => {
             if(setting.settingId() === newSetting.settingId() 
             && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
                 setting.setKey(newSetting.key());
                 setting.setValue(newSetting.value());
-                updated = true;
             }   
         })
-
-        if(updated) {
-            this.settingsChanged.next(this.settings);
-        }
+ 
+        this.settingsChanged.next(this.settings);
+        this.settingUpdated.next(new SettingState(
+                newSetting.settingId(), 1, true));
+        
     }
 
     getMapSettings() {

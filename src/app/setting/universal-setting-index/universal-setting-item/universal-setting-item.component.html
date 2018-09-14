@@ -18,7 +18,7 @@
     <div class="col-xs-2 margin edit-padding" >
         <span *ngIf='!editMode' >
             <a (click)='onEdit()'  class="edit-icon pointer"><span title='Edit' class="glyphicon glyphicon-pencil edit-icon-hidden"></span> Edit</a>
-            <a *ngIf='removable' (click)='onRemove()' class="edit-icon pointer"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
+            <a (click)='onRemove()' class="edit-icon pointer"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>
         </span>
         <span *ngIf='editMode' class="edit-indent" >
             <a (click)='onUpdate()'  class="edit-icon pointer"><span title='Update' class="glyphicon glyphicon-ok"></span></a>

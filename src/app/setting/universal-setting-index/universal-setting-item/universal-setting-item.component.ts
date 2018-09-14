@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { Subscription } from 'rxjs/Subscription';
@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { SettingService } from './../../setting.service';
 import { Setting } from '../../../shared/setting.model';
 import { failScaleTrigger } from '../../setting.animation';
+import { SettingState } from '../../../shared/setting-state.model';
 
 @Component({
   selector: 'app-universal-setting-item',
@@ -13,7 +14,7 @@ import { failScaleTrigger } from '../../setting.animation';
   styleUrls: ['./universal-setting-item.component.css'],
   animations: [ failScaleTrigger ]
 })
-export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterContentChecked {
+export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   @Input() setting: Setting;
   @Input() index: number;
   settingForm: FormGroup;
@@ -23,6 +24,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
   editMode = false;
   removable: boolean;
   scaleState: string;
+
   updateSubscription: Subscription;
 
   constructor(private settingSerivce: SettingService) { }
@@ -32,21 +34,16 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
     this.initForm();
     this.removable = this.settingSerivce.isRemovable(this.settingId);
     this.scaleState = 'default';
+    
     this.updateSubscription = this.settingSerivce.settingUpdated.subscribe(
-      (id: number) => {
-        if(this.settingId === id) {
-          this.pathForm();
-        }
-      }
-    )
+      (settingState: SettingState) => {
+        if(this.settingId === settingState.settingId) {
+          this.onSettingChanged(settingState.operation, settingState.state);}
+      });
   }
 
   ngOnDestroy() {
     this.updateSubscription.unsubscribe();
-  }
-
-  ngAfterContentChecked() {
-    this.setValue();
   }
 
   setValue() {
@@ -56,7 +53,6 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
   }
 
   onEdit() {
-    console.log('DEBUTedit', this.settingForm.value)
     this.editMode = true;
   }
 
@@ -69,6 +65,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
   }
 
   pathForm() {
+    // console.log('cahnged', this.value)
     this.settingForm.patchValue({
       'value':this.value,
       'key': this.key,
@@ -76,20 +73,42 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy, AfterCo
   }
 
   onUpdate() {
-    console.log('update', this.settingForm.value)
     this.editMode = false;
     this.settingSerivce.updateSetting(this.settingForm.value);
   }
 
   onRemove() {
-    this.settingSerivce.removeSetting();
+    this.settingSerivce.removeSetting(this.settingId);
+  }
+
+  onCancle() {
+    this.editMode = false;
+  }
+
+  stateFail() {
     this.scaleState = 'fail';
     setTimeout(() => {
       this.scaleState = 'default';
     }, 100);
   }
 
-  onCancle() {
-    this.editMode = false;
+  // 0 => remove  1 => update 
+  // public operation: number;
+  // true => success, false => fail
+  // public state: boolean;
+  onSettingChanged(operation: number, state: boolean) {
+    // console.log(operation, state)
+    switch(operation) {
+      case 0:
+        !state && this.stateFail();
+        break; 
+      case 1:
+        this.setValue();
+        this.pathForm();
+        // state && this.pathForm();
+        break;
+      default:
+        break;  
+    }
   }
 }
