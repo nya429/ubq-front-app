@@ -4,9 +4,10 @@ export class Setting {
     private _value: string;
 
     constructor(setting) {
-        this._key = setting.key;
-        this._value = setting.value;
-        this._settingId = setting.id;
+      
+        this._key = setting.key || setting.setting_key;
+        this._value = setting.value || setting.setting_value;
+        this._settingId = setting.id === 0 ? 0 : (setting.id || setting.setting_id);
     }
 
     setValue(value: string) {

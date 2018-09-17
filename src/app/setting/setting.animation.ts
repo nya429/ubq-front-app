@@ -10,7 +10,7 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
                 transform: 'translateX(-20%)'
             }),
             stagger(40,
-                [animate('500ms ease-out', keyframes([
+            animate('350ms ease-out', keyframes([
                     style({
                         opacity: 0,
                         transform: 'translateX(-20%)',
@@ -22,13 +22,12 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
                         offset: .5
                     }),
                     style({
-                        opacity: .8,
+                        opacity: 1,
                         transform: 'translateX(0)',
                         offset: 1
                     }),
                 ])
-            ),  animate('100ms ease-out', style({ opacity: 1}))]
-
+            ),
         )
         ], {optional: true}),
         query(':leave', [
@@ -36,7 +35,7 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
                 opacity: 1,
                 transform: 'translateX(0)'
             }),
-            animate('350ms ease-out',
+            animate('250ms ease-out',
                 keyframes([
                      style({
                         opacity: 1,

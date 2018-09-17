@@ -36,8 +36,7 @@ export class ParticipantService {
                     'Authorization': 'my-auth-token'
                   }),
                   participantUrl: () =>  this.settingService.getApis('participant'),
-                  eventUrl: () => this.settingService.getApis('event'),
-                  // url: 'http://192.168.0.108:3000/participant'
+                  eventUrl: () => this.settingService.getApis('event')
                 };
               }
 
@@ -240,7 +239,7 @@ export class ParticipantService {
       }, (err: HttpErrorResponse)  => {
         console.error(err);
       }
-  );
+    );
   }
 
   updateParticipantById(participantId: number, patch: Object) {

@@ -73,6 +73,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   }
 
   onUpdate() {
+    console.log(this.settingForm)
     this.editMode = false;
     this.settingSerivce.updateSetting(this.settingForm.value);
   }

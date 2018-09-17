@@ -21,12 +21,13 @@ export class UniversalSettingIndexComponent implements OnInit {
   constructor(private settingService: SettingService) { }
 
   ngOnInit() {
-    this.getSettings();
+    this.settings = this.settingService.getSettings();
     this.settingSubscription = this.settingService.settingsChanged.subscribe(() => 
-    this.getSettings())
+    this.settings = this.settingService.getSettings())
   }
 
-  getSettings() {
-     this.settings = this.settingService.getSettings();
+
+  getSettingsApi() {
+    this.settingService.getSettingListByOptions();
   }
 }
