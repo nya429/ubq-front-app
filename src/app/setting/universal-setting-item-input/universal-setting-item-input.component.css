@@ -39,3 +39,16 @@
     /* animation: .3s .2s ease-in forwards pop-up; */
     
 }
+
+.add-button-groups {
+    position: fixed;
+    width: 100px;
+    height: 50px;
+    padding: 35px 0;
+    border-radius: 5px;
+    background-color: rgb(240, 255, 255); 
+    border: 1px solid lightcyan;
+    margin:auto;
+    z-index: 1040;
+    bottom: 50px; right: 50px;
+}

@@ -10,3 +10,7 @@
 app-universal-setting-item {
     display: block;
 }
+
+.setting-penal {
+    min-height: 80vh;
+}
