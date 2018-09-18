@@ -32,13 +32,13 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.setValue();
     this.initForm();
-    this.removable = this.settingSerivce.isRemovable(this.settingId);
+    this.removable = this.settingSerivce.isRemovable(this.key);
     this.scaleState = 'default';
-    
+
     this.updateSubscription = this.settingSerivce.settingUpdated.subscribe(
       (settingState: SettingState) => {
-        if(this.settingId === settingState.settingId) {
-          this.onSettingChanged(settingState.operation, settingState.state);}
+        if (this.settingId === settingState.settingId) {
+          this.onSettingChanged(settingState.operation, settingState.state); }
       });
   }
 
@@ -67,19 +67,23 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   pathForm() {
     // console.log('cahnged', this.value)
     this.settingForm.patchValue({
-      'value':this.value,
+      'value': this.value,
       'key': this.key,
-    })
+    });
   }
 
   onUpdate() {
-    console.log(this.settingForm)
     this.editMode = false;
     this.settingSerivce.updateSetting(this.settingForm.value);
   }
 
   onRemove() {
-    this.settingSerivce.removeSetting(this.settingId);
+    if (!this.removable) {
+        this.settingSerivce.settingUpdated.next(new SettingState(
+        this.settingId, 0, false));
+    } else {
+      this.settingSerivce.removeSetting(this.settingId, this.key);
+    }
   }
 
   onCancle() {
@@ -93,23 +97,25 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
     }, 100);
   }
 
-  // 0 => remove  1 => update 
+  // 0 => remove  1 => update
   // public operation: number;
   // true => success, false => fail
   // public state: boolean;
   onSettingChanged(operation: number, state: boolean) {
     // console.log(operation, state)
-    switch(operation) {
+    switch (operation) {
       case 0:
-        !state && this.stateFail();
-        break; 
+        if (!state ) {
+         this.stateFail();
+        }
+        break;
       case 1:
         this.setValue();
         this.pathForm();
         // state && this.pathForm();
         break;
       default:
-        break;  
+        break;
     }
   }
 }

@@ -10,16 +10,15 @@ import { FormGroup } from '@angular/forms';
 
 @Injectable()
 export class SettingService {
+    // TODO: will eliminate id
     defaultSettings: Setting[] = [
-        new Setting({key: 'host', value: 'localhost', id: 0}),
-        new Setting({key: 'key2', value: 2, id: 1}) ];
-
-    settings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 0}),
         new Setting({key: 'key2', value: 2, id: 1}),
         new Setting({key: 'key3', value: 3, id: 2}),
         new Setting({key: 'key4', value: 4, id: 3}),
         new Setting({key: 'key4', value: 5, id: 4}) ];
+
+    settings: Setting[];
 
     private api;
     private subDomains;
@@ -31,6 +30,7 @@ export class SettingService {
 
     constructor(private httpClient: HttpClient) {
         this.api = new API('localhost');
+        this.settings = this.defaultSettings;
         this.httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json',
@@ -49,14 +49,11 @@ export class SettingService {
         return this.httpClient.post(`${this.httpOptions.settingUrl()}${urlSuffix}`, form, {
           observe: 'body',
           responseType: 'json'
-        }).subscribe((result) => {        
-            console.log(result);            
-            // TODO: tmp method for settingId
-            // change it to this
-            // form['settingId' = result['data']; 
-            form['settingId'] = this.settings.length;
-            let setting = new Setting(form);
+        }).subscribe((result) => {
+            form['id'] = result['data']['setting_id'];
+            const setting = new Setting(form);
             this.settings.push(setting);
+            console.log(setting);
             this.settingsChanged.next(this.settings.slice());
         }, (err: HttpErrorResponse)  => {
             console.error(err);
@@ -88,13 +85,14 @@ export class SettingService {
           );
     }
 
-    removeSetting(settingId: number) {
-        if(!this.isRemovable(settingId)) {
+    // FIXME, this should be fixed, index -1 isssues
+    removeSetting(settingId: number, key: string) {
+        if (!this.isRemovable(key)) {
             this.settingUpdated.next(new SettingState(
                 settingId, 0, false));
             return;
         }
-        const removal = this.settings.find(setting => 
+        const removal = this.settings.find(setting =>
             setting.settingId() === settingId);
         const index = this.settings.indexOf(removal);
         this.settings.splice(index, 1);
@@ -102,21 +100,19 @@ export class SettingService {
     }
 
     updateSetting(form: object) {
-        let setting = new Setting(form);
+        const setting = new Setting(form);
         const settingId = setting.settingId();
 
-        if(settingId === 0) {
+        if (settingId === 0) {
             return this.updateLocalSetting(setting);
         }
 
-        if(!settingId) {
+        if (!settingId) {
             return false;
-            // this.settingUpdated.next(new SettingState(settingId, 1, false)); 
+            // this.settingUpdated.next(new SettingState(settingId, 1, false));
         }
 
- 
-
-        return this.httpClient.patch(`${this.httpOptions.settingUrl}/${settingId}`, patch, {
+        return this.httpClient.patch(`${this.httpOptions.settingUrl}/${settingId}`, form, {
             observe: 'body',
             responseType: 'json'
         }).subscribe(
@@ -135,7 +131,7 @@ export class SettingService {
         console.log(setting.key());
         switch (setting.key()) {
             case 'host': // host setting
-                let hostOption = this.setHost(setting.value());
+                const hostOption = this.setHost(setting.value());
                 setting.setValue(hostOption);
                 update = true;
                 fail = hostOption === setting.value() ? true : false;
@@ -144,22 +140,22 @@ export class SettingService {
                 break;
         }
 
-        if(update) {
+        if (update) {
             this.onSettingUpdated(setting);
         }
     }
-    
+
     onSettingUpdated(newSetting: Setting) {
         this.settings.map(setting => {
-            if(setting.settingId() === newSetting.settingId() 
+            if (setting.settingId() === newSetting.settingId()
             && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
                 setting.setKey(newSetting.key());
                 setting.setValue(newSetting.value());
-            }   
-        })
- 
+            }
+        });
+
         this.settingsChanged.next(this.settings.slice());
-        this.settingUpdated.next(new SettingState(newSetting.settingId(), 1, true));   
+        this.settingUpdated.next(new SettingState(newSetting.settingId(), 1, true));
     }
 
     setHost(option: string) {
@@ -173,10 +169,10 @@ export class SettingService {
         return this.api.getSubdomains()[subDomain];
     }
 
-    isRemovable(pendingRemovalId: number) {
-        let removals = this.defaultSettings.filter(setting => 
-            setting.settingId() === pendingRemovalId
-        )
+    isRemovable(pendingRemovalKey: string) {
+        const removals = this.defaultSettings.filter(setting =>
+            setting.key() === pendingRemovalKey
+        );
 
         if ( removals && removals.length > 0  ) {
             return false;
@@ -192,7 +188,23 @@ export class SettingService {
         const settings = data['settings'].map(
           seetingRaw => new Setting(seetingRaw)
         );
-        this.settings = settings.unshift(this.settings[0]);
+        settings.unshift(this.settings[0]);
+        this.settings = settings;
+        console.log(this.settings);
         this.settingsChanged.next(this.settings);
+    }
+
+    // given default setting
+    // if exist
+    // grab
+    // not exist
+    // use default
+    // and populate?
+    defaultSettingsLookup() {
+
+    }
+
+    populateSettings () {
+
     }
 }

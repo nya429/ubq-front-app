@@ -4,7 +4,6 @@ export class Setting {
     private _value: string;
 
     constructor(setting) {
-      
         this._key = setting.key || setting.setting_key;
         this._value = setting.value || setting.setting_value;
         this._settingId = setting.id === 0 ? 0 : (setting.id || setting.setting_id);
@@ -18,7 +17,7 @@ export class Setting {
         this._key = key;
     }
 
-    setId(id:number) {
+    setId(id: number) {
         this._settingId = id;
     }
 

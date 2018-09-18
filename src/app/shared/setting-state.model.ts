@@ -1,6 +1,6 @@
 export class SettingState {
     public settingId: number;
-    // 0 => remove  1 => update 
+    // 0 => remove  1 => update
     public operation: number;
     // true => success, false => fail
     public state: boolean;

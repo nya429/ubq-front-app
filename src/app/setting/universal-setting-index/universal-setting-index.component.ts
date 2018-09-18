@@ -14,7 +14,6 @@ import { Setting } from '../../shared/setting.model';
 })
 export class UniversalSettingIndexComponent implements OnInit {
   private settingSubscription: Subscription;
-  
   settings: Setting[];
   subDomain: object;
 
@@ -22,8 +21,8 @@ export class UniversalSettingIndexComponent implements OnInit {
 
   ngOnInit() {
     this.settings = this.settingService.getSettings();
-    this.settingSubscription = this.settingService.settingsChanged.subscribe(() => 
-    this.settings = this.settingService.getSettings())
+    this.settingSubscription = this.settingService.settingsChanged.subscribe(() =>
+    this.settings = this.settingService.getSettings());
   }
 
 
