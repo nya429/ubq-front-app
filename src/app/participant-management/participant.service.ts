@@ -30,15 +30,15 @@ export class ParticipantService {
 
   constructor(private httpClient: HttpClient,
               private settingService: SettingService) {
-               this.httpOptions = {
-                  headers: new HttpHeaders({
-                    'Content-Type':  'application/json',
-                    'Authorization': 'my-auth-token'
-                  }),
-                  participantUrl: () =>  this.settingService.getApis('participant'),
-                  eventUrl: () => this.settingService.getApis('event')
-                };
-              }
+    this.httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'my-auth-token'
+      }),
+      participantUrl: () =>  this.settingService.getApis('participant'),
+      eventUrl: () => this.settingService.getApis('event')
+    };
+  }
 
   reset() {
     this.limit = null;

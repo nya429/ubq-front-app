@@ -30,7 +30,7 @@ export class SettingService {
 
     constructor(private httpClient: HttpClient) {
         this.api = new API('localhost');
-        this.settings = this.defaultSettings;
+        
         this.httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json',
@@ -38,6 +38,9 @@ export class SettingService {
             }),
             settingUrl: () => this.getApis('setting'),
           };
+        
+        // TODO: fetch then excute this if failed;
+        this.settings = this.defaultSettings;
     }
 
     getSettings() {
