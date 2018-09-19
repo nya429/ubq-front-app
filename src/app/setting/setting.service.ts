@@ -156,6 +156,7 @@ export class SettingService {
             update = false;
             this.settingUpdated.next(new SettingState(setting.settingId(), 1, false));
         } else {
+            // TODO fetch host
             console.log('poped')
             update = true;
             this.poped.next();
