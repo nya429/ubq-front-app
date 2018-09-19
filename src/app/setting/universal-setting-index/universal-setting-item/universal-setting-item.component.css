@@ -15,7 +15,7 @@
     padding: 6px 12px;
 }
 
-.edit-padding {
+.edit-btn-group {
     padding: 6px 0px;
 }
 
@@ -49,3 +49,14 @@
 .edit-indent {
     padding-left: 28px;
 }
+
+@media screen and (max-width: 700px) {
+    .edit-icon-hidden {
+        display: none;
+    }
+    
+    .edit-icon:hover > .edit-icon-hidden, 
+    .edit-icon:active > .edit-icon-hidden  {
+        display: none;
+    }
+  }

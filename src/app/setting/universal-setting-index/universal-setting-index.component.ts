@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -12,7 +12,7 @@ import { Setting } from '../../shared/setting.model';
   styleUrls: ['./universal-setting-index.component.css'],
   animations: [ listItemSlideStateTrigger ]
 })
-export class UniversalSettingIndexComponent implements OnInit {
+export class UniversalSettingIndexComponent implements OnInit, OnDestroy {
   private settingSubscription: Subscription;
   settings: Setting[];
   subDomain: object;
@@ -20,13 +20,22 @@ export class UniversalSettingIndexComponent implements OnInit {
   constructor(private settingService: SettingService) { }
 
   ngOnInit() {
-    this.settings = this.settingService.getSettings();
+    this.getLocalSettings();
+    this.getCloudSettings();
     this.settingSubscription = this.settingService.settingsChanged.subscribe(() =>
-    this.settings = this.settingService.getSettings());
+      this.getLocalSettings());
+  }
+
+  ngOnDestroy() {
+    this.settingSubscription.unsubscribe();
   }
 
 
-  getSettingsApi() {
+  getCloudSettings() {
     this.settingService.getSettingListByOptions();
+  }
+
+  getLocalSettings() {
+    this.settings = this.settingService.getSettings();
   }
 }

@@ -26,7 +26,7 @@ export class SettingService {
 
     settingsChanged = new Subject<Setting[]>();
     settingUpdated = new Subject<SettingState>();
-
+    poped = new Subject<object>();
 
     constructor(private httpClient: HttpClient) {
         this.api = new API('localhost');
@@ -106,6 +106,7 @@ export class SettingService {
         const setting = new Setting(form);
         const settingId = setting.settingId();
 
+        // TODO use key for conditioning later
         if (settingId === 0) {
             return this.updateLocalSetting(setting);
         }
@@ -134,21 +135,35 @@ export class SettingService {
         console.log(setting.key());
         switch (setting.key()) {
             case 'host': // host setting
-                const hostOption = this.setHost(setting.value());
-                setting.setValue(hostOption);
-                update = true;
-                fail = hostOption === setting.value() ? true : false;
+                update = this.onUpdateHost(setting, update, fail);
                 break;
             default:
                 break;
         }
 
         if (update) {
-            this.onSettingUpdated(setting);
+            this.onLocalSettingUpdated(setting);
         }
     }
 
-    onSettingUpdated(newSetting: Setting) {
+    onUpdateHost(setting: Setting, update:boolean, fail: boolean) {
+         // assigned option should different from old one
+        const oldValue = this.settings[0].value();
+        const assignedValue = this.setHost(setting.value());
+        setting.setValue(assignedValue);
+        fail = assignedValue === oldValue ? true : false;
+        if(fail) {
+            update = false;
+            this.settingUpdated.next(new SettingState(setting.settingId(), 1, false));
+        } else {
+            console.log('poped')
+            update = true;
+            this.poped.next();
+        }
+        return update;
+    }
+
+    onLocalSettingUpdated(newSetting: Setting) {
         this.settings.map(setting => {
             if (setting.settingId() === newSetting.settingId()
             && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
@@ -158,6 +173,7 @@ export class SettingService {
         });
 
         this.settingsChanged.next(this.settings.slice());
+        //TODO change it to id
         this.settingUpdated.next(new SettingState(newSetting.settingId(), 1, true));
     }
 
@@ -191,6 +207,7 @@ export class SettingService {
         const settings = data['settings'].map(
           seetingRaw => new Setting(seetingRaw)
         );
+        // unshift host setting into the array
         settings.unshift(this.settings[0]);
         this.settings = settings;
         console.log(this.settings);

@@ -64,7 +64,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  pathForm() {
+  patchForm() {
     // console.log('cahnged', this.value)
     this.settingForm.patchValue({
       'value': this.value,
@@ -88,6 +88,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
 
   onCancle() {
     this.editMode = false;
+    this.patchForm();
   }
 
   stateFail() {
@@ -111,7 +112,10 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
         break;
       case 1:
         this.setValue();
-        this.pathForm();
+        this.patchForm();
+        if (!state ) {
+          this.stateFail();
+         }
         // state && this.pathForm();
         break;
       default:

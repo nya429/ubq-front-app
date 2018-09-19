@@ -12,6 +12,7 @@ import { SettingComponent } from './setting.component';
 import { UniversalSettingIndexComponent } from './universal-setting-index/universal-setting-index.component';
 import { UniversalSettingItemComponent } from './universal-setting-index/universal-setting-item/universal-setting-item.component';
 import { UniversalSettingItemInputComponent } from './universal-setting-item-input/universal-setting-item-input.component';
+import { SettingPopupComponent } from './setting-popup/setting-popup.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { UniversalSettingItemInputComponent } from './universal-setting-item-inp
     SettingComponent,
     UniversalSettingIndexComponent,
     UniversalSettingItemComponent,
-    UniversalSettingItemInputComponent],
+    UniversalSettingItemInputComponent,
+    SettingPopupComponent],
   providers: []
 })
 export class SettingModule { }

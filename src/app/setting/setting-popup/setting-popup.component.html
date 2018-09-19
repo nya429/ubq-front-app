@@ -1,14 +1,14 @@
 <div *ngIf='display' class="popup-wrapper">
   <div class='popup-background'></div>
-  <div class='popup'>
+  <div class='popup' #popup>
     <div class="popup-title">
         <img alt="attention" 
         src="../assets/map/warning.svg"
         class="img-responsive">
-        <h3>Tracking Map Stopped</h3>
+        <h3>Host has changed to </h3>
     </div>
     <div class="popup-text">
-        <p>The tracking map will be stopped automatically every time you leave this page</p>
+        <p>Please refresh</p>
     </div>
     <div class="popup-action">
         <a (click)='onDismiss()' class='cursor-pointer'>GOT IT</a>

@@ -14,3 +14,7 @@ app-universal-setting-item {
 .setting-penal {
     min-height: 80vh;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}

@@ -15,7 +15,7 @@
             <input (keydown.enter)='onUpdate()' (keydown.esc)='onUpdate()' type="text" class="form-control" id="value" formControlName="value">
         </div>
     </form>
-    <div class="col-xs-2 margin edit-padding" >
+    <div class="col-xs-2 margin edit-btn-group">
         <span *ngIf='!editMode' >
             <a (click)='onEdit()'  class="edit-icon pointer"><span title='Edit' class="glyphicon glyphicon-pencil edit-icon-hidden"></span> Edit</a>
             <a (click)='onRemove()' class="edit-icon pointer"><span title='Delete' class="glyphicon glyphicon-remove"></span></a>

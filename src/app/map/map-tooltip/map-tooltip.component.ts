@@ -25,7 +25,7 @@ export class MapTooltipComponent implements OnInit, OnDestroy {
     this.pageBlureSub.unsubscribe();
   }
 
-  onOK() {
+  onDismiss() {
     this.display = false;
   }
 }
