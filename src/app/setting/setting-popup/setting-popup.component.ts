@@ -11,6 +11,9 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
   display: boolean;
   popupSub: Subscription;
   head: string;
+  message: string;
+  connected: boolean;
+  statusHasPoped: boolean;
 
   @ViewChild('popup') private elRef: ElementRef;
 
@@ -25,13 +28,24 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
   }
   
   onPopup(popup: object) {
-    this.head = `Backend  has changed to ${popup['host'].toUpperCase()}`;
-    this.display = popup['poped'];
+    if (popup['host']) {
+      this.head = `Backend  has changed to ${popup['host'].toUpperCase()}`;
+      this.message = 'The setting will be refreshed';
+    } else {
+      this.head = `Something wrong...`;
+      this.message = 'Try out other hosts, or changes will not be stored';
+    }
+    this.statusHasPoped = this.settingService.isConnected() === this.connected ?  true : false;
+    this.connected = this.settingService.isConnected();
+
+    this.display = popup['poped'] && !this.statusHasPoped;
   }
 
   onDismiss() {
     this.display = false;
-    this.settingService.getSettingListByOptions();
+    if(this.connected) {
+      this.settingService.getSettingListByOptions();
+    }
   }
  
   @HostListener('document:click', ['$event.target'])

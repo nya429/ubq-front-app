@@ -23,6 +23,7 @@ export class SettingService {
     private api;
     private subDomains;
     private httpOptions;
+    private connected: boolean;
 
     settingsChanged = new Subject<Setting[]>();
     settingUpdated = new Subject<SettingState>();
@@ -41,6 +42,7 @@ export class SettingService {
         
         // TODO: fetch then excute this if failed;
         this.settings = this.defaultSettings;
+        this.getSettingListByOptions();
     }
 
     getSettings() {
@@ -54,14 +56,22 @@ export class SettingService {
           observe: 'body',
           responseType: 'json'
         }).subscribe((result) => {
-            form['id'] = result['data']['setting_id'];
-            const setting = new Setting(form);
-            this.settings.push(setting);
-            console.log(setting);
-            this.settingsChanged.next(this.settings.slice());
+            this.addLocalsetting(form, result['data']['setting_id']);
         }, (err: HttpErrorResponse)  => {
             console.error(err);
+            // TODO check 404 then
+            this.connected = false;
+            this.popup('opeartion', 'add');
+            this.addLocalsetting(form, 40400 + this.settings.length);
         });
+    }
+
+    addLocalsetting(form: object, settingId: number) {
+        form['id'] = settingId;
+        const setting = new Setting(form);
+        this.settings.push(setting);
+        console.log(setting);
+        this.settingsChanged.next(this.settings.slice());
     }
 
     getSettingListByOptions(offset?: number, limit?: number) {
@@ -84,7 +94,10 @@ export class SettingService {
                 const data = result['data'];
                 this.setSettings(data);
               }, (err: HttpErrorResponse)  => {
+                 // TODO check 404 then
+                this.connected = false;
                 console.error(err);
+                this.popup('opeartion', 'get');
               }
           );
     }
@@ -108,6 +121,9 @@ export class SettingService {
 
             }, (err: HttpErrorResponse)  => {
               console.error(err);
+                        // TODO check 404 then
+            this.connected = false;
+            this.popup('opeartion', 'remove');
             }
         );
     }
@@ -141,8 +157,13 @@ export class SettingService {
             (result) => {
                 const data = result['data'];
                 this.setSettings(data);
+                this.updateLocalSetting(setting);
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
+                          // TODO check 404 then
+            this.connected = false;
+                this.updateLocalSetting(setting);
+                this.popup('opeartion', 'update');
               }
         );
     }
@@ -177,9 +198,7 @@ export class SettingService {
             // TODO fetch host
             console.log('poped')
             update = true;
-            setTimeout(() => {
-                this.poped.next({poped: true, host: assignedValue});
-            }, 100); 
+            this.popup('host', assignedValue)
         }
         return update;
     }
@@ -247,5 +266,18 @@ export class SettingService {
 
     populateSettings () {
 
+    }
+
+    popup(key: string, value: string) {
+        let popObject = {'poped': true};
+        popObject[key] = value;
+        
+        setTimeout(() => {
+            this.poped.next(popObject);
+        }, 100); 
+    }
+
+    isConnected() {
+        return this.connected;
     }
 }
