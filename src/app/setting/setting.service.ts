@@ -47,6 +47,7 @@ export class SettingService {
         return this.settings.slice();
     }
 
+    // TODO add trim() in backend
     addSetting(form: object) {
         const urlSuffix = '/new';
         return this.httpClient.post(`${this.httpOptions.settingUrl()}${urlSuffix}`, form, {
@@ -89,12 +90,29 @@ export class SettingService {
     }
 
     // FIXME, this should be fixed, index -1 isssues
+
     removeSetting(settingId: number, key: string) {
         if (!this.isRemovable(key)) {
             this.settingUpdated.next(new SettingState(
                 settingId, 0, false));
             return;
         }
+
+        this.removeLocalSetting(settingId);
+
+        return this.httpClient.delete(`${this.httpOptions.settingUrl()}/${settingId}`, {
+            observe: 'body',
+            responseType: 'json'
+          }).subscribe(
+            (result) => {
+
+            }, (err: HttpErrorResponse)  => {
+              console.error(err);
+            }
+        );
+    }
+
+    removeLocalSetting(settingId: number) {
         const removal = this.settings.find(setting =>
             setting.settingId() === settingId);
         const index = this.settings.indexOf(removal);
@@ -159,7 +177,9 @@ export class SettingService {
             // TODO fetch host
             console.log('poped')
             update = true;
-            this.poped.next();
+            setTimeout(() => {
+                this.poped.next({poped: true, host: assignedValue});
+            }, 100); 
         }
         return update;
     }
@@ -200,7 +220,7 @@ export class SettingService {
         return true;
     }
 
-    isKeyChangeable() {
+    isKeyTaken() {
 
     }
 

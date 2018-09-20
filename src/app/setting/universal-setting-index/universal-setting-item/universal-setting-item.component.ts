@@ -7,6 +7,8 @@ import { SettingService } from './../../setting.service';
 import { Setting } from '../../../shared/setting.model';
 import { failScaleTrigger } from '../../setting.animation';
 import { SettingState } from '../../../shared/setting-state.model';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 
 @Component({
   selector: 'app-universal-setting-item',
@@ -24,6 +26,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
   editMode = false;
   removable: boolean;
   scaleState: string;
+  private settingTimer;
 
   updateSubscription: Subscription;
 
@@ -121,5 +124,19 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  settingValidate(control: FormControl): Observable<any> | Promise<any> {
+    clearTimeout(this.settingTimer);
+    if (this.editMode && control.value.trim().toLowerCase() === this.value) {
+      return new Promise(resolve => resolve({'valueIsSame': true}));
+    }
+    // TODO: may need to value check later 
+    // return Observable.create((observer: Observer<any>) => {
+    //   this.settingTimer = setTimeout(() => {
+
+    //     observer.complete();
+    //     }, 500);
+    // });
   }
 }

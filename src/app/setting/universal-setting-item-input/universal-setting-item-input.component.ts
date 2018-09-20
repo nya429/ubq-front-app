@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SettingService } from '../setting.service';
 import { slideInTrigger, failScaleTrigger } from '../setting.animation';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 
 @Component({
   selector: 'app-universal-setting-item-input',
@@ -15,6 +17,7 @@ export class UniversalSettingItemInputComponent implements OnInit {
   value: string;
   settingId: number;
   editMode = false;
+  private settingTimer;
 
   constructor(private settingService: SettingService) { }
 
@@ -48,4 +51,22 @@ export class UniversalSettingItemInputComponent implements OnInit {
     // this.initForm();
   }
 
+  settingValidate(control: FormControl): Observable<any> | Promise<any> {
+    clearTimeout(this.settingTimer);
+    
+    // if (this.editMode && control.value.trim() === this.value) {
+    //   return new Promise(resolve => resolve({'valueIsSame': true}));
+    // }
+   //TODO key taken check up
+   //check local first
+
+    return Observable.create((observer: Observer<any>) => {
+      this.settingTimer = setTimeout(() => {
+   
+      // this.settingSerivce.isKeyTaken.subscribe(result => {
+      //   observer.next({'KeyIsTaken': true});
+      // });
+        },1000);
+    });
+  }
 }

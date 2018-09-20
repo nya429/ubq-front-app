@@ -277,7 +277,10 @@ export class ParticipantService {
   //     params: options
   //   });
   // }
-
+  
+  //00 not signed: not exist   =>   InvalidTrackerId
+  //01 not signed : exist      =>   OK
+  //11 signed: exist           =>   SignedTracker
   isTrackerValid(tracker_id: string) {
     let options = new HttpParams();
     options = options.append('id', tracker_id.trim());
