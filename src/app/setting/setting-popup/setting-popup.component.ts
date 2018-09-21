@@ -35,10 +35,16 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
       this.head = `Something wrong...`;
       this.message = 'Try out other hosts, or changes will not be stored';
     }
-    this.statusHasPoped = this.settingService.isConnected() === this.connected ?  true : false;
-    this.connected = this.settingService.isConnected();
 
-    this.display = popup['poped'] && !this.statusHasPoped;
+    console.log('isConnected()', this.statusHasPoped );
+    console.log(this.settingService.isConnected() === this.connected );
+    this.statusHasPoped = this.settingService.isConnected() === this.connected ?  true : false;
+    console.log('statusHaschanged', this.statusHasPoped );
+    this.connected = this.settingService.isConnected();
+    console.log('this.connected', this.connected );
+
+    this.display = popup['poped'] && this.statusHasPoped;
+    console.log('this.display', this.display );
   }
 
   onDismiss() {
