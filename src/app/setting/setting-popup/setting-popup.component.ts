@@ -10,7 +10,7 @@ import { SettingService } from '../setting.service';
 export class SettingPopupComponent implements OnInit, OnDestroy {
   display: boolean;
   popupSub: Subscription;
-  head: string;
+  title: string;
   message: string;
   connected: boolean;
   statusHasPoped: boolean;
@@ -29,10 +29,10 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
   
   onPopup(popup: object) {
     if (popup['host']) {
-      this.head = `Backend  has changed to ${popup['host'].toUpperCase()}`;
+      this.title = `Backend  has changed to ${popup['host'].toUpperCase()}`;
       this.message = 'The setting will be refreshed';
     } else {
-      this.head = `Something wrong...`;
+      this.title = `Something wrong...`;
       this.message = 'Try out other hosts, or changes will not be stored';
     }
 
@@ -46,7 +46,8 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
     this.display = popup['poped'] && this.statusHasPoped;
     console.log('this.display', this.display );
   }
-
+  
+  // must fixed!! other wise the same id will be update
   onDismiss() {
     this.display = false;
     if(this.connected) {

@@ -10,6 +10,10 @@
     display: block;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .transition {
     transition: .3s ease-in;   
 }
@@ -40,15 +44,49 @@
     
 }
 
-.add-button-groups {
+.add-button-group {
     position: fixed;
     width: 100px;
     height: 50px;
-    padding: 35px 0;
-    border-radius: 5px;
-    background-color: rgb(240, 255, 255); 
-    border: 1px solid lightcyan;
+    /* border-radius: 5px; */
+    /* background-color: rgb(240, 255, 255);  */
+    border: 1px solid black;
     margin:auto;
     z-index: 1040;
     bottom: 50px; right: 50px;
 }
+
+.btn-round {
+    border-radius: 50%;
+    background-color: #66afe9; 
+    height: 50px;
+    width: 50px;
+    padding: 10px;
+}
+
+.plus-bar {
+    position: absolute;
+    background-color: white;
+    height: 30px;
+    width: 2px;
+}
+
+.plus-bar-hor {
+    margin-left: 14px;
+    transform: rotate(90deg);
+}
+
+.plus-bar-ver {
+    margin-left: 14px;
+}
+
+@media screen and (max-width: 700px) {
+    .edit-icon-hidden {
+        display: none;
+    }
+    
+    .edit-icon:hover > .edit-icon-hidden, 
+    .edit-icon:active > .edit-icon-hidden  {
+        display: none;
+    }
+  }

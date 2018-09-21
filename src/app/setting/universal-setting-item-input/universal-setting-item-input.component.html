@@ -38,10 +38,13 @@
   </form>
 </div>
 <span class='add-button-group'>
-        <button class="btn  btn-round" 
+        <a class="btn-round block cursor-pointer" 
         (click)='editMode ? onAdd() : onNew()'
         [ngClass]="{'btn-success': editMode,
-        'btn-primary': !editMode}">Add</button>
+        'btn-primary': !editMode}">
+         <span class='plus-bar plus-bar-hor block'></span>
+         <span class='plus-bar plus-bar-ver block'></span>
+        </a>
         <button *ngIf='editMode' [disabled]='!editMode'
         (click)='onCancle()'
         class="btn btn-danger btn-round">Cancle</button>

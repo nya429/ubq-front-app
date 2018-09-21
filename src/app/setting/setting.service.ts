@@ -56,6 +56,7 @@ export class SettingService {
           observe: 'body',
           responseType: 'json'
         }).subscribe((result) => {
+            this.connected = true;
             this.addLocalsetting(form, result['data']['setting_id']);
         }, (err: HttpErrorResponse)  => {
             console.error(err);
@@ -91,6 +92,7 @@ export class SettingService {
           })
           .subscribe(
               (result) => {
+                this.connected = true;
                 const data = result['data'];
                 this.setSettings(data);
               }, (err: HttpErrorResponse)  => {
@@ -118,7 +120,7 @@ export class SettingService {
             responseType: 'json'
           }).subscribe(
             (result) => {
-
+                this.connected = true;
             }, (err: HttpErrorResponse)  => {
               console.error(err);
                         // TODO check 404 then
@@ -135,41 +137,43 @@ export class SettingService {
         this.settings.splice(index, 1);
         this.settingsChanged.next(this.settings.slice());
     }
-
-    updateSetting(form: object) {
+    
+    // TODO fix update on backend
+    updateSetting(form: object, index: number) {
         const setting = new Setting(form);
         const settingId = setting.settingId();
 
         // TODO use key for conditioning later
         if (settingId === 0) {
-            return this.updateLocalSetting(setting);
+            return this.updateLocalSetting(setting, index);
         }
 
         if (!settingId) {
             return false;
             // this.settingUpdated.next(new SettingState(settingId, 1, false));
         }
-
-        return this.httpClient.patch(`${this.httpOptions.settingUrl}/${settingId}`, form, {
+        console.log(form);
+        return this.httpClient.patch(`${this.httpOptions.settingUrl()}/${settingId}`, form, {
             observe: 'body',
             responseType: 'json'
         }).subscribe(
             (result) => {
+                this.connected = true;
                 const data = result['data'];
-                this.setSettings(data);
-                this.updateLocalSetting(setting);
+                console.log(result);
+                this.updateLocalSetting(setting, index);
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
                           // TODO check 404 then
             this.connected = false;
-                this.updateLocalSetting(setting);
+                this.updateLocalSetting(setting, index);
                 this.popup('opeartion', 'update');
               }
         );
     }
 
-    updateLocalSetting(setting: Setting) {
-        let update = false;
+    updateLocalSetting(setting: Setting, index: number) {
+        let update = true;
         let fail = false;
         console.log(setting.key());
         switch (setting.key()) {
@@ -181,7 +185,7 @@ export class SettingService {
         }
 
         if (update) {
-            this.onLocalSettingUpdated(setting);
+            this.onLocalSettingUpdated(setting, index);
         }
     }
 
@@ -195,22 +199,25 @@ export class SettingService {
             update = false;
             this.settingUpdated.next(new SettingState(setting.settingId(), 1, false));
         } else {
-            // TODO fetch host
+            // TODO fetch host here first
             console.log('poped')
             update = true;
+            this.getSettingListByOptions(); //temp solution
             this.popup('host', assignedValue)
         }
         return update;
     }
 
-    onLocalSettingUpdated(newSetting: Setting) {
-        this.settings.map(setting => {
-            if (setting.settingId() === newSetting.settingId()
-            && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
-                setting.setKey(newSetting.key());
-                setting.setValue(newSetting.value());
-            }
-        });
+    onLocalSettingUpdated(newSetting: Setting,  index: number) {
+        // this.settings.map(setting => {
+        //     if (setting.settingId() === newSetting.settingId()
+        //     && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
+        //         setting.setKey(newSetting.key());
+        //         setting.setValue(newSetting.value());
+        //     }
+        // });
+
+        this.settings[index] = newSetting;
 
         this.settingsChanged.next(this.settings.slice());
         //TODO change it to id
@@ -261,7 +268,7 @@ export class SettingService {
     // use default
     // and populate?
     defaultSettingsLookup() {
-
+// select count(*) from universal is key in []
     }
 
     populateSettings () {
@@ -276,7 +283,8 @@ export class SettingService {
             this.poped.next(popObject);
         }, 100); 
     }
-
+    
+    // TODO this will be replaced by fecth
     isConnected() {
         return this.connected;
     }
