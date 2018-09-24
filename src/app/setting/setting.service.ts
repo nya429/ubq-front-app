@@ -31,7 +31,7 @@ export class SettingService {
 
     constructor(private httpClient: HttpClient) {
         this.api = new API('localhost');
-        
+
         this.httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json',
@@ -39,7 +39,7 @@ export class SettingService {
             }),
             settingUrl: () => this.getApis('setting'),
           };
-        
+
         // TODO: fetch then excute this if failed;
         this.settings = this.defaultSettings;
         this.getSettingListByOptions();
@@ -137,7 +137,7 @@ export class SettingService {
         this.settings.splice(index, 1);
         this.settingsChanged.next(this.settings.slice());
     }
-    
+
     // TODO fix update on backend
     updateSetting(form: object, index: number) {
         const setting = new Setting(form);
@@ -181,6 +181,7 @@ export class SettingService {
                 update = this.onUpdateHost(setting, update, fail);
                 break;
             default:
+                fail = true;
                 break;
         }
 
@@ -189,21 +190,20 @@ export class SettingService {
         }
     }
 
-    onUpdateHost(setting: Setting, update:boolean, fail: boolean) {
+    onUpdateHost(setting: Setting, update: boolean, fail: boolean) {
          // assigned option should different from old one
         const oldValue = this.settings[0].value();
         const assignedValue = this.setHost(setting.value());
         setting.setValue(assignedValue);
         fail = assignedValue === oldValue ? true : false;
-        if(fail) {
+        if (fail) {
             update = false;
             this.settingUpdated.next(new SettingState(setting.settingId(), 1, false));
         } else {
             // TODO fetch host here first
-            console.log('poped')
             update = true;
-            this.getSettingListByOptions(); //temp solution
-            this.popup('host', assignedValue)
+            this.getSettingListByOptions(); // temp solution
+            this.popup('host', assignedValue);
         }
         return update;
     }
@@ -220,7 +220,7 @@ export class SettingService {
         this.settings[index] = newSetting;
 
         this.settingsChanged.next(this.settings.slice());
-        //TODO change it to id
+        // TODO change it to id
         this.settingUpdated.next(new SettingState(newSetting.settingId(), 1, true));
     }
 
@@ -276,14 +276,14 @@ export class SettingService {
     }
 
     popup(key: string, value: string) {
-        let popObject = {'poped': true};
+        const popObject = {'poped': true};
         popObject[key] = value;
-        
+
         setTimeout(() => {
             this.poped.next(popObject);
-        }, 100); 
+        }, 100);
     }
-    
+
     // TODO this will be replaced by fecth
     isConnected() {
         return this.connected;

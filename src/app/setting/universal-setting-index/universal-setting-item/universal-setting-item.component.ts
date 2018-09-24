@@ -131,7 +131,7 @@ export class UniversalSettingItemComponent implements OnInit, OnDestroy {
     if (this.editMode && control.value.trim().toLowerCase() === this.value) {
       return new Promise(resolve => resolve({'valueIsSame': true}));
     }
-    // TODO: may need to value check later 
+    // TODO: may need to value check later
     // return Observable.create((observer: Observer<any>) => {
     //   this.settingTimer = setTimeout(() => {
 

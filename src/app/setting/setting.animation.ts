@@ -7,13 +7,13 @@ const  listItemSlideStateTrigger =  trigger('listItemSlideState', [
         query(':enter', [
             style({
                 opacity: 0,
-                transform: 'translateX(-20%)'
+                transform: 'translateX(-10%)'
             }),
             stagger(40,
             animate('350ms ease-out', keyframes([
                     style({
                         opacity: 0,
-                        transform: 'translateX(-20%)',
+                        transform: 'translateX(-10%)',
                         offset: 0
                     }),
                     style({
@@ -62,7 +62,7 @@ const failScaleTrigger =  trigger('scale', [
             style({transform: 'translateX(-3%)'}),
             style({transform: 'translateX(1%)'}),
             style({transform: 'translateX(0)'}),
-        ]) 
+        ])
     )),
     transition('default => authed', animate('400ms 100ms ease-out', keyframes([
         style({transform: 'translateX(1.1)', offset: 0.7}),
@@ -93,4 +93,4 @@ const slideInTrigger =  trigger('slideInState', [
     ]),
 ]);
 
-export {listItemSlideStateTrigger, failScaleTrigger, slideInTrigger}
+export {listItemSlideStateTrigger, failScaleTrigger, slideInTrigger};

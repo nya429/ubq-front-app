@@ -26,7 +26,7 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.popupSub.unsubscribe();
   }
-  
+
   onPopup(popup: object) {
     if (popup['host']) {
       this.title = `Backend  has changed to ${popup['host'].toUpperCase()}`;
@@ -46,18 +46,18 @@ export class SettingPopupComponent implements OnInit, OnDestroy {
     this.display = popup['poped'] && this.statusHasPoped;
     console.log('this.display', this.display );
   }
-  
+
   // must fixed!! other wise the same id will be update
   onDismiss() {
     this.display = false;
-    if(this.connected) {
+    if (this.connected) {
       this.settingService.getSettingListByOptions();
     }
   }
- 
+
   @HostListener('document:click', ['$event.target'])
   onClickOutSide(targetElement) {
-      if(!this.elRef) {
+      if (!this.elRef) {
         return;
       }
       const clickedInside = this.elRef.nativeElement.contains(targetElement);

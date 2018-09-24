@@ -1,51 +1,50 @@
-<div class="row ">
-  <form [formGroup]='settingForm'
-        class="col-xs-12 bottom-line padding-bottom">
-    <!-- <div class="row">
-        <label class='col-xs-6 ' for="key"><h4>Add new Key pair</h4></label>
-        <div class=" col-xs-6" align=right>
-            <span>
-                <button class="btn  btn-round" 
-                (click)='editMode ? onAdd() : onNew()'
-                [ngClass]="{'btn-success': editMode,
-                'btn-primary': !editMode}">Add</button>
-                <button *ngIf='editMode' [disabled]='!editMode'
-                (click)='onCancle()'
-                class="btn btn-danger btn-round">Cancle</button>
-            </span>
+
+  <form [formGroup]='settingForm'>
+
+    <div *ngIf='editMode' class="popup-background"></div>
+    <div *ngIf='editMode' class="popup">
+        <div class="row">
+            <label class='col-md-offset-1 col-md-10' for="key"><h4>Add new Key pair</h4></label>
         </div>
-    </div> -->
-    <div @slideInState *ngIf='editMode' class="row block">
-        <br>
-        <div  class="form-group">
-            <div class="col-xs-2">
-                <label for="key">Key:</label>
+        <div @slideInState  class="row block">
+            <br>
+            <div  class="form-group">
+                <div class="col-md-offset-1 col-md-10">
+                    <label for="key">Key</label>
+                    <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Key" type="text" class="form-control" id="key" formControlName="key">
+                </div>
             </div>
-            <div class="col-xs-10">
-                <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Key" type="text" class="form-control" id="key" formControlName="key">
+            <br>
+            <br>
+            <div class="form-group">
+                <div class="col-md-offset-1 col-md-10">
+                    <label for="value">Value</label>
+                    <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Value" type="text" class="form-control" id="value" formControlName="value">
+                </div>
             </div>
-          </div>
-          <br>
-          <div class="form-group">
-              <div class="col-xs-2">
-                  <label for="value">Value: </label>
-              </div>
-              <div class="col-xs-10">
-                  <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Value" type="text" class="form-control" id="value" formControlName="value">
-              </div>
-          </div>
+            <br>
+            <br>
+            <div class="col-md-offset-1 col-md-10" align=right>
+                    <span>
+                        <button class="btn  btn-primary" 
+                        (click)='editMode ? onAdd() : onNew()'
+                        [ngClass]="{'btn-success': editMode,
+                        'btn-primary': !editMode}">Add</button>
+                        <button *ngIf='editMode' [disabled]='!editMode'
+                        (click)='onCancle()'
+                        class="btn btn-danger">Cancle</button>
+                    </span>
+            </div>
+        </div>
     </div>
-  </form>
-</div>
+</form>
+
 <span class='add-button-group'>
         <a class="btn-round block cursor-pointer" 
-        (click)='editMode ? onAdd() : onNew()'
-        [ngClass]="{'btn-success': editMode,
-        'btn-primary': !editMode}">
-         <span class='plus-bar plus-bar-hor block'></span>
-         <span class='plus-bar plus-bar-ver block'></span>
+        (click)='editMode ? onCancle() : onNew()'>
+         <span class='btn-plus block' [ngClass]="{'btn-plus-rotate': editMode}">
+            <span class='plus-bar plus-bar-hor block'></span>
+            <span class='plus-bar plus-bar-ver block'></span>
+         </span>
         </a>
-        <button *ngIf='editMode' [disabled]='!editMode'
-        (click)='onCancle()'
-        class="btn btn-danger btn-round">Cancle</button>
 </span>
