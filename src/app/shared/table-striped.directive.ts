@@ -10,7 +10,6 @@ export class TableStripedDirective implements OnInit {
     private renderer: Renderer2) { }
 
   ngOnInit() {
-    console.log(this.appTableStriped);
     if (this.appTableStriped % 2 !== 0) {
       this.renderer.setStyle(this.elRef.nativeElement, 'background-color', '#f0f0f0');
     }

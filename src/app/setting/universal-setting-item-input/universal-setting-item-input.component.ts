@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SettingService } from '../setting.service';
 import { slideInTrigger, failScaleTrigger } from '../setting.animation';
@@ -17,7 +17,7 @@ export class UniversalSettingItemInputComponent implements OnInit {
   value: string;
   settingId: number;
   editMode = false;
-  private settingTimer;
+  settingTimer;
 
   constructor(private settingService: SettingService) { }
 
@@ -32,7 +32,7 @@ export class UniversalSettingItemInputComponent implements OnInit {
     this.settingForm = new FormGroup({
       'id': new FormControl(this.settingId),
       'value': new FormControl(this.value, [Validators.required, Validators.max(50)]),
-      'key': new FormControl(this.key , [Validators.required, Validators.max(50)]),
+      'key': new FormControl(this.key , [Validators.required, Validators.max(50)], this.settingValidate.bind(this)),
     });
   }
 
@@ -53,20 +53,22 @@ export class UniversalSettingItemInputComponent implements OnInit {
 
   settingValidate(control: FormControl): Observable<any> | Promise<any> {
     clearTimeout(this.settingTimer);
-    
     // if (this.editMode && control.value.trim() === this.value) {
     //   return new Promise(resolve => resolve({'valueIsSame': true}));
     // }
    //TODO key taken check up
    //check local first
-
     return Observable.create((observer: Observer<any>) => {
       this.settingTimer = setTimeout(() => {
-   
-      // this.settingSerivce.isKeyTaken.subscribe(result => {
-      //   observer.next({'KeyIsTaken': true});
-      // });
-        },1000);
+        if(this.settingService.isKeyTaken(control.value.trim().toLowerCase())) {
+          console.log('yes I')
+          observer.next({'keyIsSame': true});
+        } else {
+          observer.next(null);
+        }
+          observer.complete();
+      }, 200);
+     
     });
   }
 }

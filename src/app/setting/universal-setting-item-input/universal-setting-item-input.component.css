@@ -14,10 +14,6 @@
     cursor: pointer;
 }
 
-.transition {
-    transition: .3s ease-in;   
-}
-
 .popup-background {
     position:fixed;
     z-index: 1030;
@@ -40,9 +36,23 @@
     border: 1px solid #bce8f1;
     margin:auto;
     z-index: 1030;
-    top: 0; left: 0; bottom: 0; right: 0;
-    /* animation: .3s .2s ease-in forwards pop-up; */
-    
+    top: 0; left: 0; bottom: 0; right: 0;    
+}
+
+input.ng-invalid.ng-touched {
+    border-left: 5px solid red;
+}
+
+input {
+    border-left: 5px solid;
+}
+
+input.ng-touched.ng-pending {
+    border-left: 5px solid  #3498db;
+}
+
+input.ng-valid.ng-touched {
+    border-left: 5px solid green;
 }
 
 .add-button-group {
@@ -99,8 +109,20 @@
     margin-left: 10px;
 }
 
+.alert-label {
+    display: inline-block;
+    padding: 0px 2px;
+    margin-bottom: 0px;
+    border: none; 
+    background-color: transparent;
+}
+
 @media screen and (max-width: 767px) {
     .add-button-group {
-        bottom: 10vw; right: 10vh;
+        bottom: 5vw; right: 2vh;
+    }
+
+    .popup {
+        width: 95vw;
     }
   }

@@ -5,6 +5,7 @@ import { LoaderSmallComponent } from './loader-small/loader-small.component';
 import { ClickOutsideDirective } from './click-outside.directive';
 import { AutoFocusDirective } from './autoFocus.directive';
 import { ScrollTriggerDirective } from './scroll-trigger.directive';
+import { TableStripedDirective } from './table-striped.directive';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,8 @@ import { ScrollTriggerDirective } from './scroll-trigger.directive';
     LoaderSmallComponent,
     ClickOutsideDirective,
     AutoFocusDirective,
-    ScrollTriggerDirective
+    ScrollTriggerDirective,
+    TableStripedDirective,
   ],
   imports: [
     CommonModule
@@ -22,7 +24,7 @@ import { ScrollTriggerDirective } from './scroll-trigger.directive';
     LoaderSmallComponent,
     ClickOutsideDirective,
     AutoFocusDirective,
-
+    TableStripedDirective
   ],
   providers: [
 

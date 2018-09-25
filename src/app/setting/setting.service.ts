@@ -246,8 +246,9 @@ export class SettingService {
         return true;
     }
 
-    isKeyTaken() {
-
+    isKeyTaken(data) {
+        
+        return this.settings.filter(setting => setting.key() === data).length > 0;
     }
 
     setSettings(data) {
@@ -255,8 +256,8 @@ export class SettingService {
           seetingRaw => new Setting(seetingRaw)
         );
         // unshift host setting into the array
-        settings.unshift(this.settings[0]);
-        this.settings = settings;
+        // settings.unshift(this.settings[0]);
+        this.settings = this.settings.slice(0, 1).concat(settings)
         console.log(this.settings);
         this.settingsChanged.next(this.settings);
     }
