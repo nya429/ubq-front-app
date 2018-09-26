@@ -13,10 +13,13 @@ export class SettingService {
     // TODO: will eliminate id
     defaultSettings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 0}),
-        new Setting({key: 'key2', value: 2, id: 1}),
-        new Setting({key: 'key3', value: 3, id: 2}),
-        new Setting({key: 'key4', value: 4, id: 3}),
-        new Setting({key: 'key4', value: 5, id: 4}) ];
+        new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
+        new Setting({key: 'map_base_width', value: 100, id: 2}),
+        new Setting({key: 'map_base_height', value: 50, id: 3}),
+        new Setting({key: 'map_maring_top', value: 30, id: 4}),
+        new Setting({key: 'map_maring_bottom', value: 30, id: 5}),
+        new Setting({key: 'map_maring_left', value: 30, id: 6}),
+        new Setting({key: 'map_maring_right', value: 530, id: 7}), ];
 
     settings: Setting[];
 
@@ -76,6 +79,7 @@ export class SettingService {
     }
 
     getSettingListByOptions(offset?: number, limit?: number) {
+        this.populateSettings();
         const urlSuffix = '/list';
         let options = new HttpParams();
         if (offset) {
@@ -84,7 +88,7 @@ export class SettingService {
         if (limit) {
           options = options.append('ltd', limit.toString());
         }
-
+        console.log(`${this.httpOptions.settingUrl()}${urlSuffix}`);
         return this.httpClient.get(`${this.httpOptions.settingUrl()}${urlSuffix}`, {
             observe: 'body',
             responseType: 'json',
@@ -247,7 +251,6 @@ export class SettingService {
     }
 
     isKeyTaken(data) {
-        
         return this.settings.filter(setting => setting.key() === data).length > 0;
     }
 
@@ -257,7 +260,7 @@ export class SettingService {
         );
         // unshift host setting into the array
         // settings.unshift(this.settings[0]);
-        this.settings = this.settings.slice(0, 1).concat(settings)
+        this.settings = this.settings.slice(0, 1).concat(settings);
         console.log(this.settings);
         this.settingsChanged.next(this.settings);
     }
@@ -272,8 +275,20 @@ export class SettingService {
 // select count(*) from universal is key in []
     }
 
-    populateSettings () {
-
+    populateSettings() {
+        const urlSuffix = '/populate';
+        const defaultSetting = this.defaultSettings.slice();
+        defaultSetting.shift();
+        return this.httpClient.post(`${this.httpOptions.settingUrl()}${urlSuffix}`, defaultSetting, {
+            observe: 'body',
+            responseType: 'json'
+        }).subscribe((result) => {
+            this.connected = true;
+         
+        }, (err: HttpErrorResponse)  => {
+            console.error(err);
+            // TODO check 404 then
+        });
     }
 
     popup(key: string, value: string) {
@@ -288,5 +303,27 @@ export class SettingService {
     // TODO this will be replaced by fecth
     isConnected() {
         return this.connected;
+    }
+
+    getDefaultSettingValues ()  {
+        let changedSettingCount = 0;
+
+        this.defaultSettings.forEach(defaultSetting => {
+            if (defaultSetting.key() === 'host') {
+                return;
+            }
+            this.settings.forEach(setting => {
+                if (setting.key() === defaultSetting.key()) {
+                    setting.setValue(defaultSetting.value());
+                    changedSettingCount ++;
+                }
+            });
+        });
+
+        if (changedSettingCount === this.defaultSettings.length - 1) {
+          // TODO matched
+        } else {
+            // TODO not matched populate
+        }
     }
 }

@@ -14,7 +14,7 @@
                         <div class="alert alert-danger alert-label" *ngIf=" settingForm.get('key').touched && !settingForm.get('key').valid && settingForm.get('key').errors">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <Strong *ngIf="settingForm.get('key').errors['keyIsSame']">has been taken, try another one</Strong>
-                            <Strong *ngIf="settingForm.get('key').errors.required">is required</Strong>
+                            <Strong *ngIf="settingForm.get('key').errors['required']">is required</Strong>
                         </div>
                     </label>
                     <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Key" type="text" class="form-control" id="key" formControlName="key">
@@ -27,7 +27,7 @@
                     <label for="value">Value
                         <div class="alert alert-danger alert-label" *ngIf=" settingForm.get('value').touched && !settingForm.get('value').valid && settingForm.get('value').errors">
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <Strong *ngIf="settingForm.get('value').errors.required">is required</Strong>
+                            <Strong *ngIf="settingForm.get('value').errors['required']">is required</Strong>
                         </div>
                     </label>
                     <input (keydown.enter)='onAdd()' (keydown.esc)='onCancle()' autocomplete="off" placeholder="Value" type="text" class="form-control" id="value" formControlName="value">
