@@ -3,6 +3,12 @@
     margin-bottom:2px;
 }
 
+.wrap {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .no-margin {
     margin: 0px;
 }

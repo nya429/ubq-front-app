@@ -1,9 +1,9 @@
 <div class="row setting-row"  [@scale]="scaleState" [appTableStriped]='index'>
     <div *ngIf='!editMode'>
-        <div class="col-xs-5 margin form-padding">
+        <div class="col-xs-5 margin form-padding wrap">
             <span>{{ setting.key() }}</span>
         </div>
-        <div class="col-xs-5 margin form-padding">
+        <div class="col-xs-5 margin form-padding wrap">
             <span>{{ setting.value() }}</span>
         </div>
     </div>
