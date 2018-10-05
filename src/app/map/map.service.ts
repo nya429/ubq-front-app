@@ -46,6 +46,7 @@ export class MapService {
 
     pageBlur = new Subject<boolean>();
     pageBlurHinted = false;
+    windowResized = new Subject<void> ();
 
     // TODO restructure the selected Tracker
     selectedTrackerId: number;
@@ -343,5 +344,9 @@ export class MapService {
             this.pageBlur.next();
             this.pageBlurHinted = true;
         }
+    }
+
+    onWindowResize() {
+        this.windowResized.next();
     }
 }

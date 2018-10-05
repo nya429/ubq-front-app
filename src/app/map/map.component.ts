@@ -47,4 +47,9 @@ export class MapComponent implements OnInit, OnDestroy {
       this.leave = false;
     }
   }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.mapService.onWindowResize();
+  }
 }

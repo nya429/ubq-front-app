@@ -21,29 +21,39 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private onTestSubscription: Subscription;
   private popupSubscription: Subscription;
   private loadingStatusSubscription: Subscription;
+  private windowResizeSubscription: Subscription;
 
   private base = {width: 100, height: 50};
-  private margin: any = { top: 20, bottom: 20, left: 20, right: 20};
+  private margin: any = { top: 0, bottom: 0, left: 0, right: 0};
   private padding = {left: 30, right: 30, top: 20, bottom: 20};
 
   private chart: any;
   private svg: any;
-  private trackerPoints: any;
-  private trackerInfoG: any;
-  private mapPopup: any;
+  private rect: any;
+
+  /** Container Dimision*/
+  private divWidth: number;
+  private divHeight: number;
+  /** SVG dimension */
   private width: number;
   private height: number;
+  /** MapScale */
   private xScale: any;
   private yScale: any;
+  /** trackerPoint */
+  private trackerPoints: any;
+  private trackerInfoG: any;
+  private trackerInfoWidth = 150;
+  private trackerInfoHeight = 30;
+  private selectedPoint;
+   /** Popup */
+  private mapPopup: any;
+  private popupWidth = 250;
+  private popupHeight = 150;
+  /** not used */
   private colors: any;
   private xAxis: any;
   private yAxis: any;
-  private trackerInfoWidth = 150;
-  private trackerInfoHeight = 30;
-  private popupWidth = 250;
-  private popupHeight = 150;
-
-  private selectedPoint;
 
   constructor(private mapService: MapService) { }
 
@@ -64,6 +74,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         this.onPopupFade(true);
       }
     });
+    this.windowResizeSubscription = this.mapService.windowResized.subscribe(() => this.mapResize());
   }
 
   ngOnDestroy() {
@@ -73,6 +84,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.onTestSubscription.unsubscribe();
     this.popupSubscription.unsubscribe();
     this.loadingStatusSubscription.unsubscribe();
+    this.windowResizeSubscription.unsubscribe();
   }
 
   onStop() {
@@ -102,7 +114,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.mapService.mapInitiated = true;
       this.mapService.intiated.next(true);
       this.trackers = this.mapService.getTrackers();
-      console.log(this.trackers);
       this.initiateTrackPoint(this.trackers);
       this.mapService.move();
     }
@@ -164,50 +175,94 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   );
   }
 
-
+  
   createBase() {
     const element = this.chartContainer.nativeElement;
-    this.width = element.offsetWidth - this.margin.left - this.margin.right;
-    this.height = element.offsetHeight - this.margin.top - this.margin.bottom;
+    this.getContainerDimension(element)
+    this.getSVGDimension();
+    this.initMapScale();
+    this.appendSVG(element);
+    this.sizeSVG();
+    this.appendRect();
+    this.appendMapBackgroundImg();
+    this.attachPopup();
+
+    this.svg.on('click', () => this.diselecPoint());     //  Add trackerPoint Info ouside click dismiss
+  }
+
+  getContainerDimension(element) {
+    this.divWidth = element.offsetWidth;
+    this.divHeight = element.offsetHeight
+  }
+
+  getSVGDimension() {
+    this.width = this.divWidth - this.margin.left - this.margin.right;
+    this.height = this.divHeight - this.margin.top - this.margin.bottom;
+  }
+
+  initMapScale() {
     this.xScale = d3.scaleLinear()
-              // .domain([0, this.base.width])
-              .domain([0, this.base.width])
-              .range([0, element.offsetWidth  - 280 - this.padding.left - this.padding.right]);
+      .domain([0, this.base.width])
+      .range([0, this.width - 280 - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
-              .domain([0, this.base.height])
-              .range([0, element.offsetHeight - this.padding.top - this.padding.bottom]);
+      .domain([0, this.base.height])
+      .range([0, this.height - this.padding.top - this.padding.bottom]);
+  }
+
+  appendSVG(element) {
     d3.select(element).append('svg');
     this.svg = d3.select('svg');
+  }
+
+  /**   SVG  dimension  */
+  sizeSVG() {
     this.svg
-      .attr('width', element.offsetWidth)
-      .attr('height', element.offsetHeight)
-      .append('rect')
+      .attr('width', this.width)
+      .attr('height', this.height)
+  }
+
+  /**   RECT  dimension  */
+  appendRect() {
+    this.svg.append('rect')
+    this.rect = d3.select('rect');
+
+    this.rect
       .attr('class', 'trackerMapBase')
-      .attr('width', element.offsetWidth)
-      .attr('height', element.offsetHeight)
+      /** this is the place probably I want to use this.width -margin.top and this height  */
+      .attr('width', this.width)
+      .attr('height', this.height)
+      /* -------------------------------------*/
       // .style('stroke', 'cadetblue')
       // .style('stroke-width', 5)
       .attr('fill', 'white')
       .transition()
       .duration(1000)
       .attr('fill', 'darkslategray');
+  }
 
+  sizeRect() {
+    this.rect
+    .attr('width', this.width)
+    .attr('height', this.height);
+  }
+
+
+
+  appendMapBackgroundImg() {
     const imgs = this.svg.selectAll('svg').data([0]);
     imgs.enter()
       .append('svg:image')
       .attr('xlink:href', '../../../assets/store_floorplan.svg')
       .attr('x', -1270)
       .attr('y', -310)
-      .attr('width', element.offsetWidth * 4)
-      .attr('height', element.offsetHeight * 2)
+      .attr('width', this.width * 4)
+      .attr('height', this.height * 2)
       .attr('opacity', 0)
       .transition()
       .duration(1000)
       .delay(500)
       .attr('opacity', .6);
-
-    this.svg.on('click', () => this.diselecPoint());
-    this.attachPopup(element.offsetWidth, element.offsetHeight);
+  
   }
 
   initiateTrackPoint(trackers: Tracker[]) {
@@ -271,6 +326,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .duration(1000)
     .ease(d3.easeLinear)
     .style('fill', d => d.color)
+    /** point steps */
     .attr('cx', d => this.xScale(d.xCrd)  + this.padding.left)
     .attr('cy', d => this.yScale(d.yCrd) + this.padding.top);
 
@@ -444,7 +500,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
      this.trackerPoints.data(this.trackers);
   }
 
-  attachPopup(width: number, height: number) {
+  attachPopup() {
     if (this.mapPopup) {
       return false;
     }
@@ -460,8 +516,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .style('fill-opacity', .4)
       .attr('width', this.popupWidth)
       .attr('height', this.popupHeight)
-      .attr('x', width / 2 - this.popupWidth / 2)
-      .attr('y', height / 2 - this.popupHeight / 2 )
+      .attr('x', this.width / 2 - this.popupWidth / 2)
+      .attr('y', this.height / 2 - this.popupHeight / 2 )
       .attr('rx', 5)
       .attr('ry', 5);
     this.mapPopup.insert('text')
@@ -471,8 +527,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('fill', 'white')
       .attr('font-weight', 'bolder')
       .attr('font-size', '24px')
-      .attr('x', width / 2 )
-      .attr('y', height / 2 + 10 );
+      .attr('x', this.width / 2 )
+      .attr('y', this.height / 2 + 10 );
   }
 
   onPopup(text: string) {
@@ -505,5 +561,19 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .delay(d => delay ? 800 : 0)
     .style('opacity', 0);
   }
-
+  
+  mapResize() {
+    const element = this.chartContainer.nativeElement;
+    if (element.offsetWidth === this.divWidth && element.offsetHeight === this.divHeight) {
+      return;
+    }
+    console.log('DEBUG => map resize ');
+    console.log('Width=>', element.offsetWidth, "Height=>", element.offsetHeight);
+    // this.onStop();
+    this.getContainerDimension(element);
+    this.getSVGDimension();
+    this.initMapScale();
+    this.sizeSVG();
+    this.sizeRect();
+  }
 }
