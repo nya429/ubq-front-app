@@ -14,12 +14,8 @@ export class SettingService {
     defaultSettings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 0}),
         new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
-        new Setting({key: 'map_base_width', value: 100, id: 2}),
-        new Setting({key: 'map_base_height', value: 50, id: 3}),
-        new Setting({key: 'map_maring_top', value: 30, id: 4}),
-        new Setting({key: 'map_maring_bottom', value: 30, id: 5}),
-        new Setting({key: 'map_maring_left', value: 30, id: 6}),
-        new Setting({key: 'map_maring_right', value: 530, id: 7}), ];
+        new Setting({key: 'map_doamin_x', value: '100', id: 2}),
+        new Setting({key: 'map_doamin_y', value: '50', id: 3}) ];
 
     settings: Setting[];
 
@@ -326,4 +322,17 @@ export class SettingService {
             // TODO not matched populate
         }
     }
+
+    getMapSettingBase() {
+        let doamin_x = this.settings.find(setting => setting.key() === 'map_doamin_x');
+        let domain_y = this.settings.find(setting => setting.key() === 'map_doamin_y');
+
+        if(doamin_x && domain_y) {
+            doamin_x = this.defaultSettings.find(setting => setting.key() === 'map_doamin_x');
+            domain_y = this.defaultSettings.find(setting => setting.key() === 'map_doamin_y');
+        } 
+
+        return {width: +doamin_x.value(), height: +domain_y.value()};
+    }
+
 }

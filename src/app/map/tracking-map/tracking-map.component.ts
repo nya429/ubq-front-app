@@ -1,3 +1,4 @@
+import { SettingService } from './../../setting/setting.service';
 import { Component, Input, ViewChild, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import * as d3 from 'd3';
@@ -55,9 +56,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private xAxis: any;
   private yAxis: any;
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService,
+    private settingService: SettingService) { }
 
   ngOnInit() {
+    this.getMapSettings();
     this.createBase();
     this.onStartSubscription = this.mapService.onStarted.subscribe(() => this.onStart());
     this.onStopSubscription = this.mapService.onStopped.subscribe(() => this.onStop());
@@ -175,6 +178,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   );
   }
 
+  getMapSettings() {
+    this.base = this.settingService.getMapSettingBase();
+  }
   
   createBase() {
     const element = this.chartContainer.nativeElement;
