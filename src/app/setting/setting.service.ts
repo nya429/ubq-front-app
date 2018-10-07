@@ -14,8 +14,8 @@ export class SettingService {
     defaultSettings: Setting[] = [
         new Setting({key: 'host', value: 'localhost', id: 0}),
         new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
-        new Setting({key: 'map_doamin_x', value: '100', id: 2}),
-        new Setting({key: 'map_doamin_y', value: '50', id: 3}) ];
+        new Setting({key: 'map_domain_x', value: '100', id: 2}),
+        new Setting({key: 'map_domain_y', value: '50', id: 3}) ];
 
     settings: Setting[];
 
@@ -41,7 +41,7 @@ export class SettingService {
 
         // TODO: fetch then excute this if failed;
         this.settings = this.defaultSettings;
-        this.getSettingListByOptions();
+        this.populateSettings();
     }
 
     getSettings() {
@@ -56,17 +56,17 @@ export class SettingService {
           responseType: 'json'
         }).subscribe((result) => {
             this.connected = true;
-            this.addLocalsetting(form, result['data']['setting_id']);
+            this.addLocalSetting(form, result['data']['setting_id']);
         }, (err: HttpErrorResponse)  => {
             console.error(err);
             // TODO check 404 then
             this.connected = false;
             this.popup('opeartion', 'add');
-            this.addLocalsetting(form, 40400 + this.settings.length);
+            this.addLocalSetting(form, 40400 + this.settings.length);
         });
     }
 
-    addLocalsetting(form: object, settingId: number) {
+    addLocalSetting(form: object, settingId: number) {
         form['id'] = settingId;
         const setting = new Setting(form);
         this.settings.push(setting);
@@ -75,7 +75,6 @@ export class SettingService {
     }
 
     getSettingListByOptions(offset?: number, limit?: number) {
-        this.populateSettings();
         const urlSuffix = '/list';
         let options = new HttpParams();
         if (offset) {
@@ -94,6 +93,7 @@ export class SettingService {
               (result) => {
                 this.connected = true;
                 const data = result['data'];
+                console.log(data);
                 this.setSettings(data);
               }, (err: HttpErrorResponse)  => {
                  // TODO check 404 then
@@ -280,8 +280,9 @@ export class SettingService {
             responseType: 'json'
         }).subscribe((result) => {
             this.connected = true;
-         
+            this.getSettingListByOptions();
         }, (err: HttpErrorResponse)  => {
+            this.popup('opeartion', 'get');
             console.error(err);
             // TODO check 404 then
         });
@@ -324,13 +325,13 @@ export class SettingService {
     }
 
     getMapSettingBase() {
-        let doamin_x = this.settings.find(setting => setting.key() === 'map_doamin_x');
-        let domain_y = this.settings.find(setting => setting.key() === 'map_doamin_y');
+        let doamin_x = this.settings.find(setting => setting.key() === 'map_domain_x');
+        let domain_y = this.settings.find(setting => setting.key() === 'map_domain_y');
 
-        if(doamin_x && domain_y) {
-            doamin_x = this.defaultSettings.find(setting => setting.key() === 'map_doamin_x');
-            domain_y = this.defaultSettings.find(setting => setting.key() === 'map_doamin_y');
-        } 
+        if (!doamin_x || !domain_y) {
+            doamin_x = this.defaultSettings.find(setting => setting.key() === 'map_domain_x');
+            domain_y = this.defaultSettings.find(setting => setting.key() === 'map_domain_y');
+        }
 
         return {width: +doamin_x.value(), height: +domain_y.value()};
     }

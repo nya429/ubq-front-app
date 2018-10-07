@@ -18,3 +18,24 @@ app-universal-setting-item {
 .cursor-pointer {
     cursor: pointer;
 }
+
+.glyphicon {
+    font-size: 18px;
+}
+
+#panel-btn-refresh span{
+    opacity: .7;
+    transition: .3s;
+    transform: rotate(0);
+}
+
+#panel-btn-refresh:hover span  {
+    opacity: 1;
+    transition: .3s;
+    transform: rotate(180deg);
+}
+
+#panel-btn-refresh:active span {
+    opacity: .5;
+    transition: .3s;
+}
