@@ -39,7 +39,6 @@ export class SettingService {
             settingUrl: () => this.getApis('setting'),
           };
 
-        // TODO: fetch then excute this if failed;
         this.settings = this.defaultSettings;
         this.populateSettings();
     }
@@ -94,7 +93,10 @@ export class SettingService {
                 this.connected = true;
                 const data = result['data'];
                 console.log(data);
-                this.setSettings(data);
+                const settings = data['settings'].map(
+                    seetingRaw => new Setting(seetingRaw)
+                  );
+                this.setSettings(settings);
               }, (err: HttpErrorResponse)  => {
                  // TODO check 404 then
                 this.connected = false;
@@ -200,27 +202,18 @@ export class SettingService {
             update = false;
             this.settingUpdated.next(new SettingState(setting.settingId(), 1, false));
         } else {
-            // TODO fetch host here first
             update = true;
-            this.getSettingListByOptions(); // temp solution
+            // FIXME => populate later?
+            this.defaultSettingsLookup();
             this.popup('host', assignedValue);
         }
         return update;
     }
 
     onLocalSettingUpdated(newSetting: Setting,  index: number) {
-        // this.settings.map(setting => {
-        //     if (setting.settingId() === newSetting.settingId()
-        //     && (setting.value() !== newSetting.value() || setting.key()) !== newSetting.key()) {
-        //         setting.setKey(newSetting.key());
-        //         setting.setValue(newSetting.value());
-        //     }
-        // });
-
         this.settings[index] = newSetting;
 
         this.settingsChanged.next(this.settings.slice());
-        // TODO change it to id
         this.settingUpdated.next(new SettingState(newSetting.settingId(), 1, true));
     }
 
@@ -250,26 +243,55 @@ export class SettingService {
         return this.settings.filter(setting => setting.key() === data).length > 0;
     }
 
-    setSettings(data) {
-        const settings = data['settings'].map(
-          seetingRaw => new Setting(seetingRaw)
-        );
+    setSettings(newSettings: Setting[]) {
         // unshift host setting into the array
         // settings.unshift(this.settings[0]);
-        this.settings = this.settings.slice(0, 1).concat(settings);
+        this.settings = this.settings.slice(0, 1).concat(newSettings);
         console.log(this.settings);
         this.settingsChanged.next(this.settings);
     }
 
-    // given default setting
-    // if exist
-    // grab
-    // not exist
-    // use default
-    // and populate?
+    // check if defualt exist in host db, popualte the defualt setting unleess exist
     defaultSettingsLookup() {
-// select count(*) from universal is key in []
+        const urlSuffix = '/default';
+        const defaultSetting = this.defaultSettings.slice();
+        defaultSetting.shift();
+        return this.httpClient.post(`${this.httpOptions.settingUrl()}${urlSuffix}`, defaultSetting, {
+            observe: 'body',
+            responseType: 'json'
+        }).subscribe((result) => {
+            this.connected = true;
+            console.log('DEBUG', 'defualt');
+            this.getSettingListByOptions();
+        }, (err: HttpErrorResponse)  => {
+            this.popup('opeartion', 'post');
+            console.error(err);
+        });
     }
+
+    restoreDefaultSettings() {
+        const urlSuffix = '/restore';
+        const defaultSetting = this.defaultSettings.slice();
+        defaultSetting.shift();
+        return this.httpClient.post(`${this.httpOptions.settingUrl()}${urlSuffix}`, defaultSetting, {
+            observe: 'body',
+            responseType: 'json'
+        }).subscribe((result) => {
+            this.connected = true;
+            console.log('DEBUG', 'defualt');
+            this.getSettingListByOptions();
+        }, (err: HttpErrorResponse)  => {
+            this.restoreLocalSettingsToDefault();
+            this.popup('opeartion', 'post');
+            console.error(err);
+        });
+    }
+
+    restoreLocalSettingsToDefault() {
+        const newtSettings = this.defaultSettings;
+        this.setSettings(newtSettings);
+    }
+
 
     populateSettings() {
         const urlSuffix = '/populate';
@@ -335,5 +357,4 @@ export class SettingService {
 
         return {width: +doamin_x.value(), height: +domain_y.value()};
     }
-
 }

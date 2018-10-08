@@ -32,10 +32,16 @@ export class UniversalSettingIndexComponent implements OnInit, OnDestroy {
 
 
   getCloudSettings() {
-    this.settingService.populateSettings();
+    this.settingService.getSettingListByOptions();
   }
 
   getLocalSettings() {
     this.settings = this.settingService.getSettings();
+  }
+
+  restoreSettings() {
+    if (confirm('Do you want to restore the setting values to the default?')) {
+      this.settingService.restoreDefaultSettings();
+    }
   }
 }

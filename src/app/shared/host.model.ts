@@ -6,7 +6,8 @@ class API {
 
     private hosts = {
         'localhost': 'http://localhost:3000/',
-        'aws'      : 'http://18.218.72.63:80/api/'
+        'aws'      : 'http://18.218.72.63:80/api/',
+        'mywin'    : 'http://192.168.0.113:3000/'
     };
 
     constructor(hostOption: string) {
