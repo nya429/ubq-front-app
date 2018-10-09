@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 @Injectable()
 export class MapService {
     private httpOptions;
+    private base = {width: 100, height: 50};
 
     constructor(private httpClient: HttpClient,
         private settingService: SettingService) {
@@ -22,6 +23,7 @@ export class MapService {
                participantUrl: () =>  this.settingService.getApis('participant'),
                eventUrl: () => this.settingService.getApis('event'),
              };
+        this.getMapSettings();
      }
 
 
@@ -61,20 +63,26 @@ export class MapService {
     onTest = new EventEmitter<boolean>();
 
     // TODO those are participants
-    private trackers: Tracker[] = [
-        new Tracker(1, '', 1, 1, null),
-        new Tracker(2, '', 1, 49, null),
-        new Tracker(3, '', 99, 1, null),
-        new Tracker(4, '', 99, 49, null),
-        new Tracker(5, '', 10, 10, null),
-        new Tracker(6, '', 50, 20, null),
-        new Tracker(7, '', 30, 30, null),
-        new Tracker(8, '', 80, 40, null),
-        new Tracker(9, '', 10, 10, null),
-        new Tracker(10, '', 42, 34, null),
-        new Tracker(11, '', 20, 37, null),
-        new Tracker(12, '', 40, 45, null),
-    ];
+    private trackers: Tracker[];
+    
+
+    initDummyTrackers(base) {
+        this.trackers = [
+            new Tracker(1, '', 1 / 100 * base.width, 1 / 50 * base.height, null),
+            new Tracker(2, '', 1 / 100 * base.width, 49 / 50 * base.height, null),
+            new Tracker(3, '', 99 / 100 * base.width, 1 / 50 * base.height, null),
+            new Tracker(4, '', 99  / 100 * base.width, 49 / 50 * base.height, null),
+            new Tracker(5, '', 10 / 100 * base.width, 10 / 50 * base.height, null),
+            new Tracker(6, '', 50  / 100 * base.width, 20 / 50 * base.height, null),
+            new Tracker(7, '', 30  / 100 * base.width, 30 / 50 * base.height, null),
+            new Tracker(8, '', 80  / 100 * base.width, 40 / 50 * base.height, null),
+            new Tracker(9, '', 10  / 100 * base.width, 10 / 50 * base.height, null),
+            new Tracker(10, '', 42  / 100 * base.width, 34 / 50 * base.height, null),
+            new Tracker(11, '', 20  / 100 * base.width, 37 / 50 * base.height, null),
+            new Tracker(12, '', 40  / 100 * base.width, 45 / 50 * base.height, null),
+        ];
+    }
+
 
     // dummy move
     private step = [
@@ -143,14 +151,14 @@ export class MapService {
         if (tracker.xCrd === 0) {
             tracker.xCrd  = 5;
         }
-        if (tracker.xCrd === 100) {
-            tracker.xCrd = 95;
+        if (tracker.xCrd === this.base.width) {
+            tracker.xCrd = this.base.width - 2;
         }
         if (tracker.yCrd === 0) {
             tracker.yCrd = 5 ;
         }
-        if (tracker.yCrd === 50 ) {
-            tracker.yCrd = 45;
+        if (tracker.yCrd === this.base.height  ) {
+            tracker.yCrd = this.base.height - 2;
         }
         return tracker;
     }
@@ -179,17 +187,15 @@ export class MapService {
         this.hideTrackerIndex.next(id);
     }
 
-    updateTrackerInfo(index: number, form: any) {
-
-        // TODO replace this after having backend
-        this.trackers[index].alias = form.alias;
-        this.trackerLocChanges.next(this.trackers.slice());
-    }
-
     onCompanyDropdownFolded(folded: boolean) {
         this.dropdownFolded.next(folded);
     }
 
+    updateTrackerInfo(index: number, form: any) {
+        // TODO replace this after having backend
+        this.trackers[index].alias = form.alias;
+        this.trackerLocChanges.next(this.trackers.slice());
+    }
 
     getParticipantListByFilters(filters: object, offset?: number, limit?: number) {
         const urlSuffix = 'list/filter';
@@ -236,7 +242,6 @@ export class MapService {
 
     getParticipantLocalsByTime(id: string, begin?: number, end?: number) {
         const urlSuffix = 'tracker/locs';
-        // const trackerLocsUrl = 'http://localhost:3000/event/tracker/locs';
         const con = {'begin': begin, 'end': end, 'id': id};
         return this.httpClient.post(`${this.httpOptions.eventUrl()}/${urlSuffix}`, con, {
             observe: 'body',
@@ -254,7 +259,6 @@ export class MapService {
 
     getLastActiveTrackers() {
         const urlSuffix = 'tracker/lastActive';
-        // const trackerUrl = 'http://localhost:3000/event/tracker/lastActive';
         const limit = 15;
         return this.httpClient.get(`${this.httpOptions.eventUrl()}/${urlSuffix}`, {
             observe: 'body',
@@ -289,7 +293,8 @@ export class MapService {
             this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
-                        trac.setCrd(data[0].loc_x/20*95, data[0].loc_y/17*45);
+                        // API
+                        trac.setCrd(data[0].loc_x / 20 * this.base.width, data[0].loc_y / 17 * this.base.width);
                         trac.setLocs(data, 0);
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
@@ -329,7 +334,8 @@ export class MapService {
         const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
         const nextLoc = tracker.locs[nextLocIndex];
         tracker.currentLoc = nextLocIndex;
-        tracker.setCrd(nextLoc.loc_x / 20 * 95, nextLoc.loc_y / 17 * 45);
+              // API
+        tracker.setCrd(nextLoc.loc_x / 20 * this.base.width, nextLoc.loc_y / 17 * this.base.height);
         tracker.setTime(nextLoc.time * 1000);
         // this.trackerLocChanges.next(this.trackers.slice());
     }
@@ -348,5 +354,11 @@ export class MapService {
 
     onWindowResize() {
         this.windowResized.next();
+    }
+
+    getMapSettings() {
+        this.base = this.settingService.getMapSettingBase();
+        this.initDummyTrackers(this.base);
+        return this.base;
     }
 }

@@ -55,6 +55,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private colors: any;
   private xAxis: any;
   private yAxis: any;
+  /** Map_img */
+  private mapBackImgViewBox;
+  private mapBackImg;
 
   constructor(private mapService: MapService,
     private settingService: SettingService) { }
@@ -190,6 +193,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.appendSVG(element);
     this.sizeSVG();
     this.appendRect();
+    this.appendMapBackgroundImgViewBox(element);
     this.appendMapBackgroundImg();
     this.attachPopup();
 
@@ -209,9 +213,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   initMapScale() {
     this.xScale = d3.scaleLinear()
       .domain([0, this.base.width])
+      // API
       .range([0, this.width - 280 - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
+      // API
       .range([0, this.height - this.padding.top - this.padding.bottom]);
   }
 
@@ -253,14 +259,34 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
 
+  appendMapBackgroundImgViewBox(element) {
+    this.svg.selectAll('svg').data([0]).enter()
+    .append('svg')
+    .attr('class','mapImgViewBox')
+    .attr('width', element.offsetWidth)
+    .attr('height', element.offsetHeight);
+
+    this.mapBackImgViewBox = this.svg.select('.mapImgViewBox');
+  }
+
+  resizeMapBackgroundImgViewBox(element) {
+    this.mapBackImgViewBox
+    .attr('width', element.offsetWidth)
+    .attr('height', element.offsetHeight);
+  }
 
   appendMapBackgroundImg() {
-    const imgs = this.svg.selectAll('svg').data([0]);
-    imgs.enter()
+    this.svg.select('.mapImgViewBox')
       .append('svg:image')
+      .attr('class','mapImg');
+    
+    this.mapBackImg = d3.select('.mapImg');
+    this.mapBackImg
       .attr('xlink:href', '../../../assets/store_floorplan.svg')
+      // API: position
       .attr('x', -1270)
       .attr('y', -310)
+      // API: dimensions
       .attr('width', this.width * 4)
       .attr('height', this.height * 2)
       .attr('opacity', 0)
@@ -269,6 +295,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .delay(500)
       .attr('opacity', .6);
   
+      console.log(this.svg, this.mapBackImg)
+  }
+
+  sizeBackImg(offsetWidth, offsetHeight) {
+    this.mapBackImg
+      .attr('x', 0)
+      .attr('y', 0)
+      // API: dimensions
+      .attr('width', offsetWidth)
+      .attr('height', offsetHeight)
   }
 
   initiateTrackPoint(trackers: Tracker[]) {
@@ -537,6 +573,18 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('y', this.height / 2 + 10 );
   }
 
+  positionPopup() {
+    this.mapPopup.select('.popupBackground')
+    .attr('width', this.popupWidth)
+    .attr('height', this.popupHeight)
+    .attr('x', this.width / 2 - this.popupWidth / 2)
+    .attr('y', this.height / 2 - this.popupHeight / 2 )
+    
+    this.mapPopup.select('.popupText')
+    .attr('x', this.width / 2 )
+    .attr('y', this.height / 2 + 10 );
+  }
+
   onPopup(text: string) {
     if (!this.mapPopup) {
       return false;
@@ -581,5 +629,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.initMapScale();
     this.sizeSVG();
     this.sizeRect();
+    this.sizeBackImg(element.offsetWidth, element.offsetHeight);
+    this.positionPopup();
+    this.resizeMapBackgroundImgViewBox(element)
   }
 }

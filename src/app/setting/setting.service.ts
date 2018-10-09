@@ -34,7 +34,7 @@ export class SettingService {
         this.httpOptions = {
             headers: new HttpHeaders({
               'Content-Type':  'application/json',
-              'Authorization': 'my-auth-token'
+              'Authorization': 'my-auth-token',
             }),
             settingUrl: () => this.getApis('setting'),
           };
@@ -289,6 +289,7 @@ export class SettingService {
 
     restoreLocalSettingsToDefault() {
         const newtSettings = this.defaultSettings;
+        newtSettings.shift();
         this.setSettings(newtSettings);
     }
 
