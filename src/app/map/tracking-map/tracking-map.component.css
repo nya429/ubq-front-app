@@ -2,4 +2,6 @@
 .d3-chart {
     width: 100%;
     height: 500px;
+    /* relate to the backImg */
+    min-width: 615px;
   }

@@ -56,7 +56,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private xAxis: any;
   private yAxis: any;
   /** Map_img */
-  private mapBackImgViewBox;
+  // private mapBackImgViewBox;
   private mapBackImg;
 
   constructor(private mapService: MapService,
@@ -193,7 +193,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.appendSVG(element);
     this.sizeSVG();
     this.appendRect();
-    this.appendMapBackgroundImgViewBox(element);
+    // this.appendMapBackgroundImgViewBox(element);
     this.appendMapBackgroundImg();
     this.attachPopup();
 
@@ -213,8 +213,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   initMapScale() {
     this.xScale = d3.scaleLinear()
       .domain([0, this.base.width])
-      // API
-      .range([0, this.width - 280 - this.padding.left - this.padding.right]);
+      /**
+       * 516 = this.width - (this.width - imgWidth)
+       */
+      .range([0, 516 - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
@@ -259,36 +261,43 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
 
-  appendMapBackgroundImgViewBox(element) {
-    this.svg.selectAll('svg').data([0]).enter()
-    .append('svg')
-    .attr('class','mapImgViewBox')
-    .attr('width', element.offsetWidth)
-    .attr('height', element.offsetHeight);
+//   appendMapBackgroundImgViewBox(element) {
+//     this.svg.selectAll('svg').data([0]).enter()
+//     .append('svg')
+//     .attr('class','mapImgViewBox')
+//     .attr('width', element.offsetWidth)
+//     .attr('height', element.offsetHeight)
+//     .attr('x', 0)
+//     .attr('y', 0)
+//     // .attr('preserveAspectRatio', 'xMinYMin meet')
+// ;
 
-    this.mapBackImgViewBox = this.svg.select('.mapImgViewBox');
-  }
+//     this.mapBackImgViewBox = this.svg.select('.mapImgViewBox');
+//   }
 
-  resizeMapBackgroundImgViewBox(element) {
-    this.mapBackImgViewBox
-    .attr('width', element.offsetWidth)
-    .attr('height', element.offsetHeight);
-  }
+  // resizeMapBackgroundImgViewBox(element) {
+  //   this.mapBackImgViewBox
+  //   .attr('width', element.offsetWidth)
+  //   .attr('height', element.offsetHeight);
+  // }
 
   appendMapBackgroundImg() {
-    this.svg.select('.mapImgViewBox')
+    // this.svg.select('.mapImgViewBox')
+    this.svg.selectAll('svg').data([0]).enter()
       .append('svg:image')
       .attr('class','mapImg');
     
     this.mapBackImg = d3.select('.mapImg');
     this.mapBackImg
+    // svg:image will not overwrite the inline preserveAspectRatio
+    .attr('preserveAspectRatio', 'xMinYMin meet')
       .attr('xlink:href', '../../../assets/store_floorplan.svg')
       // API: position
-      .attr('x', -1270)
-      .attr('y', -310)
+      .attr('x', 0)
+      .attr('y', 0)     
       // API: dimensions
-      .attr('width', this.width * 4)
-      .attr('height', this.height * 2)
+      .attr('width', this.width)
+      .attr('height', this.height)
       .attr('opacity', 0)
       .transition()
       .duration(1000)
@@ -631,6 +640,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.sizeRect();
     this.sizeBackImg(element.offsetWidth, element.offsetHeight);
     this.positionPopup();
-    this.resizeMapBackgroundImgViewBox(element)
+    // this.resizeMapBackgroundImgViewBox(element)
   }
 }
