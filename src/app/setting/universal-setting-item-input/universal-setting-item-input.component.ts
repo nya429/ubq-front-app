@@ -31,8 +31,8 @@ export class UniversalSettingItemInputComponent implements OnInit {
   initForm() {
     this.settingForm = new FormGroup({
       'id': new FormControl(this.settingId),
-      'value': new FormControl(this.value, [Validators.required, Validators.max(50)]),
-      'key': new FormControl(this.key , [Validators.required, Validators.max(50)], this.settingValidate.bind(this)),
+      'value': new FormControl(this.value, [Validators.required, Validators.maxLength(50)]),
+      'key': new FormControl(this.key , [Validators.required, Validators.maxLength(50)], this.settingValidate.bind(this)),
     });
   }
 
@@ -48,7 +48,6 @@ export class UniversalSettingItemInputComponent implements OnInit {
 
   onCancle() {
     this.editMode = false;
-    // this.initForm();
   }
 
   settingValidate(control: FormControl): Observable<any> | Promise<any> {
