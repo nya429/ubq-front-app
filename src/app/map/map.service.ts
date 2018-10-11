@@ -151,17 +151,17 @@ export class MapService {
         tracker.xCrd = tracker.xCrd + dirc[0];
         tracker.yCrd = tracker.yCrd + dirc[1];
 
-        if (tracker.xCrd === 0) {
-            tracker.xCrd  = 5;
+        if (tracker.xCrd <= 0) {
+            tracker.xCrd  = 1;
         }
-        if (tracker.xCrd === this.base.width) {
-            tracker.xCrd = this.base.width - 2;
+        if (tracker.xCrd >= this.base.width) {
+            tracker.xCrd = this.base.width - 1;
         }
-        if (tracker.yCrd === 0) {
-            tracker.yCrd = 5 ;
+        if (tracker.yCrd <= 0) {
+            tracker.yCrd = 1 ;
         }
-        if (tracker.yCrd === this.base.height  ) {
-            tracker.yCrd = this.base.height - 2;
+        if (tracker.yCrd >= this.base.height  ) {
+            tracker.yCrd = this.base.height - 1;
         }
         return tracker;
     }
@@ -304,8 +304,8 @@ export class MapService {
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
                         // API
-                        trac.setCrd(data[0].loc_x / this.trackerDimension.x * this.base.width,
-                             data[0].loc_y / this.trackerDimension.y * this.base.width);
+                        trac.setCrd((data[0].loc_x - 0.5) / this.trackerDimension.x * this.base.width,
+                             (data[0].loc_y - 0.5) / this.trackerDimension.y * this.base.width);
                         trac.setLocs(data, 0);
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
@@ -352,8 +352,8 @@ export class MapService {
         const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
         const nextLoc = tracker.locs[nextLocIndex];
         tracker.currentLoc = nextLocIndex;
-        tracker.setCrd(nextLoc.loc_x / this.trackerDimension.x * this.base.width, 
-            nextLoc.loc_y / this.trackerDimension.y * this.base.height);
+        tracker.setCrd((nextLoc.loc_x - 0.5) / this.trackerDimension.x * this.base.width, 
+            (nextLoc.loc_y - 0.5)  / this.trackerDimension.y * this.base.height);
         tracker.setTime(nextLoc.time * 1000);
         // this.trackerLocChanges.next(this.trackers.slice());
     }

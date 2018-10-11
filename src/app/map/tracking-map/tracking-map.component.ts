@@ -26,7 +26,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   private base = {width: 100, height: 50};
   private margin: any = { top: 0, bottom: 0, left: 0, right: 0};
-  private padding = {left: 30, right: 30, top: 20, bottom: 20};
+  private padding = {left: 0, right: 0, top: 0, bottom: 0};
 
   private chart: any;
   private svg: any;
@@ -216,7 +216,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       /**
        * 516 = this.width - (this.width - imgWidth)
        */
-      .range([0, 516 - this.padding.left - this.padding.right]);
+      .range([0, 615 - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
