@@ -15,7 +15,9 @@ export class SettingService {
         new Setting({key: 'host', value: 'localhost', id: 0}),
         new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
         new Setting({key: 'map_domain_x', value: '100', id: 2}),
-        new Setting({key: 'map_domain_y', value: '50', id: 3}) ];
+        new Setting({key: 'map_domain_y', value: '50', id: 3}),
+        new Setting({key: 'tracker_domain_x', value: '22', id: 4}),
+        new Setting({key: 'tracker_domain_y', value: '20', id: 5}),  ];
 
     settings: Setting[];
 
@@ -347,15 +349,27 @@ export class SettingService {
         }
     }
 
-    getMapSettingBase() {
-        let doamin_x = this.settings.find(setting => setting.key() === 'map_domain_x');
-        let domain_y = this.settings.find(setting => setting.key() === 'map_domain_y');
+    getSettingsByKey(key: string) {
+        let settingPair = this.settings.find(setting => setting.key() === key);
 
-        if (!doamin_x || !domain_y) {
-            doamin_x = this.defaultSettings.find(setting => setting.key() === 'map_domain_x');
-            domain_y = this.defaultSettings.find(setting => setting.key() === 'map_domain_y');
+        if (!settingPair) {
+            settingPair = this.defaultSettings.find(setting => setting.key() === key);
         }
 
-        return {width: +doamin_x.value(), height: +domain_y.value()};
+        return settingPair.value();
+    }
+
+    getMapSettingBase() {
+        const domain_x = this.getSettingsByKey('map_domain_x');
+        const domain_y = this.getSettingsByKey('map_domain_x');
+
+        return {width: +domain_x, height: +domain_y};
+    }
+
+    getMapSettingTrackerDimension() {
+        const trackerX = this.getSettingsByKey('tracker_domain_x');
+        const trackerY = this.getSettingsByKey('tracker_domain_y');
+
+        return {x: +trackerX, y: +trackerY};
     }
 }

@@ -14,7 +14,7 @@ export class MapService {
     // map doamin
     private base = {width: 100, height: 50};
     // tracker dimension
-    private trackerDimension = {x: 20, y: 17};
+    private trackerDimension = {x: 23, y: 20};
 
     constructor(private httpClient: HttpClient,
         private settingService: SettingService) {
@@ -67,7 +67,24 @@ export class MapService {
 
     // TODO those are participants
     private trackers: Tracker[];
-    
+    // dummy move
+    private step = [
+        [-1, -1], [0, -1], [1, -1],
+        [-1, -0], [0, 0], [1, 0],
+        [-1, 1], [0, 1], [1, 1]
+    ];
+
+    getMapSettings() {
+        this.base = this.settingService.getMapSettingBase();
+        this.trackerDimension = this.settingService.getMapSettingTrackerDimension();
+        this.initDummyTrackers(this.base);
+        return this.base;
+    }
+
+    setTrackerDimension(x: number, y: number) {
+        this.trackerDimension.x = x ?  x : this.trackerDimension.x;
+        this.trackerDimension.y = y ?  y : this.trackerDimension.y;
+    }
 
     initDummyTrackers(base) {
         this.trackers = [
@@ -85,14 +102,6 @@ export class MapService {
             new Tracker(12, '', 40  / 100 * base.width, 45 / 50 * base.height, null),
         ];
     }
-
-
-    // dummy move
-    private step = [
-        [-1, -1], [0, -1], [1, -1],
-        [-1, -0], [0, 0], [1, 0],
-        [-1, 1], [0, 1], [1, 1]
-    ];
 
     start() {
         this.onStarted.next(this.mapStarted);
@@ -287,7 +296,7 @@ export class MapService {
      * loc_x/y will always between 20/17
      * Eventually this.base.width should eqaul to 20
      *  this.base.height should eqaul to 17
-     * 
+     *
      */
     testLocal() {
         // map particiapnt id, pass the id
@@ -304,8 +313,8 @@ export class MapService {
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
                         // API
-                        trac.setCrd((data[0].loc_x - 0.5) / this.trackerDimension.x * this.base.width,
-                             (data[0].loc_y - 0.5) / this.trackerDimension.y * this.base.width);
+                        trac.setCrd((data[0].loc_x + 0.5) / this.trackerDimension.x * this.base.width,
+                             (data[0].loc_y + 0.5) / this.trackerDimension.y * this.base.width);
                         trac.setLocs(data, 0);
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
@@ -346,14 +355,14 @@ export class MapService {
      * loc_x/y will always between 20/17
      * Eventually this.base.width should eqaul to trackerDimension.x
      *  this.base.height should eqaul to trackerDimension.y
-     * 
+     *
      */
     testMoveHis(tracker: Tracker) {
         const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
         const nextLoc = tracker.locs[nextLocIndex];
         tracker.currentLoc = nextLocIndex;
-        tracker.setCrd((nextLoc.loc_x - 0.5) / this.trackerDimension.x * this.base.width, 
-            (nextLoc.loc_y - 0.5)  / this.trackerDimension.y * this.base.height);
+        tracker.setCrd((nextLoc.loc_x + 0.5) / this.trackerDimension.x * this.base.width,
+            (nextLoc.loc_y + 0.5)  / this.trackerDimension.y * this.base.height);
         tracker.setTime(nextLoc.time * 1000);
         // this.trackerLocChanges.next(this.trackers.slice());
     }
@@ -374,18 +383,5 @@ export class MapService {
         this.windowResized.next();
     }
 
-    getMapSettings() {
-        this.base = this.settingService.getMapSettingBase();
-        this.initDummyTrackers(this.base);
-        return this.base;
-    }
 
-    getTrackerDimension() {
-        return this.trackerDimension;
-    }
-
-    setTrackerDimension(x: number, y: number) {
-        this.trackerDimension.x = x ?  x : this.trackerDimension.x;
-        this.trackerDimension.y = y ?  y : this.trackerDimension.y;
-    }
 }
