@@ -11,7 +11,10 @@ import { Subscription } from 'rxjs/Subscription';
 @Injectable()
 export class MapService {
     private httpOptions;
+    // map doamin
     private base = {width: 100, height: 50};
+    // tracker dimension
+    private trackerDimension = {x: 20, y: 17};
 
     constructor(private httpClient: HttpClient,
         private settingService: SettingService) {
@@ -148,17 +151,17 @@ export class MapService {
         tracker.xCrd = tracker.xCrd + dirc[0];
         tracker.yCrd = tracker.yCrd + dirc[1];
 
-        if (tracker.xCrd === 0) {
-            tracker.xCrd  = 5;
+        if (tracker.xCrd <= 0) {
+            tracker.xCrd  = 1;
         }
-        if (tracker.xCrd === this.base.width) {
-            tracker.xCrd = this.base.width - 2;
+        if (tracker.xCrd >= this.base.width) {
+            tracker.xCrd = this.base.width - 1;
         }
-        if (tracker.yCrd === 0) {
-            tracker.yCrd = 5 ;
+        if (tracker.yCrd <= 0) {
+            tracker.yCrd = 1 ;
         }
-        if (tracker.yCrd === this.base.height  ) {
-            tracker.yCrd = this.base.height - 2;
+        if (tracker.yCrd >= this.base.height  ) {
+            tracker.yCrd = this.base.height - 1;
         }
         return tracker;
     }
@@ -279,6 +282,13 @@ export class MapService {
           );
     }
 
+    /**
+     * 20/17 is the max I can see in the simulation_data
+     * loc_x/y will always between 20/17
+     * Eventually this.base.width should eqaul to 20
+     *  this.base.height should eqaul to 17
+     * 
+     */
     testLocal() {
         // map particiapnt id, pass the id
         this.getLastActiveTrackers();
@@ -294,7 +304,8 @@ export class MapService {
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
                         // API
-                        trac.setCrd(data[0].loc_x / 20 * this.base.width, data[0].loc_y / 17 * this.base.width);
+                        trac.setCrd((data[0].loc_x - 0.5) / this.trackerDimension.x * this.base.width,
+                             (data[0].loc_y - 0.5) / this.trackerDimension.y * this.base.width);
                         trac.setLocs(data, 0);
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
@@ -330,12 +341,19 @@ export class MapService {
         }, 800);
     }
 
+    /**
+     * trackerDimension.x/y (20/17) is the max I can see in the simulation_data
+     * loc_x/y will always between 20/17
+     * Eventually this.base.width should eqaul to trackerDimension.x
+     *  this.base.height should eqaul to trackerDimension.y
+     * 
+     */
     testMoveHis(tracker: Tracker) {
         const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
         const nextLoc = tracker.locs[nextLocIndex];
         tracker.currentLoc = nextLocIndex;
-              // API
-        tracker.setCrd(nextLoc.loc_x / 20 * this.base.width, nextLoc.loc_y / 17 * this.base.height);
+        tracker.setCrd((nextLoc.loc_x - 0.5) / this.trackerDimension.x * this.base.width, 
+            (nextLoc.loc_y - 0.5)  / this.trackerDimension.y * this.base.height);
         tracker.setTime(nextLoc.time * 1000);
         // this.trackerLocChanges.next(this.trackers.slice());
     }
@@ -360,5 +378,14 @@ export class MapService {
         this.base = this.settingService.getMapSettingBase();
         this.initDummyTrackers(this.base);
         return this.base;
+    }
+
+    getTrackerDimension() {
+        return this.trackerDimension;
+    }
+
+    setTrackerDimension(x: number, y: number) {
+        this.trackerDimension.x = x ?  x : this.trackerDimension.x;
+        this.trackerDimension.y = y ?  y : this.trackerDimension.y;
     }
 }
