@@ -1,4 +1,3 @@
-import { SettingService } from './../../setting/setting.service';
 import { Component, Input, ViewChild, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 import * as d3 from 'd3';
@@ -41,6 +40,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   /** MapScale */
   private xScale: any;
   private yScale: any;
+  private offsetX = 0;
+  private offsetY = 0;
+
   /** trackerPoint */
   private trackerPoints: any;
   private trackerInfoG: any;
@@ -58,9 +60,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   /** Map_img */
   // private mapBackImgViewBox;
   private mapBackImg;
+  /** Map_size_control */
+  private mapPosControlPanel: any;
+  private mapPosControlPanelSize = {width: 90, height: 90};
+  private mapPosControlUp: any;
+  private mapPosControlRight: any;
+  private mapPosControlDown: any;
+  private mapPosControlLeft: any;
+  private arrowPath = 'M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z'; 
 
-  constructor(private mapService: MapService,
-    private settingService: SettingService) { }
+  constructor(private mapService: MapService) { }
 
   ngOnInit() {
     this.getMapSettings();
@@ -182,7 +191,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   getMapSettings() {
-    this.base = this.settingService.getMapSettingBase();
+    this.base = this.mapService.getMapSettings();
   }
   
   createBase() {
@@ -196,7 +205,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // this.appendMapBackgroundImgViewBox(element);
     this.appendMapBackgroundImg();
     this.attachPopup();
-
+    this.appendmapPosControlPenal();
     this.svg.on('click', () => this.diselecPoint());     //  Add trackerPoint Info ouside click dismiss
   }
 
@@ -216,15 +225,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       /**
        * 516 = this.width - (this.width - imgWidth)
        */
-      .range([0, 615 - this.padding.left - this.padding.right]);
+      .range([0 + this.offsetX, 615 + this.offsetX - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
-      .range([0, this.height - this.padding.top - this.padding.bottom]);
+      .range([0 + this.offsetY, this.height + this.offsetY - this.padding.top - this.padding.bottom]);
   }
 
   appendSVG(element) {
-    d3.select(element).append('svg');
+    d3.select(element).append('svg')
+    .attr('class', 'trackerMapBase');
     this.svg = d3.select('svg');
   }
 
@@ -241,7 +251,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.rect = d3.select('rect');
 
     this.rect
-      .attr('class', 'trackerMapBase')
+      .attr('class', 'trackerMapBaseRect')
       /** this is the place probably I want to use this.width -margin.top and this height  */
       .attr('width', this.width)
       .attr('height', this.height)
@@ -309,8 +319,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   sizeBackImg(offsetWidth, offsetHeight) {
     this.mapBackImg
-      .attr('x', 0)
-      .attr('y', 0)
+      .attr('x', 0 + this.offsetX)
+      .attr('y', 0 + this.offsetY)
       // API: dimensions
       .attr('width', offsetWidth)
       .attr('height', offsetHeight)
@@ -329,7 +339,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
           return false;
         }
        const thisPoint = d3.select(this);
-       that.onMouseOver(thisPoint);
+       that.onMouseOverTracker(thisPoint);
     })
     .on('mouseout', function(d, i) {
       if (that.mapService.mapStopped) {
@@ -340,7 +350,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       if (thisPoint.datum().selected) {
         return false;
       } else {
-        that.onMouseout(thisPoint);
+        that.onMouseoutTracker(thisPoint);
       }
     })
     .on('click', function() {
@@ -353,7 +363,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       }
 
       that.selectedPoint = d3.select(this);
-      that.onMouseClick();
+      that.onMouseClickTracker();
     });
 
     this.trackerPoints.attr('class', 'trackerPoint')
@@ -407,7 +417,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     }, 800);
   }
 
-   onMouseOver(trackerPoint) {
+   onMouseOverTracker(trackerPoint) {
     trackerPoint
     .transition(500)
     .ease(d3.easeQuadIn)
@@ -417,7 +427,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .style('stroke-width', 5);
    }
 
-   onMouseout(trackerPoint) {
+   onMouseoutTracker(trackerPoint) {
     trackerPoint
     .style('fill-opacity', 0.7)
     .transition(1000)
@@ -427,10 +437,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .style('stroke-width', 2);
    }
 
-   onMouseClick() {
+   onMouseClickTracker() {
      this.selectedPoint.datum().selected = true;
      this.mapService.onTrackerHasSelected(this.selectedPoint.datum().id);
-     this.onMouseOver(this.selectedPoint);
+     this.onMouseOverTracker(this.selectedPoint);
       // TODO: delete this condition, when deep copy complete
      if (this.trackerInfoG && this.selectedPoint && this.trackerInfoG.datum().id !== this.selectedPoint.datum().id) {
         this.removeTrackerInfo();
@@ -447,7 +457,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       if (this.selectedPoint) {
         this.removeTrackerInfo();
         if (this.selectedPoint.datum().isActivated()) {
-          this.onMouseout(this.selectedPoint);
+          this.onMouseoutTracker(this.selectedPoint);
         }
         this.selectedPoint.datum().selected = false;
         this.selectedPoint = null;
@@ -460,7 +470,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         .filter(d => this.selectedPoint.datum() !== d && d.selected === true && d.isActivated());
       if (otherSelectedElements.data().length) {
           otherSelectedElements.data().map(point => point.selected = false);
-          this.onMouseout(otherSelectedElements);
+          this.onMouseoutTracker(otherSelectedElements);
       }
    }
 
@@ -521,7 +531,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
           return false;
       } else {
         this.selectedPoint = point;
-        this.onMouseClick();
+        this.onMouseClickTracker();
       }
    }
 
@@ -541,9 +551,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       if (!point.datum().isActivated()) {
          this.hidePoint(point);
       } else if (this.selectedPoint && point.datum().id === this.selectedPoint.datum().id) {
-         this.onMouseClick();
+         this.onMouseClickTracker();
       } else {
-        this.onMouseout(point);
+        this.onMouseoutTracker(point);
       }
  }
 
@@ -630,8 +640,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (element.offsetWidth === this.divWidth && element.offsetHeight === this.divHeight) {
       return;
     }
-    console.log('DEBUG => map resize ');
-    console.log('Width=>', element.offsetWidth, "Height=>", element.offsetHeight);
+    // console.log('DEBUG => map resize ');
+    // console.log('Width=>', element.offsetWidth, "Height=>", element.offsetHeight);
     // this.onStop();
     this.getContainerDimension(element);
     this.getSVGDimension();
@@ -641,5 +651,197 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.sizeBackImg(element.offsetWidth, element.offsetHeight);
     this.positionPopup();
     // this.resizeMapBackgroundImgViewBox(element)
+    this.rePositionMapSizeControoPenal()
+  }
+
+  appendmapPosControlPenal() {
+    /** determin 3 x 3 dimension */
+    const penalWidth31 = this.mapPosControlPanelSize.width / 3;
+    const penalWidth32 = this.mapPosControlPanelSize.width / 3 * 2;
+    const penalHeight31 = this.mapPosControlPanelSize.height / 3;
+    const penalHeight32 = this.mapPosControlPanelSize.height / 3 * 2;
+    
+    /** set 4 Position buttons' data */
+    const buttonDate = [
+      {'id':'mapPosControlUp', 
+      'operation' : 'up',
+      'x':penalWidth31, 
+      'y': 0, 
+      'transform': 'translate(100,20) rotate(90)'},
+      {'id':'mapPosControlRight', 
+      'operation' : 'right',
+      'x':penalWidth32, 
+      'y': penalHeight31, 
+      'transform': 'translate(80,100) rotate(180)'},
+      {'id':'mapPosControlDown', 
+      'operation' : 'down',
+      'x':penalWidth31, 
+      'y': penalHeight32, 
+      'transform': 'translate(0, 80) rotate(270)'},
+      {'id':'mapPosControlLeft', 
+      'operation' : 'left',
+      'x': 0, 
+      'y': penalHeight31, 
+      'transform': 'translate(20,0)'},
+    ];
+
+    /** create 4 Position buttons wrapper */
+    this.svg
+      .insert('svg')
+      .attr('class', 'mapPosControlPanel')
+      .attr('x', this.width - this.mapPosControlPanelSize.width)
+      .attr('y', this.height - this.mapPosControlPanelSize.height) 
+      .attr('width', this.mapPosControlPanelSize.width)
+      .attr('height', this.mapPosControlPanelSize.height)
+      .style('opacity',0)
+      .transition()
+      .duration(1000)
+      .delay(500)
+      .style('opacity',1);
+  
+    this.mapPosControlPanel = d3.select('.mapPosControlPanel')
+    
+    const that = this;
+    /**  create button base */
+    const buttons = this.mapPosControlPanel.insert('g')
+      .attr('class', 'mapPosButtonGroup')
+      .selectAll('.mapPosButtonGroup')
+      .data(() => buttonDate)
+      .enter()
+      .append('svg')
+      .attr('class',    'mapPosControlButton')
+      .attr('id',        d => d.id)
+      .attr('x',         d => d.x)
+      .attr('y',         d => d.y)
+      .attr('width',     penalWidth31)
+      .attr('height',    penalWidth31)
+      .attr('viewBox',   '0, 0, 100, 100')
+      .style('fill-opacity', .6)
+      .style('cursor', 'pointer');
+    
+    /**  create button base */
+    buttons
+      .append('rect')
+      .attr('class',     'mapPosControlButtonBack')
+      .style('fill',     'black')
+      .attr('width',      100)
+      .attr('height',     100)
+      .attr('rx',         15)
+      .attr('ry',         15);
+      
+    /**  create button arrow */
+    
+    buttons
+      .append('svg')
+      .attr('class',     'mapPosControlButtonArrow')
+      .attr('x',          15)
+      .attr('y',          15)
+      .attr('width',      70)
+      .attr('height',     70)
+      .attr('viewBox',    '0, 0, 100, 100')
+      .append('path')
+      .attr('d',          that.arrowPath)
+      .style('fill',      'white')
+      .attr('transform',  d => d.transform);
+    
+    buttons
+    .on('mouseover', function(d, i) {
+        const thisButton = d3.select(this);
+        that.onMouseOverMapPosButton(thisButton);
+    })
+    .on('mouseout', function(d, i) {
+      const thisButton = d3.select(this);
+      that.onMouseOutMapPosButton(thisButton);
+    })
+    .on('mousedown', function(d, i) {
+      const thisButton = d3.select(this);
+      that.onMouseDownMapPosButton(thisButton);
+    })   
+    .on('mouseup', function(d, i) {
+      const thisButton = d3.select(this);
+      that.onMouseUpMapPosButton(thisButton, d);
+    });
+
+    this.mapPosControlUp = d3.select('#mapPosControlUp');
+    this.mapPosControlRight = d3.select('#mapPosControlRight');
+    this.mapPosControlDown = d3.select('#mapPosControlDown');
+    this.mapPosControlLeft = d3.select('#mapPosControlLeft');
+  }
+
+  rePositionMapSizeControoPenal() {
+    this.mapPosControlPanel
+      .attr('x', this.width - this.mapPosControlPanelSize.width)
+      .attr('y', this.height - this.mapPosControlPanelSize.height) 
+  }
+
+  onMouseOverMapPosButton(mapPosButton) {
+    mapPosButton
+      .transition(100)
+      .style('fill-opacity', .8)
+      .select('.mapPosControlButtonArrow')
+      .attr('x',          12)
+      .attr('y',          12)
+      .attr('width',      76)
+      .attr('height',     76)
+  }
+
+  onMouseOutMapPosButton(mapPosButton) {
+    mapPosButton
+      .transition(100)
+      .style('fill-opacity', .6)
+      .select('.mapPosControlButtonArrow')
+      .attr('x',          15)
+      .attr('y',          15)
+      .attr('width',      70)
+      .attr('height',     70)
+  }
+
+  onMouseDownMapPosButton(mapPosButton) {
+    mapPosButton
+      .transition(30)
+      .style('fill-opacity', .4)
+      .select('.mapPosControlButtonArrow')
+      .attr('x',          15)
+      .attr('y',          15)
+      .attr('width',      70)
+      .attr('height',     70)
+  }
+
+  onMouseUpMapPosButton(mapPosButton, datum) {
+    mapPosButton
+      .transition(30)
+      .style('fill-opacity', .8)
+      .select('.mapPosControlButtonArrow')
+      .attr('x',          12)
+      .attr('y',          12)
+      .attr('width',      76)
+      .attr('height',     76)
+    
+      this.positionMap(datum.operation)
+  }
+  
+  positionMap(operation: string) {
+    let step = 10;
+
+    switch(operation) {
+      case 'up':
+        this.offsetY -= step;
+        break;
+      case 'right':
+        this.offsetX += step;
+        break;
+      case 'down':
+       this.offsetY += step;
+       break;
+      case 'left':
+        this.offsetX -= step;
+        break;
+      default:
+        break;
+    }
+    console.log(operation)
+    this.initMapScale();
+    const element = this.chartContainer.nativeElement;
+    this.sizeBackImg(element.offsetWidth, element.offsetHeight);
   }
 }
