@@ -63,11 +63,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   /** Map_size_control */
   private mapPosControlPanel: any;
   private mapPosControlPanelSize = {width: 90, height: 90};
-  private mapPosControlUp: any;
-  private mapPosControlRight: any;
-  private mapPosControlDown: any;
-  private mapPosControlLeft: any;
-  private arrowPath = 'M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z'; 
+  private mapPosControlTimer;
+  private mapPosControlInterval;
+  private arrowPath = 'M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z';
 
   constructor(private mapService: MapService) { }
 
@@ -100,6 +98,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.popupSubscription.unsubscribe();
     this.loadingStatusSubscription.unsubscribe();
     this.windowResizeSubscription.unsubscribe();
+    clearTimeout(this.mapPosControlTimer);
+    clearInterval(this.mapPosControlInterval);
   }
 
   onStop() {
@@ -193,10 +193,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   getMapSettings() {
     this.base = this.mapService.getMapSettings();
   }
-  
+
   createBase() {
     const element = this.chartContainer.nativeElement;
-    this.getContainerDimension(element)
+    this.getContainerDimension(element);
     this.getSVGDimension();
     this.initMapScale();
     this.appendSVG(element);
@@ -211,7 +211,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   getContainerDimension(element) {
     this.divWidth = element.offsetWidth;
-    this.divHeight = element.offsetHeight
+    this.divHeight = element.offsetHeight;
   }
 
   getSVGDimension() {
@@ -242,12 +242,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   sizeSVG() {
     this.svg
       .attr('width', this.width)
-      .attr('height', this.height)
+      .attr('height', this.height);
   }
 
   /**   RECT  dimension  */
   appendRect() {
-    this.svg.append('rect')
+    this.svg.append('rect');
     this.rect = d3.select('rect');
 
     this.rect
@@ -295,8 +295,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // this.svg.select('.mapImgViewBox')
     this.svg.selectAll('svg').data([0]).enter()
       .append('svg:image')
-      .attr('class','mapImg');
-    
+      .attr('class', 'mapImg');
+
     this.mapBackImg = d3.select('.mapImg');
     this.mapBackImg
     // svg:image will not overwrite the inline preserveAspectRatio
@@ -304,7 +304,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('xlink:href', '../../../assets/store_floorplan.svg')
       // API: position
       .attr('x', 0)
-      .attr('y', 0)     
+      .attr('y', 0)
       // API: dimensions
       .attr('width', this.width)
       .attr('height', this.height)
@@ -313,17 +313,18 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .duration(1000)
       .delay(500)
       .attr('opacity', .6);
-  
-      console.log(this.svg, this.mapBackImg)
+
   }
 
-  sizeBackImg(offsetWidth, offsetHeight) {
+  sizeBackImg(offsetWidth, offsetHeight, dur = 10) {
     this.mapBackImg
+      .transition()
+      .duration(dur)
       .attr('x', 0 + this.offsetX)
       .attr('y', 0 + this.offsetY)
       // API: dimensions
       .attr('width', offsetWidth)
-      .attr('height', offsetHeight)
+      .attr('height', offsetHeight);
   }
 
   initiateTrackPoint(trackers: Tracker[]) {
@@ -381,10 +382,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .style('stroke-width', 2);
   }
 
-  movePoint(trackers: Tracker[]) {
+  movePoint(trackers: Tracker[], dur = 1000) {
     this.trackerPoints.data(trackers)
     .transition()
-    .duration(1000)
+    .duration(dur)
     .ease(d3.easeLinear)
     .style('fill', d => d.color)
     /** point steps */
@@ -398,7 +399,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.trackerInfoG
       // .datum(this.selectedPoint.datum())
        .transition()
-         .duration(1000)
+         .duration(dur)
          .attr('transform', d => `translate(${this.xScale(x - d.xCrd)}, ${this.yScale(y - d.yCrd)} )`);
     }
   }
@@ -597,8 +598,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .attr('width', this.popupWidth)
     .attr('height', this.popupHeight)
     .attr('x', this.width / 2 - this.popupWidth / 2)
-    .attr('y', this.height / 2 - this.popupHeight / 2 )
-    
+    .attr('y', this.height / 2 - this.popupHeight / 2 );
+
     this.mapPopup.select('.popupText')
     .attr('x', this.width / 2 )
     .attr('y', this.height / 2 + 10 );
@@ -634,7 +635,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .delay(d => delay ? 800 : 0)
     .style('opacity', 0);
   }
-  
+
   mapResize() {
     const element = this.chartContainer.nativeElement;
     if (element.offsetWidth === this.divWidth && element.offsetHeight === this.divHeight) {
@@ -651,7 +652,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.sizeBackImg(element.offsetWidth, element.offsetHeight);
     this.positionPopup();
     // this.resizeMapBackgroundImgViewBox(element)
-    this.rePositionMapSizeControoPenal()
+    this.rePositionMapSizeControoPenal();
   }
 
   appendmapPosControlPenal() {
@@ -660,28 +661,28 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     const penalWidth32 = this.mapPosControlPanelSize.width / 3 * 2;
     const penalHeight31 = this.mapPosControlPanelSize.height / 3;
     const penalHeight32 = this.mapPosControlPanelSize.height / 3 * 2;
-    
+
     /** set 4 Position buttons' data */
     const buttonDate = [
-      {'id':'mapPosControlUp', 
+      {'id': 'mapPosControlUp',
       'operation' : 'up',
-      'x':penalWidth31, 
-      'y': 0, 
+      'x': penalWidth31,
+      'y': 0,
       'transform': 'translate(100,20) rotate(90)'},
-      {'id':'mapPosControlRight', 
+      {'id': 'mapPosControlRight',
       'operation' : 'right',
-      'x':penalWidth32, 
-      'y': penalHeight31, 
+      'x': penalWidth32,
+      'y': penalHeight31,
       'transform': 'translate(80,100) rotate(180)'},
-      {'id':'mapPosControlDown', 
+      {'id': 'mapPosControlDown',
       'operation' : 'down',
-      'x':penalWidth31, 
-      'y': penalHeight32, 
+      'x': penalWidth31,
+      'y': penalHeight32,
       'transform': 'translate(0, 80) rotate(270)'},
-      {'id':'mapPosControlLeft', 
+      {'id': 'mapPosControlLeft',
       'operation' : 'left',
-      'x': 0, 
-      'y': penalHeight31, 
+      'x': 0,
+      'y': penalHeight31,
       'transform': 'translate(20,0)'},
     ];
 
@@ -690,17 +691,17 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .insert('svg')
       .attr('class', 'mapPosControlPanel')
       .attr('x', this.width - this.mapPosControlPanelSize.width)
-      .attr('y', this.height - this.mapPosControlPanelSize.height) 
+      .attr('y', this.height - this.mapPosControlPanelSize.height)
       .attr('width', this.mapPosControlPanelSize.width)
       .attr('height', this.mapPosControlPanelSize.height)
-      .style('opacity',0)
+      .style('opacity', 0)
       .transition()
       .duration(1000)
       .delay(500)
-      .style('opacity',1);
-  
-    this.mapPosControlPanel = d3.select('.mapPosControlPanel')
-    
+      .style('opacity', 1);
+
+    this.mapPosControlPanel = d3.select('.mapPosControlPanel');
+
     const that = this;
     /**  create button base */
     const buttons = this.mapPosControlPanel.insert('g')
@@ -718,7 +719,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('viewBox',   '0, 0, 100, 100')
       .style('fill-opacity', .6)
       .style('cursor', 'pointer');
-    
+
     /**  create button base */
     buttons
       .append('rect')
@@ -728,9 +729,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('height',     100)
       .attr('rx',         15)
       .attr('ry',         15);
-      
+
     /**  create button arrow */
-    
     buttons
       .append('svg')
       .attr('class',     'mapPosControlButtonArrow')
@@ -743,7 +743,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('d',          that.arrowPath)
       .style('fill',      'white')
       .attr('transform',  d => d.transform);
-    
+
     buttons
     .on('mouseover', function(d, i) {
         const thisButton = d3.select(this);
@@ -755,23 +755,18 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     })
     .on('mousedown', function(d, i) {
       const thisButton = d3.select(this);
-      that.onMouseDownMapPosButton(thisButton);
-    })   
+      that.onMouseDownMapPosButton(thisButton, d);
+    })
     .on('mouseup', function(d, i) {
       const thisButton = d3.select(this);
       that.onMouseUpMapPosButton(thisButton, d);
     });
-
-    this.mapPosControlUp = d3.select('#mapPosControlUp');
-    this.mapPosControlRight = d3.select('#mapPosControlRight');
-    this.mapPosControlDown = d3.select('#mapPosControlDown');
-    this.mapPosControlLeft = d3.select('#mapPosControlLeft');
   }
 
   rePositionMapSizeControoPenal() {
     this.mapPosControlPanel
       .attr('x', this.width - this.mapPosControlPanelSize.width)
-      .attr('y', this.height - this.mapPosControlPanelSize.height) 
+      .attr('y', this.height - this.mapPosControlPanelSize.height);
   }
 
   onMouseOverMapPosButton(mapPosButton) {
@@ -782,10 +777,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('x',          12)
       .attr('y',          12)
       .attr('width',      76)
-      .attr('height',     76)
+      .attr('height',     76);
   }
 
   onMouseOutMapPosButton(mapPosButton) {
+    clearTimeout(this.mapPosControlTimer);
+    clearInterval(this.mapPosControlInterval);
     mapPosButton
       .transition(100)
       .style('fill-opacity', .6)
@@ -793,10 +790,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('x',          15)
       .attr('y',          15)
       .attr('width',      70)
-      .attr('height',     70)
+      .attr('height',     70);
   }
 
-  onMouseDownMapPosButton(mapPosButton) {
+  onMouseDownMapPosButton(mapPosButton, datum) {
+    const duration = 100;
+
     mapPosButton
       .transition(30)
       .style('fill-opacity', .4)
@@ -804,10 +803,19 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('x',          15)
       .attr('y',          15)
       .attr('width',      70)
-      .attr('height',     70)
+      .attr('height',     70);
+    this.positionMap(datum.operation, duration);
+    this.mapPosControlTimer = setTimeout(() => {
+      this.mapPosControlInterval = setInterval(() =>
+        this.positionMap(datum.operation, duration), duration);
+    }, 500);
   }
 
   onMouseUpMapPosButton(mapPosButton, datum) {
+    clearTimeout(this.mapPosControlTimer);
+    clearInterval(this.mapPosControlInterval);
+    // const duration = 100;
+
     mapPosButton
       .transition(30)
       .style('fill-opacity', .8)
@@ -815,15 +823,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('x',          12)
       .attr('y',          12)
       .attr('width',      76)
-      .attr('height',     76)
-    
-      this.positionMap(datum.operation)
-  }
-  
-  positionMap(operation: string) {
-    let step = 10;
+      .attr('height',     76);
 
-    switch(operation) {
+      // this.positionMap(datum.operation, duration);
+  }
+
+  positionMap(operation: string, duration: number) {
+    const step = 10;
+
+    switch (operation) {
       case 'up':
         this.offsetY -= step;
         break;
@@ -839,9 +847,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       default:
         break;
     }
-    console.log(operation)
+
     this.initMapScale();
     const element = this.chartContainer.nativeElement;
-    this.sizeBackImg(element.offsetWidth, element.offsetHeight);
+    this.sizeBackImg(element.offsetWidth, element.offsetHeight, duration);
+    if (!this.mapService.mapStopped) {
+      this.movePoint(this.trackers, duration);
+    }
   }
 }
