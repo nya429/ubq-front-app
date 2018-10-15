@@ -60,12 +60,22 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   /** Map_img */
   // private mapBackImgViewBox;
   private mapBackImg;
-  /** Map_size_control */
+  /** Map_size&pos_control */
+  private mapDimensionControlPanel: any;
+  private mapDimensionControlPanelSize = {width: 90, height: 500};
+  /** Map_position_control */
   private mapPosControlPanel: any;
   private mapPosControlPanelSize = {width: 90, height: 90};
   private mapPosControlTimer;
   private mapPosControlInterval;
   private arrowPath = 'M 50,0 L 60,10 L 20,50 L 60,90 L 50,100 L 0,50 Z';
+  /** Map_scale_control */
+  private mapScaleControlPanel: any;
+  private mapScaleControlPanelSize = {width: 90, height: 200, paddingTop: 10, paddingBottom: 10};
+  private draggerActiveLine: any;
+  private scaleDragger: any;
+  private scale = 1;
+
 
   constructor(private mapService: MapService) { }
 
@@ -205,7 +215,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // this.appendMapBackgroundImgViewBox(element);
     this.appendMapBackgroundImg();
     this.attachPopup();
-    this.appendmapPosControlPenal();
+    this.appendMapDimensionPanel()
+    // this.appendmapPosControlPenal();
+    // this.appendMapScaleControlPenal();
     this.svg.on('click', () => this.diselecPoint());     //  Add trackerPoint Info ouside click dismiss
   }
 
@@ -223,13 +235,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.xScale = d3.scaleLinear()
       .domain([0, this.base.width])
       /**
-       * 516 = this.width - (this.width - imgWidth)
+       * 615 = this.width - (this.width - imgWidth)
        */
-      .range([0 + this.offsetX, 615 + this.offsetX - this.padding.left - this.padding.right]);
+      .range([(615 / 2) - (615 / 2) * this.scale + this.offsetX, (615 / 2) + (615 / 2) * this.scale  + this.offsetX - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
-      .range([0 + this.offsetY, this.height + this.offsetY - this.padding.top - this.padding.bottom]);
+      .range([(this.height / 2) - (this.height / 2) * this.scale + this.offsetY, (this.height / 2) + (this.height / 2) * this.scale + this.offsetY - this.padding.top - this.padding.bottom]);
   }
 
   appendSVG(element) {
@@ -301,7 +313,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.mapBackImg
     // svg:image will not overwrite the inline preserveAspectRatio
     .attr('preserveAspectRatio', 'xMinYMin meet')
-      .attr('xlink:href', '../../../assets/store_floorplan.svg')
+      // .attr('xlink:href', '../../../assets/store_floorplan.svg')
       // API: position
       .attr('x', 0)
       .attr('y', 0)
@@ -467,7 +479,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
    }
 
    diselectOtherPoints() {
-      const otherSelectedElements = d3.selectAll('svg circle')
+      const otherSelectedElements = d3.selectAll('.trackerPoint')
         .filter(d => this.selectedPoint.datum() !== d && d.selected === true && d.isActivated());
       if (otherSelectedElements.data().length) {
           otherSelectedElements.data().map(point => point.selected = false);
@@ -652,7 +664,33 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.sizeBackImg(element.offsetWidth, element.offsetHeight);
     this.positionPopup();
     // this.resizeMapBackgroundImgViewBox(element)
-    this.rePositionMapSizeControoPenal();
+    this.rePositionMapDimensionPanel();
+  }
+  
+  appendMapDimensionPanel() {
+    this.svg
+    .insert('svg')
+    .attr('class', 'mapDimensionControlPanel')
+    .attr('x', this.width - this.mapDimensionControlPanelSize.width)
+    .attr('y', 0)
+    .attr('width', this.mapDimensionControlPanelSize.width)
+    .attr('height', this.mapDimensionControlPanelSize.height)
+    .style('opacity', 0)
+    .transition()
+    .duration(1000)
+    .delay(500)
+    .style('opacity', 1);
+
+    this.mapDimensionControlPanel =  d3.select('.mapDimensionControlPanel')
+  
+    this.appendmapPosControlPenal();
+    this.appendMapScaleControlPenal();
+  }
+
+  rePositionMapDimensionPanel() {
+    this.mapDimensionControlPanel
+      .attr('x', this.width - this.mapDimensionControlPanelSize.width)
+      .attr('y', 0);
   }
 
   appendmapPosControlPenal() {
@@ -687,18 +725,19 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     ];
 
     /** create 4 Position buttons wrapper */
-    this.svg
+    this.mapDimensionControlPanel
       .insert('svg')
       .attr('class', 'mapPosControlPanel')
-      .attr('x', this.width - this.mapPosControlPanelSize.width)
-      .attr('y', this.height - this.mapPosControlPanelSize.height)
+      // .attr('x', this.width - this.mapPosControlPanelSize.width)
+      .attr('x', 0)
+      .attr('y', this.mapDimensionControlPanelSize.height * 5 / 6 - this.mapPosControlPanelSize.height)
       .attr('width', this.mapPosControlPanelSize.width)
       .attr('height', this.mapPosControlPanelSize.height)
-      .style('opacity', 0)
-      .transition()
-      .duration(1000)
-      .delay(500)
-      .style('opacity', 1);
+      // .style('opacity', 0)
+      // .transition()
+      // .duration(1000)
+      // .delay(500)
+      // .style('opacity', 1);
 
     this.mapPosControlPanel = d3.select('.mapPosControlPanel');
 
@@ -761,12 +800,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       const thisButton = d3.select(this);
       that.onMouseUpMapPosButton(thisButton, d);
     });
-  }
-
-  rePositionMapSizeControoPenal() {
-    this.mapPosControlPanel
-      .attr('x', this.width - this.mapPosControlPanelSize.width)
-      .attr('y', this.height - this.mapPosControlPanelSize.height);
   }
 
   onMouseOverMapPosButton(mapPosButton) {
@@ -854,5 +887,160 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (!this.mapService.mapStopped) {
       this.movePoint(this.trackers, duration);
     }
+  }
+
+  appendMapScaleControlPenal() {
+    let process = 100 ;
+  
+    this.mapDimensionControlPanel
+    .insert('svg')
+    .attr('class', 'mapScaleControlPanel')
+    .attr('x', 0)
+    .attr('y', this.mapDimensionControlPanelSize.height / 6 )
+    .attr('width', this.mapScaleControlPanelSize.width)
+    .attr('height', this.mapScaleControlPanelSize.height)
+    .attr('viewBox',   '0, 0, 90, 200')
+    .style('opacity', 0)
+    .transition()
+    .duration(1000)
+    .delay(500)
+    .style('opacity', .6);
+
+    this.mapScaleControlPanel = d3.select('.mapScaleControlPanel');
+
+
+    // this.mapScaleControlPanel.append('rect')
+    // .attr('x', 0)
+    // .attr('y', 0)
+    // .attr('width', 90)
+    // .attr('height', 200)
+    //   .style('stroke', 'cadetblue')
+    //   .style('stroke-width', 1)
+
+    const that = this;
+    const draggerLines = this.mapScaleControlPanel.insert('g')
+    .attr('class', 'mapScaleDragger')
+    .style('cursor', 'pointer');
+    
+    draggerLines.append('line')
+    .attr('id', 'mapScaleControlLineSlot')
+    .attr('x1',          this.mapScaleControlPanelSize.width / 2)
+    .attr('x2',          this.mapScaleControlPanelSize.width / 2)
+    .attr('y1',         this.mapScaleControlPanelSize.paddingTop)
+    .attr('y2',         this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom)
+    .attr('stroke',     'black')
+    .attr('stroke-width',    3)
+    // .style('fill-opacity', .6)
+
+
+    this.draggerActiveLine = draggerLines
+    .append('line')
+    .attr('id', 'mapScaleControlLineActive')
+    .attr('x1',          this.mapScaleControlPanelSize.width / 2)
+    .attr('x2',          this.mapScaleControlPanelSize.width / 2)
+    .attr('y1',         this.mapScaleControlPanelSize.height - process)
+    .attr('y2',         this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom)
+    .attr('stroke',     'white')
+    .attr('stroke-width',    3)
+    .style('fill-opacity', .6);
+
+    this.scaleDragger = draggerLines
+    .append('circle')
+    .attr('id', 'mapScaleControlDragger')
+    .attr('cx', this.mapScaleControlPanelSize.width / 2)
+    .attr('cy', this.mapScaleControlPanelSize.height - process)
+    .attr('r', 5)
+    .style('fill',      'white')
+
+  draggerLines   
+  .on('mouseover', function(d, i) {
+      const dragger = d3.select(this);
+      that.onMouseoverDragger(dragger);
+  })
+  .on('mouseout', function(d, i) {
+    const dragger = d3.select(this);
+    that.onMouseoutDragger(dragger);
+  })
+  // .on('mousedown', function(d, i) {
+  //   const dragger = d3.select(this);
+  //   that.onMouseClickDragger(dragger);
+  // })
+  // .on('mouseup', function(d, i) {
+  //   const thisButton = d3.select(this);
+  //   that.onMouseUpMapPosButton(thisButton, d);
+  //   });
+
+  this.scaleDragger.call(
+    d3.drag()        
+    .on("start", d => this.scaleDragstarted(d))
+    .on("drag", d => this.scaleDragged(d))
+    .on("end", d => this.scaleDragended(d))
+    );
+  }
+
+  scaleDragstarted(d) {
+    this.scaleDragger
+    .transition()
+    .duration(50)
+    .attr('r', 7);
+  }
+    
+  scaleDragged(d) {
+    this.scaleDragger
+    .attr("cy", d => this.moverDragger(d));
+    // this.draggerActiveLine
+    // .attr("y1", d => this.moverDragger(d));
+  }
+    
+  scaleDragended(d) {
+    this.scaleDragger    
+    .transition()
+    .duration(50)
+    .attr('r', 5);
+  }
+
+  onMouseoverDragger(dragger) {
+    this.mapScaleControlPanel
+    .transition()
+    .duration(100)
+    .style('opacity', .8);
+  }
+
+  onMouseoutDragger(dragger) {
+    this.mapScaleControlPanel
+    .transition()
+    .duration(100)
+    .style('opacity', .6);
+  }
+
+  moverDragger(d) {
+    let y = d3.event.y; 
+
+    if (y >= this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom) {
+      y =  this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom;
+    } 
+     
+    if(y <= this.mapScaleControlPanelSize.paddingTop ) {
+      y = this.mapScaleControlPanelSize.paddingTop;
+    } 
+    
+    /** speed = 9 */
+    this.scale = (y) / 
+    ((this.mapScaleControlPanelSize.height) / 2);
+    this.initMapScale();
+    if (!this.mapService.mapStopped) {
+       this.movePoint(this.trackers, 10);
+    }
+    return y;
+   
+    // const element = this.chartContainer.nativeElement;
+    // this.sizeBackImg(element.offsetWidth, element.offsetHeight, duration);
+    // if (!this.mapService.mapStopped) {
+    //   this.movePoint(this.trackers, duration);
+    // }
+  }
+
+  reBackImg() {
+
   }
 }
