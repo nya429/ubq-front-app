@@ -13,8 +13,10 @@ export class MapService {
     private httpOptions;
     // map doamin
     private base = {width: 100, height: 50};
-    // tracker dimension
-    private trackerDimension = {x: 23, y: 20};
+    private mapPosScale = {offsetX: 0, offsetY: 0, scale: 1};
+    // tracker boundary
+    private trackerBoundary = {x: 22, y: 20};
+    
 
     constructor(private httpClient: HttpClient,
         private settingService: SettingService) {
@@ -27,6 +29,7 @@ export class MapService {
                eventUrl: () => this.settingService.getApis('event'),
              };
         this.getMapSettings();
+        this.initDummyTrackers(this.base);
      }
 
 
@@ -74,19 +77,34 @@ export class MapService {
         [-1, 1], [0, 1], [1, 1]
     ];
 
+    /** 
+     * base
+     * tracker boundary
+     */
     getMapSettings() {
         this.base = this.settingService.getMapSettingBase();
-        this.trackerDimension = this.settingService.getMapSettingTrackerDimension();
-        this.initDummyTrackers(this.base);
-        return this.base;
+        this.trackerBoundary = this.settingService.getMapSettingTrackerBoundary();
+        this.mapPosScale = this.settingService.getMapSettingPosScale();
+        return {base: {...this.base}, mapPosScale: {...this.mapPosScale}};
     }
 
-    setTrackerDimension(x: number, y: number) {
-        this.trackerDimension.x = x ?  x : this.trackerDimension.x;
-        this.trackerDimension.y = y ?  y : this.trackerDimension.y;
+    settrackerBoundary(x: number, y: number) {
+        this.trackerBoundary.x = x ?  x : this.trackerBoundary.x;
+        this.trackerBoundary.y = y ?  y : this.trackerBoundary.y;
     }
 
-    initDummyTrackers(base) {
+    /**offsetX: number, offsetY: number, scale: number */
+    updateMapSettings(mapPosScale: {offsetX: number, offsetY: number, scale: number}) {
+        Object.keys(mapPosScale).forEach(key => {
+            const value = mapPosScale[key]
+            if (this.mapPosScale[key] !== value) {
+                console.log(this.mapPosScale[key], value)
+                this.settingService.updateMapSetting(key, value.toString());
+            }
+        });
+    }
+
+    initDummyTrackers(base: {width: number, height: number}) {
         this.trackers = [
             new Tracker(1, '', 1 / 100 * base.width, 1 / 50 * base.height, null),
             new Tracker(2, '', 1 / 100 * base.width, 49 / 50 * base.height, null),
@@ -313,8 +331,8 @@ export class MapService {
                 this.trackers.forEach(trac => {
                     if (trac.tagId === data[0].customer_id) {
                         // API
-                        trac.setCrd((data[0].loc_x + 0.5) / this.trackerDimension.x * this.base.width,
-                             (data[0].loc_y + 0.5) / this.trackerDimension.y * this.base.width);
+                        trac.setCrd((data[0].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
+                             (data[0].loc_y + 0.5) / this.trackerBoundary.y * this.base.width);
                         trac.setLocs(data, 0);
                         if (customer_ids_index === customer_ids.length) {
                             this.trackerLocsListener.unsubscribe();
@@ -351,18 +369,18 @@ export class MapService {
     }
 
     /**
-     * trackerDimension.x/y (20/17) is the max I can see in the simulation_data
+     * trackerBoundary.x/y (20/17) is the max I can see in the simulation_data
      * loc_x/y will always between 20/17
-     * Eventually this.base.width should eqaul to trackerDimension.x
-     *  this.base.height should eqaul to trackerDimension.y
+     * Eventually this.base.width should eqaul to trackerBoundary.x
+     *  this.base.height should eqaul to trackerBoundary.y
      *
      */
     testMoveHis(tracker: Tracker) {
         const nextLocIndex = tracker.currentLoc < tracker.locs.length ? tracker.currentLoc + 1 : 0;
         const nextLoc = tracker.locs[nextLocIndex];
         tracker.currentLoc = nextLocIndex;
-        tracker.setCrd((nextLoc.loc_x + 0.5) / this.trackerDimension.x * this.base.width,
-            (nextLoc.loc_y + 0.5)  / this.trackerDimension.y * this.base.height);
+        tracker.setCrd((nextLoc.loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
+            (nextLoc.loc_y + 0.5)  / this.trackerBoundary.y * this.base.height);
         tracker.setTime(nextLoc.time * 1000);
         // this.trackerLocChanges.next(this.trackers.slice());
     }
@@ -382,6 +400,4 @@ export class MapService {
     onWindowResize() {
         this.windowResized.next();
     }
-
-
 }

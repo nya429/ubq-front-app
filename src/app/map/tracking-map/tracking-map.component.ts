@@ -22,8 +22,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private popupSubscription: Subscription;
   private loadingStatusSubscription: Subscription;
   private windowResizeSubscription: Subscription;
-
-  private base = {width: 100, height: 50};
+  
+  /** API */
+  private base: {width: number, height: number};
   private margin: any = { top: 0, bottom: 0, left: 0, right: 0};
   private padding = {left: 0, right: 0, top: 0, bottom: 0};
 
@@ -40,8 +41,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   /** MapScale */
   private xScale: any;
   private yScale: any;
-  private offsetX = 0;
-  private offsetY = 0;
+  /** API */
+  private mapPosScale: {offsetX: number, offsetY: number, scale: number};
 
   /** trackerPoint */
   private trackerPoints: any;
@@ -62,6 +63,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private mapBackImg;
   /** Map_size&pos_control */
   private mapDimensionControlPanel: any;
+  // TODO this height need to change when the container changed
   private mapDimensionControlPanelSize = {width: 90, height: 500};
   /** Map_position_control */
   private mapPosControlPanel: any;
@@ -74,8 +76,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private mapScaleControlPanelSize = {width: 90, height: 200, paddingTop: 10, paddingBottom: 10};
   private draggerActiveLine: any;
   private scaleDragger: any;
-  private scale = 1;
-
+  private mapPosScaleTimer: any;
 
   constructor(private mapService: MapService) { }
 
@@ -201,7 +202,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   getMapSettings() {
-    this.base = this.mapService.getMapSettings();
+    // console.log('REST TEST', this.mapService.getMapSettings())
+    const {base, mapPosScale} = this.mapService.getMapSettings();
+    
+    this.base = base;
+    this.mapPosScale = mapPosScale;
+    console.log(mapPosScale.scale);
   }
 
   createBase() {
@@ -237,13 +243,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       /**
        * 615 = this.width - (this.width - imgWidth)
        */
-      .range([(615 / 2) * (1 - this.scale) + this.offsetX,
-         (615 / 2) * (1 + this.scale)  + this.offsetX - this.padding.left - this.padding.right]);
+      .range([(615 / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetX,
+         (615 / 2) * (1 + this.mapPosScale.scale)  + this.mapPosScale.offsetX - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
-      .range([(this.height / 2) * (1 - this.scale) + this.offsetY,
-        (this.height / 2) * (1 + this.scale)  + this.offsetY - this.padding.top - this.padding.bottom]);
+      .range([(this.height / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetY,
+        (this.height / 2) * (1 + this.mapPosScale.scale)  + this.mapPosScale.offsetY - this.padding.top - this.padding.bottom]);
   }
 
   appendSVG(element) {
@@ -319,9 +325,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       // API: position
       .attr('x', 0)
       .attr('y', 0)
+      .attr('x',   (615 / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetX)
+      .attr('y', (500 / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetY)
       // API: dimensions
       .attr('width', this.width)
       .attr('height', this.height)
+      .attr('width', this.width * this.mapPosScale.scale)
+      .attr('height', this.height * this.mapPosScale.scale)
       .attr('opacity', 0)
       .transition()
       .duration(1000)
@@ -334,15 +344,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.mapBackImg
       .transition()
       .duration(dur)
-      .attr('x', 0 + this.offsetX)
-      .attr('y', 0 + this.offsetY)
-      .attr('x',   (615 / 2) * (1 - this.scale) + this.offsetX)
-      .attr('y', (500 / 2) * (1 - this.scale) + this.offsetY)
+      // .attr('x', 0 + this.mapPosScale.offsetX)
+      // .attr('y', 0 + this.mapPosScale.offsetY)
+      .attr('x',   (615 / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetX)
+      .attr('y', (500 / 2) * (1 - this.mapPosScale.scale) + this.mapPosScale.offsetY)
       // API: dimensions
       .attr('width', offsetWidth)
       .attr('height', offsetHeight)
-      .attr('width', offsetWidth * this.scale)
-      .attr('height', offsetHeight * this.scale)
+      .attr('width', offsetWidth * this.mapPosScale.scale)
+      .attr('height', offsetHeight * this.mapPosScale.scale)
       ;
   }
 
@@ -834,8 +844,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   onMouseDownMapPosButton(mapPosButton, datum) {
-    const duration = 100;
-
+    clearTimeout(this.mapPosScaleTimer);
+    const duration = 10;
     mapPosButton
       .transition(30)
       .style('fill-opacity', .4)
@@ -865,6 +875,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('width',      76)
       .attr('height',     76);
 
+      this.onMapPosScaleChanged();
       // this.positionMap(datum.operation, duration);
   }
 
@@ -873,16 +884,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
     switch (operation) {
       case 'up':
-        this.offsetY -= step;
+        this.mapPosScale.offsetY -= step;
         break;
       case 'right':
-        this.offsetX += step;
+        this.mapPosScale.offsetX += step;
         break;
       case 'down':
-       this.offsetY += step;
+       this.mapPosScale.offsetY += step;
        break;
       case 'left':
-        this.offsetX -= step;
+        this.mapPosScale.offsetX -= step;
         break;
       default:
         break;
@@ -939,13 +950,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .attr('stroke-width',    3)
     // .style('fill-opacity', .6)
 
+    // this.mapPosScale.scale = (y) / ((this.mapScaleControlPanelSize.height) / 2);
 
+    const y = this.mapPosScale.scale  * ((this.mapScaleControlPanelSize.height) / 2)
     this.draggerActiveLine = draggerLines
     .append('line')
     .attr('id', 'mapScaleControlLineActive')
     .attr('x1',          this.mapScaleControlPanelSize.width / 2)
     .attr('x2',          this.mapScaleControlPanelSize.width / 2)
     .attr('y1',         this.mapScaleControlPanelSize.height - process)
+    .attr('y1',         y)
     .attr('y2',         this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom)
     .attr('stroke',     'white')
     .attr('stroke-width',    3)
@@ -956,6 +970,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .attr('id', 'mapScaleControlDragger')
     .attr('cx', this.mapScaleControlPanelSize.width / 2)
     .attr('cy', this.mapScaleControlPanelSize.height - process)
+    .attr('cy', y)
     .attr('r', 5)
     .style('fill',      'white')
 
@@ -986,6 +1001,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   scaleDragstarted(d) {
+    clearTimeout(this.mapPosScaleTimer);
     this.scaleDragger
     .transition()
     .duration(50)
@@ -994,11 +1010,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     
   scaleDragged(d) {
     this.scaleDragger
-    .attr("cy", d => this.moverDragger(d));
+    .attr("cy", d => this.calDraggerHeight(d));
     this.draggerActiveLine
-    .attr("y1", d => {
-      
-      return this.moverDragger(d)});
+    .attr("y1", d => this.calDraggerHeight(d));
+
+    this.initMapScale();
+    const element = this.chartContainer.nativeElement;
+    this.sizeBackImg(element.offsetWidth, element.offsetHeight, 10);
+    if (!this.mapService.mapStopped) {
+      this.movePoint(this.trackers, 10);
+    }
   }
     
   scaleDragended(d) {
@@ -1006,6 +1027,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .transition()
     .duration(50)
     .attr('r', 5);
+
+    this.onMapPosScaleChanged();
   }
 
   onMouseoverDragger(dragger) {
@@ -1022,7 +1045,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .style('opacity', .6);
   }
 
-  moverDragger(d) {
+  calDraggerHeight(d) {
     let y = d3.event.y; 
 
     if (y >= this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom) {
@@ -1033,25 +1056,15 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       y = this.mapScaleControlPanelSize.paddingTop;
     } 
     
-    /** speed = 9 */
-    this.scale = (y) / 
-    ((this.mapScaleControlPanelSize.height) / 2);
-    this.initMapScale();
-        const element = this.chartContainer.nativeElement;
-    this.sizeBackImg(element.offsetWidth, element.offsetHeight, 10);
-    if (!this.mapService.mapStopped) {
-       this.movePoint(this.trackers, 10);
-    }
+    /** calculate = 9 */
+    this.mapPosScale.scale = (y) / ((this.mapScaleControlPanelSize.height) / 2);
     return y;
-   
-    // const element = this.chartContainer.nativeElement;
-    // this.sizeBackImg(element.offsetWidth, element.offsetHeight, duration);
-    // if (!this.mapService.mapStopped) {
-    //   this.movePoint(this.trackers, duration);
-    // }
   }
 
-  reBackImg() {
-
+  onMapPosScaleChanged() {
+    this.mapPosScaleTimer = setTimeout(() => {
+      console.log('onMapPosScaleChanged');
+      this.mapService.updateMapSettings(this.mapPosScale);
+    }, 800);
   }
 }

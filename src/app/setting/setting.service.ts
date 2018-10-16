@@ -17,7 +17,10 @@ export class SettingService {
         new Setting({key: 'map_domain_x', value: '100', id: 2}),
         new Setting({key: 'map_domain_y', value: '50', id: 3}),
         new Setting({key: 'tracker_domain_x', value: '22', id: 4}),
-        new Setting({key: 'tracker_domain_y', value: '20', id: 5}),  ];
+        new Setting({key: 'tracker_domain_y', value: '20', id: 5}),
+        new Setting({key: 'map_pos_offset_x', value: '0', id: 6}),
+        new Setting({key: 'map_pos_offset_y', value: '0', id: 7}),
+        new Setting({key: 'map_scale', value: '1', id: 8}),  ];
 
     settings: Setting[];
 
@@ -141,9 +144,29 @@ export class SettingService {
         this.settings.splice(index, 1);
         this.settingsChanged.next(this.settings.slice());
     }
+  
+    updateMapSetting(key: string, value: string) {
+        switch(key) {
+            case 'offsetX': 
+                key = 'map_pos_offset_x';
+                break;
+            case 'offsetY': 
+                key = 'map_pos_offset_y';
+                break;
+            case 'scale': 
+                key = 'map_scale';
+                break;
+            default:
+            break;
+        }
+        console.log(key)
+        const index = this.getSettingIdByKey(key);
+        const form = {id: index, key: key, value: value};
+        this.updateSetting(form, index);
+    }
 
     // TODO fix update on backend
-    updateSetting(form: object, index: number) {
+    updateSetting(form: {id: number, key: string, value: string}, index: number) {
         const setting = new Setting(form);
         const settingId = setting.settingId();
 
@@ -349,7 +372,7 @@ export class SettingService {
         }
     }
 
-    getSettingsByKey(key: string) {
+    getSettingValueByKey(key: string) {
         let settingPair = this.settings.find(setting => setting.key() === key);
 
         if (!settingPair) {
@@ -359,17 +382,35 @@ export class SettingService {
         return settingPair.value();
     }
 
+    getSettingIdByKey(key: string) {
+        let settingPair = this.settings.find(setting => setting.key() === key);
+
+        if (!settingPair) {
+            settingPair = this.defaultSettings.find(setting => setting.key() === key);
+        }
+
+        return settingPair.settingId();
+    }
+
     getMapSettingBase() {
-        const domain_x = this.getSettingsByKey('map_domain_x');
-        const domain_y = this.getSettingsByKey('map_domain_x');
+        const domain_x = this.getSettingValueByKey('map_domain_x');
+        const domain_y = this.getSettingValueByKey('map_domain_x');
 
         return {width: +domain_x, height: +domain_y};
     }
 
-    getMapSettingTrackerDimension() {
-        const trackerX = this.getSettingsByKey('tracker_domain_x');
-        const trackerY = this.getSettingsByKey('tracker_domain_y');
+    getMapSettingTrackerBoundary() {
+        const trackerX = this.getSettingValueByKey('tracker_domain_x');
+        const trackerY = this.getSettingValueByKey('tracker_domain_y');
 
         return {x: +trackerX, y: +trackerY};
+    }
+
+    getMapSettingPosScale() {
+        const trackerX = this.getSettingValueByKey('map_pos_offset_x');
+        const trackerY = this.getSettingValueByKey('map_pos_offset_y');
+        const scale = this.getSettingValueByKey('map_scale');
+
+        return {offsetX: +trackerX, offsetY: +trackerY, scale: +scale};
     }
 }
