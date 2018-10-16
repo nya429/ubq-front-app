@@ -237,11 +237,13 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       /**
        * 615 = this.width - (this.width - imgWidth)
        */
-      .range([(615 / 2) - (615 / 2) * this.scale + this.offsetX, (615 / 2) + (615 / 2) * this.scale  + this.offsetX - this.padding.left - this.padding.right]);
+      .range([(615 / 2) * (1 - this.scale) + this.offsetX,
+         (615 / 2) * (1 + this.scale)  + this.offsetX - this.padding.left - this.padding.right]);
     this.yScale = d3.scaleLinear()
       .domain([0, this.base.height])
       // API
-      .range([(this.height / 2) - (this.height / 2) * this.scale + this.offsetY, (this.height / 2) + (this.height / 2) * this.scale + this.offsetY - this.padding.top - this.padding.bottom]);
+      .range([(this.height / 2) * (1 - this.scale) + this.offsetY,
+        (this.height / 2) * (1 + this.scale)  + this.offsetY - this.padding.top - this.padding.bottom]);
   }
 
   appendSVG(element) {
@@ -313,7 +315,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.mapBackImg
     // svg:image will not overwrite the inline preserveAspectRatio
     .attr('preserveAspectRatio', 'xMinYMin meet')
-      // .attr('xlink:href', '../../../assets/store_floorplan.svg')
+      .attr('xlink:href', '../../../assets/store_floorplan.svg')
       // API: position
       .attr('x', 0)
       .attr('y', 0)
@@ -334,9 +336,14 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .duration(dur)
       .attr('x', 0 + this.offsetX)
       .attr('y', 0 + this.offsetY)
+      .attr('x',   (615 / 2) * (1 - this.scale) + this.offsetX)
+      .attr('y', (500 / 2) * (1 - this.scale) + this.offsetY)
       // API: dimensions
       .attr('width', offsetWidth)
-      .attr('height', offsetHeight);
+      .attr('height', offsetHeight)
+      .attr('width', offsetWidth * this.scale)
+      .attr('height', offsetHeight * this.scale)
+      ;
   }
 
   initiateTrackPoint(trackers: Tracker[]) {
@@ -988,8 +995,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   scaleDragged(d) {
     this.scaleDragger
     .attr("cy", d => this.moverDragger(d));
-    // this.draggerActiveLine
-    // .attr("y1", d => this.moverDragger(d));
+    this.draggerActiveLine
+    .attr("y1", d => {
+      
+      return this.moverDragger(d)});
   }
     
   scaleDragended(d) {
@@ -1028,6 +1037,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.scale = (y) / 
     ((this.mapScaleControlPanelSize.height) / 2);
     this.initMapScale();
+        const element = this.chartContainer.nativeElement;
+    this.sizeBackImg(element.offsetWidth, element.offsetHeight, 10);
     if (!this.mapService.mapStopped) {
        this.movePoint(this.trackers, 10);
     }
