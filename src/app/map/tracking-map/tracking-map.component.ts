@@ -391,7 +391,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       if (!d3.select(this).datum().isActivated()) {
         return false;
       }
-
+      d3.select(this).raise();
       that.selectedPoint = d3.select(this);
       that.onMouseClickTracker();
     });
@@ -418,8 +418,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .ease(d3.easeLinear)
     .style('fill', d => d.color)
     /** point steps */
-    .attr('cx', d => this.xScale(d.xCrd)  + this.padding.left)
-    .attr('cy', d => this.yScale(d.yCrd) + this.padding.top);
+    .attr('cx', d => this.xScale(d.xCrd))
+    .attr('cy', d => this.yScale(d.yCrd));
 
     if (this.mapService.mapStarted && this.trackerInfoG && this.selectedPoint ) {
       const x = this.selectedPoint.datum().xCrd;
@@ -429,10 +429,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       // .datum(this.selectedPoint.datum())
        .transition()
          .duration(dur)
-         .attr('transform', d => `translate(${this.xScale(x - d.xCrd)}, ${this.yScale(y - d.yCrd)} )`);
+        //  .attr('transform', d => `translate(${this.xScale(x - d.xCrd)}, ${this.yScale(y - d.yCrd)} )`);
+        .attr('x', d => this.xScale(x) - this.trackerInfoWidth / 2 + this.padding.left)
+        .attr('y', d => this.yScale(y) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
     }
   }
-
+  
   removePoint() {
     const trackerPoints = d3.selectAll('.trackerPoint');
     trackerPoints.transition(700)
@@ -519,9 +521,18 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     }
     console.log(this.selectedPoint.datum());
     const that = this;
-    this.trackerInfoG = this.svg.insert('g')
+    this.trackerInfoG = this.svg
+        // .insert('g')
+        .append('svg')
+        .datum(JSON.parse(JSON.stringify(this.selectedPoint.datum())))
         .attr('class', 'trackerInfo')
-        .datum(JSON.parse(JSON.stringify(this.selectedPoint.datum())));
+        .attr('width', this.trackerInfoWidth)
+        .attr('height', this.trackerInfoHeight)
+        .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2 + this.padding.left)
+        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
+        .attr('viewBox', `0,0,${this.trackerInfoWidth}, ${this.trackerInfoHeight}`)
+        
+        
 
     this.trackerInfoG.insert('rect')
         .attr('class', 'trackerInfoRect')
@@ -529,19 +540,25 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         .style('fill-opacity', 0.4)
         .attr('width', this.trackerInfoWidth)
         .attr('height', this.trackerInfoHeight)
-        .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2 + this.padding.left)
-        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
+        // .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2 + this.padding.left)
+        // .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
+        .attr('x', 0)
+        .attr('y',  0)
         .attr('rx', 5)
         .attr('ry', 5);
     this.trackerInfoG.insert('text')
         .attr('class', 'trackerInfoText')
-        .text(d => `ID: ${d.alias} (${Math.floor(d.xCrd)}, ${Math.floor(d.yCrd)})`)
+        .text(d => `${d.alias} (${Math.floor(d.xCrd)}, ${Math.floor(d.yCrd)})`)
+        // .style('text-anchor', 'middle')
         .style('text-anchor', 'middle')
+        .style('font-size', '16px')
         .attr('fill', 'white')
         .attr('font-weight', 'bolder')
-        .attr('x', d => this.xScale(d.xCrd) + this.padding.left)
-        .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight + this.padding.top);
-      }
+        // .attr('x', d => this.xScale(d.xCrd) + this.padding.left)
+        // .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight + this.padding.top)
+        .attr('x', this.trackerInfoWidth / 2)
+        .attr('y', this.trackerInfoHeight * 3 / 4)
+   }
 
    removeTrackerInfo() {
       this.svg.select('.trackerInfo').remove();
