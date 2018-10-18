@@ -16,7 +16,6 @@ export class MapService {
     private mapPosScale = {offsetX: 0, offsetY: 0, scale: 1};
     // tracker boundary
     private trackerBoundary = {x: 22, y: 20};
-    
 
     constructor(private httpClient: HttpClient,
         private settingService: SettingService) {
@@ -96,9 +95,9 @@ export class MapService {
     /**offsetX: number, offsetY: number, scale: number */
     updateMapSettings(mapPosScale: {offsetX: number, offsetY: number, scale: number}) {
         Object.keys(mapPosScale).forEach(key => {
-            const value = mapPosScale[key]
+            const value = mapPosScale[key];
             if (this.mapPosScale[key] !== value) {
-                console.log(this.mapPosScale[key], value)
+                console.log(this.mapPosScale[key], value);
                 this.settingService.updateMapSetting(key, value.toString());
             }
         });

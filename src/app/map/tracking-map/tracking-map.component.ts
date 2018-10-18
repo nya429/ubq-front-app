@@ -22,7 +22,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   private popupSubscription: Subscription;
   private loadingStatusSubscription: Subscription;
   private windowResizeSubscription: Subscription;
-  
   /** API */
   private base: {width: number, height: number};
   private margin: any = { top: 0, bottom: 0, left: 0, right: 0};
@@ -204,7 +203,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   getMapSettings() {
     // console.log('REST TEST', this.mapService.getMapSettings())
     const {base, mapPosScale} = this.mapService.getMapSettings();
-    
     this.base = base;
     this.mapPosScale = mapPosScale;
     console.log(mapPosScale.scale);
@@ -221,7 +219,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // this.appendMapBackgroundImgViewBox(element);
     this.appendMapBackgroundImg();
     this.attachPopup();
-    this.appendMapDimensionPanel()
+    this.appendMapDimensionPanel();
     // this.appendmapPosControlPenal();
     // this.appendMapScaleControlPenal();
     this.svg.on('click', () => this.diselecPoint());     //  Add trackerPoint Info ouside click dismiss
@@ -431,10 +429,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
          .duration(dur)
         //  .attr('transform', d => `translate(${this.xScale(x - d.xCrd)}, ${this.yScale(y - d.yCrd)} )`);
         .attr('x', d => this.xScale(x) - this.trackerInfoWidth / 2 + this.padding.left)
-        .attr('y', d => this.yScale(y) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
+        .attr('y', d => this.yScale(y) - this.trackerInfoHeight * 2 + 10 + this.padding.top);
     }
   }
-  
+
   removePoint() {
     const trackerPoints = d3.selectAll('.trackerPoint');
     trackerPoints.transition(700)
@@ -530,9 +528,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         .attr('height', this.trackerInfoHeight)
         .attr('x', d => this.xScale(d.xCrd) - this.trackerInfoWidth / 2 + this.padding.left)
         .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight * 2 + 10 + this.padding.top)
-        .attr('viewBox', `0,0,${this.trackerInfoWidth}, ${this.trackerInfoHeight}`)
-        
-        
+        .attr('viewBox', `0,0,${this.trackerInfoWidth}, ${this.trackerInfoHeight}`);
 
     this.trackerInfoG.insert('rect')
         .attr('class', 'trackerInfoRect')
@@ -557,7 +553,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
         // .attr('x', d => this.xScale(d.xCrd) + this.padding.left)
         // .attr('y', d => this.yScale(d.yCrd) - this.trackerInfoHeight + this.padding.top)
         .attr('x', this.trackerInfoWidth / 2)
-        .attr('y', this.trackerInfoHeight * 3 / 4)
+        .attr('y', this.trackerInfoHeight * 3 / 4);
    }
 
    removeTrackerInfo() {
@@ -700,7 +696,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     // this.resizeMapBackgroundImgViewBox(element)
     this.rePositionMapDimensionPanel();
   }
-  
+
   appendMapDimensionPanel() {
     this.svg
     .insert('svg')
@@ -715,8 +711,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .delay(500)
     .style('opacity', 1);
 
-    this.mapDimensionControlPanel =  d3.select('.mapDimensionControlPanel')
-  
+    this.mapDimensionControlPanel =  d3.select('.mapDimensionControlPanel');
     this.appendmapPosControlPenal();
     this.appendMapScaleControlPenal();
   }
@@ -766,7 +761,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       .attr('x', 0)
       .attr('y', this.mapDimensionControlPanelSize.height * 5 / 6 - this.mapPosControlPanelSize.height)
       .attr('width', this.mapPosControlPanelSize.width)
-      .attr('height', this.mapPosControlPanelSize.height)
+      .attr('height', this.mapPosControlPanelSize.height);
       // .style('opacity', 0)
       // .transition()
       // .duration(1000)
@@ -925,8 +920,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   appendMapScaleControlPenal() {
-    let process = 100 ;
-  
+    const process = 100 ;
+
     this.mapDimensionControlPanel
     .insert('svg')
     .attr('class', 'mapScaleControlPanel')
@@ -989,9 +984,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .attr('cy', this.mapScaleControlPanelSize.height - process)
     .attr('cy', y)
     .attr('r', 5)
-    .style('fill',      'white')
+    .style('fill',      'white');
 
-  draggerLines   
+  draggerLines
   .on('mouseover', function(d, i) {
       const dragger = d3.select(this);
       that.onMouseoverDragger(dragger);
@@ -1010,10 +1005,10 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   //   });
 
   this.scaleDragger.call(
-    d3.drag()        
-    .on("start", d => this.scaleDragstarted(d))
-    .on("drag", d => this.scaleDragged(d))
-    .on("end", d => this.scaleDragended(d))
+    d3.drag()
+    .on('start', d => this.scaleDragstarted(d))
+    .on('drag', d => this.scaleDragged(d))
+    .on('end', d => this.scaleDragended(d))
     );
   }
 
@@ -1024,12 +1019,12 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     .duration(50)
     .attr('r', 7);
   }
-    
+
   scaleDragged(d) {
     this.scaleDragger
-    .attr("cy", d => this.calDraggerHeight(d));
+    .attr('cy', d => this.calDraggerHeight(d));
     this.draggerActiveLine
-    .attr("y1", d => this.calDraggerHeight(d));
+    .attr('y1', d => this.calDraggerHeight(d));
 
     this.initMapScale();
     const element = this.chartContainer.nativeElement;
@@ -1038,9 +1033,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.movePoint(this.trackers, 10);
     }
   }
-    
+
   scaleDragended(d) {
-    this.scaleDragger    
+    this.scaleDragger
     .transition()
     .duration(50)
     .attr('r', 5);
@@ -1063,16 +1058,16 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   calDraggerHeight(d) {
-    let y = d3.event.y; 
+    let y = d3.event.y;
 
     if (y >= this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom) {
       y =  this.mapScaleControlPanelSize.height - this.mapScaleControlPanelSize.paddingBottom;
-    } 
-     
-    if(y <= this.mapScaleControlPanelSize.paddingTop ) {
+    }
+
+    if (y <= this.mapScaleControlPanelSize.paddingTop ) {
       y = this.mapScaleControlPanelSize.paddingTop;
-    } 
-    
+    }
+
     /** calculate = 9 */
     this.mapPosScale.scale = (y) / ((this.mapScaleControlPanelSize.height) / 2);
     return y;
