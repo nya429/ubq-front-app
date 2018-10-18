@@ -44,7 +44,7 @@ export class SettingService {
             settingUrl: () => this.getApis('setting'),
           };
 
-        this.settings = this.defaultSettings;
+        this.settings = [...this.defaultSettings];
         this.populateSettings();
     }
 
@@ -313,7 +313,7 @@ export class SettingService {
     }
 
     restoreLocalSettingsToDefault() {
-        const newtSettings = this.defaultSettings;
+        const newtSettings = [...this.defaultSettings];
         newtSettings.shift();
         this.setSettings(newtSettings);
     }
