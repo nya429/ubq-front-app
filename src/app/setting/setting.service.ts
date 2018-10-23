@@ -16,7 +16,7 @@ export class SettingService {
         new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
         new Setting({key: 'map_domain_x', value: '100', id: 2}),
         new Setting({key: 'map_domain_y', value: '50', id: 3}),
-        new Setting({key: 'tracker_domain_x', value: '22', id: 4}),
+        new Setting({key: 'tracker_domain_x', value: '23', id: 4}),
         new Setting({key: 'tracker_domain_y', value: '20', id: 5}),
         new Setting({key: 'map_pos_offset_x', value: '0', id: 6}),
         new Setting({key: 'map_pos_offset_y', value: '0', id: 7}),
@@ -49,7 +49,7 @@ export class SettingService {
     }
 
     getSettings() {
-        return this.settings.slice();
+        return [...this.settings];
     }
 
     // TODO add trim() in backend
@@ -97,7 +97,6 @@ export class SettingService {
               (result) => {
                 this.connected = true;
                 const data = result['data'];
-                console.log(data);
                 const settings = data['settings'].map(
                     seetingRaw => new Setting(seetingRaw)
                   );
@@ -144,42 +143,40 @@ export class SettingService {
         this.settings.splice(index, 1);
         this.settingsChanged.next(this.settings.slice());
     }
-  
+
     updateMapSetting(key: string, value: string) {
-        switch(key) {
-            case 'offsetX': 
+        switch (key) {
+            case 'offsetX':
                 key = 'map_pos_offset_x';
                 break;
-            case 'offsetY': 
+            case 'offsetY':
                 key = 'map_pos_offset_y';
                 break;
-            case 'scale': 
+            case 'scale':
                 key = 'map_scale';
                 break;
             default:
             break;
         }
-        console.log(key)
         const index = this.getSettingIdByKey(key);
         const form = {id: index, key: key, value: value};
-        this.updateSetting(form, index);
+        this.updateSetting(form);
     }
 
     // TODO fix update on backend
-    updateSetting(form: {id: number, key: string, value: string}, index: number) {
+    updateSetting(form: {id: number, key: string, value: string}) {
         const setting = new Setting(form);
         const settingId = setting.settingId();
 
         // TODO use key for conditioning later
         if (settingId === 0) {
-            return this.updateLocalSetting(setting, index);
+            return this.updateLocalSetting(setting);
         }
 
         if (!settingId) {
             return false;
             // this.settingUpdated.next(new SettingState(settingId, 1, false));
         }
-        console.log(form);
         return this.httpClient.patch(`${this.httpOptions.settingUrl()}/${settingId}`, form, {
             observe: 'body',
             responseType: 'json'
@@ -188,21 +185,20 @@ export class SettingService {
                 this.connected = true;
                 const data = result['data'];
                 console.log(result);
-                this.updateLocalSetting(setting, index);
+                this.updateLocalSetting(setting);
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
                           // TODO check 404 then
             this.connected = false;
-                this.updateLocalSetting(setting, index);
+                this.updateLocalSetting(setting);
                 this.popup('opeartion', 'update');
               }
         );
     }
 
-    updateLocalSetting(setting: Setting, index: number) {
+    updateLocalSetting(setting: Setting) {
         let update = true;
         let fail = false;
-        console.log(setting.key());
         switch (setting.key()) {
             case 'host': // host setting
                 update = this.onUpdateHost(setting, update, fail);
@@ -213,7 +209,7 @@ export class SettingService {
         }
 
         if (update) {
-            this.onLocalSettingUpdated(setting, index);
+            this.onLocalSettingUpdated(setting);
         }
     }
 
@@ -235,7 +231,9 @@ export class SettingService {
         return update;
     }
 
-    onLocalSettingUpdated(newSetting: Setting,  index: number) {
+    onLocalSettingUpdated(newSetting: Setting) {
+        const id = newSetting.settingId();
+        const index = this.settings.findIndex(setting => setting.settingId() === id);
         this.settings[index] = newSetting;
 
         this.settingsChanged.next(this.settings.slice());
@@ -271,8 +269,7 @@ export class SettingService {
     setSettings(newSettings: Setting[]) {
         // unshift host setting into the array
         // settings.unshift(this.settings[0]);
-        this.settings = this.settings.slice(0, 1).concat(newSettings);
-        console.log(this.settings);
+        this.settings = [this.settings[0], ...newSettings];
         this.settingsChanged.next(this.settings);
     }
 

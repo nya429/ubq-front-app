@@ -59,15 +59,13 @@ export class UniversalSettingItemInputComponent implements OnInit {
    //check local first
     return Observable.create((observer: Observer<any>) => {
       this.settingTimer = setTimeout(() => {
-        if(this.settingService.isKeyTaken(control.value.trim().toLowerCase())) {
-          console.log('yes I')
+        if (this.settingService.isKeyTaken(control.value.trim().toLowerCase())) {
           observer.next({'keyIsSame': true});
         } else {
           observer.next(null);
         }
           observer.complete();
       }, 200);
-     
     });
   }
 }

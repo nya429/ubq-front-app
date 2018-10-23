@@ -14,8 +14,8 @@ export class AuthService {
   constructor(private router: Router) { }
 
   isAuthenticated() {
-      // return this.token !== null;
-       return true;
+      return this.token !== null;
+      //  return true;
   }
 
   setToken() {
@@ -23,7 +23,7 @@ export class AuthService {
   }
 
   authedNav() {
-    this.router.navigate(['/setting']);
+    this.router.navigate(['/dashboard']);
   }
 
   logOut() {

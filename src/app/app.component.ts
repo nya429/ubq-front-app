@@ -1,3 +1,4 @@
+import { SettingService } from './setting/setting.service';
 import { Component } from '@angular/core';
 import { appBodyInitState, appHeadInitState } from './app.animations';
 
@@ -8,5 +9,8 @@ import { appBodyInitState, appHeadInitState } from './app.animations';
   animations: [ appBodyInitState, appHeadInitState ]
 })
 export class AppComponent {
-  title = 'ubq';
+
+  constructor(private setting: SettingService) {
+
+  }
 }

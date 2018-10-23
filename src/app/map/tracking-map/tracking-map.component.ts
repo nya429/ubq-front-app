@@ -201,11 +201,9 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
   }
 
   getMapSettings() {
-    // console.log('REST TEST', this.mapService.getMapSettings())
     const {base, mapPosScale} = this.mapService.getMapSettings();
     this.base = base;
     this.mapPosScale = mapPosScale;
-    console.log(mapPosScale.scale);
   }
 
   createBase() {
@@ -517,7 +515,6 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     if (this.trackerInfoG) {
       return false;
     }
-    console.log(this.selectedPoint.datum());
     const that = this;
     this.trackerInfoG = this.svg
         // .insert('g')
@@ -1075,8 +1072,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
 
   onMapPosScaleChanged() {
     this.mapPosScaleTimer = setTimeout(() => {
-      console.log('onMapPosScaleChanged');
       this.mapService.updateMapSettings(this.mapPosScale);
-    }, 800);
+    }, 500);
   }
 }

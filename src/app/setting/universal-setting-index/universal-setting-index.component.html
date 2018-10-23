@@ -28,7 +28,7 @@
             <div [@listItemSlideState]="settings?.length" class="settings-container">
                 <app-loading *ngIf="!settings"></app-loading>
                 <app-universal-setting-item
-                *ngFor='let setting of settings; let i = index'
+                *ngFor='let setting of settings;let i = index'
                 [setting]="setting"
                 [index] = "i">
               </app-universal-setting-item>     
