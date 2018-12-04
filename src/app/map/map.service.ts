@@ -124,13 +124,61 @@ export class MapService {
         this.onStarted.next(this.mapStarted);
     }
 
-    stop() {
+    startSync() {
+        // change table name: simulation_2 accordingly;
+        this.getLastActiveTrackers();
+        this.onLoading.next(true);
+        const listChangeSub = this.trackerListChanges.subscribe(() => {
+            listChangeSub.unsubscribe();
+            
+            const customer_ids =  this.trackers.map(tracker => tracker.tagId);
+
+            // this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
+            //     this.trackerLocsListener.unsubscribe();
+            
+            //     this.trackers.forEach(trac => 
+            //         trac.setCrd((data[trac['customer_id']].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
+            //         (data[trac['customer_id']].loc_y + 0.5) / this.trackerBoundary.y * this.base.width));
+
+            //         //Whenever get the trackers, ready to call
+            //         this.onLoaded.next(true);
+            //         this.onStarted.next(this.mapStarted);
+            //     }
+            // );
+
+            this.getParticipantLocalsByIds(customer_ids).subscribe(
+                (result) => {
+                  const data = result['data'];
+                  this.trackers.forEach(trac => {
+                    //   console.log(data,data[`${trac.tagId}`])
+                    trac.setCrd((data[trac.tagId].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
+                    (data[trac.tagId].loc_y + 0.5) / this.trackerBoundary.y * this.base.width)  });
+                
+                    //Whenever get the trackers, ready to call
+                    this.onLoaded.next(true);
+                    this.onStarted.next(this.mapStarted);
+                }, (err: HttpErrorResponse)  => {
+                  console.error(err);
+                }
+            );
+
+ 
+        })
+    }
+
+    pause() {
         if (this.trackerLocsListener) {
             this.trackerLocsListener.unsubscribe();
         }
+    }
 
+
+    stop() {
+        this.pause()
         this.onStopped.next(this.mapStopped);
     }
+
+
 
     resetServiceState() {
         this.mapStopping = true;
@@ -164,12 +212,17 @@ export class MapService {
     }
 
     move() {
+        clearInterval(this.serviceInterval);
         this.serviceInterval = setInterval(() => {
-            this.trackers.map(tracker => {
-                this.dummyMove(tracker);
-            });
-            this.trackerLocChanges.next(this.trackers.slice());
-        }, 800);
+            // dunmmyMove
+            // this.trackers.map(tracker => {
+            //     this.dummyMove(tracker);
+            // });
+            // this.trackerLocChanges.next(this.trackers.slice());
+
+            //realMove
+            this.realtimeMove();
+        }, 2000);
     }
 
     dummyMove(tracker: Tracker) {
@@ -190,6 +243,19 @@ export class MapService {
             tracker.yCrd = this.base.height - 1;
         }
         return tracker;
+    }
+
+    realtimeMove() {
+        const customer_ids = this.trackers.map(tracker => tracker.tagId);
+        this.getParticipantLocalsByIds(customer_ids).subscribe(
+           (result) => {
+             const data = result['data'];
+             this.trackers.forEach(trac => 
+               trac.setCrd((data[trac.tagId].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
+               (data[trac.tagId].loc_y + 0.5) / this.trackerBoundary.y * this.base.width));
+               console.log(this.trackers)
+               this.trackerLocChanges.next(this.trackers.slice());
+        });
     }
 
 　　onSelectedTracker(id: number) {
@@ -270,7 +336,7 @@ export class MapService {
     }
 
     getParticipantLocalsByTime(id: string, begin?: number, end?: number) {
-        const urlSuffix = 'tracker/locs';
+        const urlSuffix = 'tracker/locs/span';
         const con = {'begin': begin, 'end': end, 'id': id};
         return this.httpClient.post(`${this.httpOptions.eventUrl()}/${urlSuffix}`, con, {
             observe: 'body',
@@ -284,6 +350,15 @@ export class MapService {
                 console.error(err);
               }
           );
+    }
+
+    getParticipantLocalsByIds(ids: string[], begin?: number, end?: number) {
+        const urlSuffix = 'tracker/locs/current';
+        const con = {'begin': begin, 'end': end, 'ids': ids};
+        return this.httpClient.post(`${this.httpOptions.eventUrl()}/${urlSuffix}`, con, {
+            observe: 'body',
+            responseType: 'json',
+          });
     }
 
     getLastActiveTrackers() {
@@ -315,16 +390,16 @@ export class MapService {
      *  this.base.height should eqaul to 17
      *
      */
-    testLocal() {
+    testHistoryLocals() {
         // map particiapnt id, pass the id
+        // TODO put getLastActive under subscribe
         this.getLastActiveTrackers();
         this.onLoading.next(true);
         const listChangeSub = this.trackerListChanges.subscribe(() => {
             listChangeSub.unsubscribe();
             const customer_ids =  this.trackers.map(tracker => tracker.tagId);
-            customer_ids.map(id => {
-                this.getParticipantLocalsByTime(id);
-            });
+              // TODO put getParticipantLocalsByTime under subscribe
+            customer_ids.map(id => this.getParticipantLocalsByTime(id));
             let customer_ids_index = 1;
             this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
                 this.trackers.forEach(trac => {

@@ -74,9 +74,12 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
       return false;
     }
     if (this.playBackMode) {
-      this.getHistory();
+      this.mapService.testHistoryLocals();
     } else {
-     this.mapService.start();
+     // dummy move
+    //  this.mapService.start();
+     // real-time move, table: simulation_2
+     this.mapService.startSync();
     }
   }
 
@@ -130,10 +133,6 @@ export class MapControlPenalComponent implements OnInit, OnDestroy {
   onDropdownRemove(event) {
     this.companyFilter = this.companyFilterNull;
     event.stopPropagation();
-  }
-
-  getHistory() {
-    this.mapService.testLocal();
   }
 
   setStatus() {

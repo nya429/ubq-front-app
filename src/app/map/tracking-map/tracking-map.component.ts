@@ -137,6 +137,7 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
     this.mapService.stopped.next(false);
     if (!this.mapService.mapInitiated) {
       this.mapService.mapInitiated = true;
+      // button observable
       this.mapService.intiated.next(true);
       this.trackers = this.mapService.getTrackers();
       this.initiateTrackPoint(this.trackers);
@@ -147,9 +148,11 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       this.mapService.mapStarted = false;
       this.mapService.started.next(false);
       this.trackersChangeSubscription.unsubscribe();
+      this.mapService.pause();
     } else {
       this.mapService.mapStarted = true;
       this.mapService.started.next(true);
+      this.mapService.move();
       this.trackersChangeSubscription = this.mapService.trackerLocChanges.subscribe(
         (trackers: Tracker[]) => {
           // console.log(this.trackers[0].xCrd);
@@ -163,8 +166,8 @@ export class TrackingMapComponent implements OnInit, OnDestroy {
       id => this.onPointSelected(id)
     );
     this.onHidedSubscription = this.mapService.hideTrackerIndex.subscribe(
-    id => this.onPointHided(id)
-  );
+      id => this.onPointHided(id)
+    );
   }
 
   onTest() {
