@@ -132,7 +132,7 @@ export class MapService {
             listChangeSub.unsubscribe();
             
             const customer_ids =  this.trackers.map(tracker => tracker.tagId);
-
+            console.log(customer_ids);
             // this.trackerLocsListener = this.trackerLocsReady.subscribe(data => {
             //     this.trackerLocsListener.unsubscribe();
             
@@ -150,10 +150,11 @@ export class MapService {
                 (result) => {
                   const data = result['data'];
                   this.trackers.forEach(trac => {
+                      console.log(trac);
                     //   console.log(data,data[`${trac.tagId}`])
                     trac.setCrd((data[trac.tagId].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
-                    (data[trac.tagId].loc_y + 0.5) / this.trackerBoundary.y * this.base.width)  });
-                
+                    (data[trac.tagId].loc_y + 0.5) / this.trackerBoundary.y * this.base.width);
+                  });
                     //Whenever get the trackers, ready to call
                     this.onLoaded.next(true);
                     this.onStarted.next(this.mapStarted);
@@ -222,7 +223,7 @@ export class MapService {
 
             //realMove
             this.realtimeMove();
-        }, 2000);
+        }, 800);
     }
 
     dummyMove(tracker: Tracker) {
@@ -253,7 +254,7 @@ export class MapService {
              this.trackers.forEach(trac => 
                trac.setCrd((data[trac.tagId].loc_x + 0.5) / this.trackerBoundary.x * this.base.width,
                (data[trac.tagId].loc_y + 0.5) / this.trackerBoundary.y * this.base.width));
-               console.log(this.trackers)
+               console.log(this.trackers[0])
                this.trackerLocChanges.next(this.trackers.slice());
         });
     }
