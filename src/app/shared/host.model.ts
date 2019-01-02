@@ -7,6 +7,7 @@ class API {
     private hosts = {
         'localhost': 'http://localhost:3000/',
         'aws'      : 'http://18.218.72.63:80/api/',
+        'ubuntu'      : 'http://23.20.246.186:80/api/',
         'mywin'    : 'http://192.168.0.113:3000/'
     };
 
