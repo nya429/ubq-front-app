@@ -330,7 +330,8 @@ export class MapService {
           trackers.push(tracker);
           if (i === participants.length - 1) {
             this.trackers = trackers.slice();
-            // console.log(this.trackers);
+            console.log('DEBUG changeTrackers');
+             console.log('DEBUG', this.trackers);
             this.trackerListChanges.next();
           }
         });
@@ -339,6 +340,7 @@ export class MapService {
     getParticipantLocalsByTime(id: string, begin?: number, end?: number) {
         const urlSuffix = 'tracker/locs/span';
         const con = {'begin': begin, 'end': end, 'id': id};
+        console.log('DEBUG', con)
         return this.httpClient.post(`${this.httpOptions.eventUrl()}/${urlSuffix}`, con, {
             observe: 'body',
             responseType: 'json',
@@ -346,6 +348,8 @@ export class MapService {
           .subscribe(
               (result) => {
                 const data = result['data'];
+                console.log('DEBUG', 'getParticipantLocalsByTime');
+                console.log('DEBUG', data);
                 this.trackerLocsReady.next(data);
               }, (err: HttpErrorResponse)  => {
                 console.error(err);
@@ -372,6 +376,8 @@ export class MapService {
           .subscribe(
               (result) => {
                 const participants = result['data']['trackers'];
+                console.log('DEBUG getLastActiveTracker')
+                console.log('DEBUG', participants)
                 if (participants && participants.length > 0) {
                     this.stop();
                     this.changeTrackers(participants);

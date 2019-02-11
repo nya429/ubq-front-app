@@ -12,7 +12,7 @@ import { FormGroup } from '@angular/forms';
 export class SettingService {
     // TODO: will eliminate id
     defaultSettings: Setting[] = [
-        new Setting({key: 'host', value: 'localhost', id: 0}),
+        new Setting({key: 'host', value: 'local', id: 0}),
         new Setting({key: 'map_background_url', value: 'http://www.ubqsys.com/assets/img/solution/store_floorplan.jpg', id: 1}),
         new Setting({key: 'map_domain_x', value: '100', id: 2}),
         new Setting({key: 'map_domain_y', value: '50', id: 3}),
